@@ -1,0 +1,2224 @@
+7767517
+2222 2516
+Input                    in0                      0 1 in0
+MemoryData               pnnx_2                   0 1 1 0=1 1=1 2=3
+Split                    splitncnn_0              1 2 1 2 3
+BinaryOp                 sub_0                    2 1 in0 2 4 0=1
+Convolution              conv_218                 1 1 4 5 0=180 1=3 11=3 12=1 13=1 14=1 2=1 3=1 4=1 5=1 6=4860
+Split                    splitncnn_0              1 2 5 6 7
+Reshape                  flatten_1914             1 1 7 8 0=16384 1=180
+Permute                  transpose_1864           1 1 8 9 0=1
+LayerNorm                ln_267                   1 1 9 10 0=180 1=1.000000e-5 2=1
+Split                    splitncnn_1              1 3 10 11 12 13
+LayerNorm                ln_268                   1 1 13 14 0=180 1=1.000000e-5 2=1
+Reshape                  reshape_669              1 1 14 15 0=180 1=128 11=8 2=16
+Permute                  permute_381              1 1 15 16 0=2
+Reshape                  reshape_670              1 1 16 17 0=180 1=8 11=8 2=256
+Permute                  permute_382              1 1 17 18 0=2
+Reshape                  reshape_671              1 1 18 19 0=180 1=64 2=256
+Split                    splitncnn_2              1 3 19 20 21 22
+Reshape                  reshape_672              1 1 22 23 0=180 1=16384
+Gemm                     gemm_0                   1 1 23 24 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_673              1 1 24 25 0=180 1=64 2=256
+Reshape                  reshape_674              1 1 25 26 0=30 1=6 11=64 2=256
+Permute                  permute_383              1 1 26 27 0=2
+Reshape                  reshape_675              1 1 27 28 0=30 1=64 2=1536
+Reshape                  reshape_676              1 1 21 29 0=180 1=16384
+Gemm                     gemm_1                   1 1 29 30 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_677              1 1 30 31 0=180 1=64 2=256
+Reshape                  reshape_678              1 1 31 32 0=30 1=6 11=64 2=256
+Permute                  permute_384              1 1 32 33 0=2
+Reshape                  reshape_679              1 1 33 34 0=30 1=64 2=1536
+Reshape                  reshape_680              1 1 20 35 0=180 1=16384
+Gemm                     gemm_2                   1 1 35 36 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_681              1 1 36 37 0=180 1=64 2=256
+Reshape                  reshape_682              1 1 37 38 0=30 1=6 11=64 2=256
+Permute                  permute_385              1 1 38 39 0=2
+Reshape                  reshape_683              1 1 39 40 0=30 1=64 2=1536
+BinaryOp                 mul_1                    1 1 28 41 0=2 1=1 2=0.182574183
+MatMul                   matmultransb_0           2 1 41 34 42 0=1
+Reshape                  reshape_684              1 1 42 43 0=64 1=64 11=6 2=256
+MemoryData               pnnx_fold_1615           0 1 44 0=64 1=64 11=6 2=1
+MemoryData               pnnx_fold_1618           0 1 45 0=64 1=64 11=1 2=256
+Split                    splitncnn_1              1 18 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63
+BinaryOp                 add_2                    2 1 43 44 64 0=0
+BinaryOp                 add_3                    2 1 64 46 65 0=0
+Reshape                  reshape_685              1 1 65 66 0=64 1=64 2=1536
+Softmax                  softmax_345              1 1 66 67 0=2 1=1
+MatMul                   matmul_1577              2 1 67 40 68
+Reshape                  reshape_686              1 1 68 69 0=30 1=64 11=6 2=256
+Permute                  permute_386              1 1 69 70 0=2
+Reshape                  reshape_687              1 1 70 71 0=180 1=64 2=256
+Reshape                  reshape_688              1 1 71 72 0=180 1=16384
+Gemm                     gemm_3                   1 1 72 73 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_689              1 1 73 74 0=180 1=64 2=256
+Reshape                  reshape_690              1 1 74 75 0=180 1=8 11=8 2=256
+Permute                  permute_387              1 1 75 76 0=2
+Reshape                  reshape_691              1 1 76 77 0=180 1=8 11=128 2=16
+Permute                  permute_388              1 1 77 78 0=2
+Reshape                  reshape_692              1 1 78 79 0=180 1=16384
+BinaryOp                 add_4                    2 1 11 79 80 0=0
+Split                    splitncnn_3              1 2 80 81 82
+LayerNorm                ln_269                   1 1 82 83 0=180 1=1.000000e-5 2=1
+Gemm                     gemm_4                   1 1 83 84 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=360 9=180
+GELU                     gelu_231                 1 1 84 85
+Gemm                     gemm_5                   1 1 85 86 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=360
+BinaryOp                 add_5                    2 1 81 86 87 0=0
+Split                    splitncnn_4              1 2 87 88 89
+LayerNorm                ln_270                   1 1 89 90 0=180 1=1.000000e-5 2=1
+Reshape                  reshape_693              1 1 90 91 0=180 1=128 2=128
+Slice                    slice_1650               1 2 91 92 93 1=0 -23302=1,4
+Slice                    slice_a_1649             1 2 92 94 95 1=1 -23302=1,4
+Slice                    slice_b_1648             1 2 93 96 97 1=1 -23302=1,4
+Concat                   concat_a_1652            2 1 95 94 98 0=1
+Concat                   concat_b_1651            2 1 97 96 99 0=1
+Concat                   concat_1653              2 1 99 98 100 0=0
+Reshape                  reshape_694              1 1 100 101 0=180 1=128 11=8 2=16
+Permute                  permute_389              1 1 101 102 0=2
+Reshape                  reshape_695              1 1 102 103 0=180 1=8 11=8 2=256
+Permute                  permute_390              1 1 103 104 0=2
+Reshape                  reshape_696              1 1 104 105 0=180 1=64 2=256
+Split                    splitncnn_5              1 3 105 106 107 108
+Reshape                  reshape_697              1 1 108 109 0=180 1=16384
+Gemm                     gemm_6                   1 1 109 110 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_698              1 1 110 111 0=180 1=64 2=256
+Reshape                  reshape_699              1 1 111 112 0=30 1=6 11=64 2=256
+Permute                  permute_391              1 1 112 113 0=2
+Reshape                  reshape_700              1 1 113 114 0=30 1=64 2=1536
+Reshape                  reshape_701              1 1 107 115 0=180 1=16384
+Gemm                     gemm_7                   1 1 115 116 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_702              1 1 116 117 0=180 1=64 2=256
+Reshape                  reshape_703              1 1 117 118 0=30 1=6 11=64 2=256
+Permute                  permute_392              1 1 118 119 0=2
+Reshape                  reshape_704              1 1 119 120 0=30 1=64 2=1536
+Reshape                  reshape_705              1 1 106 121 0=180 1=16384
+Gemm                     gemm_8                   1 1 121 122 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_706              1 1 122 123 0=180 1=64 2=256
+Reshape                  reshape_707              1 1 123 124 0=30 1=6 11=64 2=256
+Permute                  permute_393              1 1 124 125 0=2
+Reshape                  reshape_708              1 1 125 126 0=30 1=64 2=1536
+BinaryOp                 mul_6                    1 1 114 127 0=2 1=1 2=0.182574183
+MatMul                   matmultransb_1           2 1 127 120 128 0=1
+Reshape                  reshape_709              1 1 128 129 0=64 1=64 11=6 2=256
+MemoryData               pnnx_fold_2003           0 1 130 0=64 1=64 11=6 2=1
+MemoryData               pnnx_fold_2006           0 1 131 0=64 1=64 11=1 2=256
+Split                    splitncnn_2              1 18 131 132 133 134 135 136 137 138 139 140 141 142 143 144 145 146 147 148 149
+BinaryOp                 add_7                    2 1 129 130 150 0=0
+BinaryOp                 add_8                    2 1 150 132 151 0=0
+Reshape                  reshape_710              1 1 151 152 0=64 1=64 2=1536
+Softmax                  softmax_346              1 1 152 153 0=2 1=1
+MatMul                   matmul_1579              2 1 153 126 154
+Reshape                  reshape_711              1 1 154 155 0=30 1=64 11=6 2=256
+Permute                  permute_394              1 1 155 156 0=2
+Reshape                  reshape_712              1 1 156 157 0=180 1=64 2=256
+Reshape                  reshape_713              1 1 157 158 0=180 1=16384
+Gemm                     gemm_9                   1 1 158 159 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_714              1 1 159 160 0=180 1=64 2=256
+Reshape                  reshape_715              1 1 160 161 0=180 1=8 11=8 2=256
+Permute                  permute_395              1 1 161 162 0=2
+Reshape                  reshape_716              1 1 162 163 0=180 1=8 11=128 2=16
+Permute                  permute_396              1 1 163 164 0=2
+Reshape                  reshape_717              1 1 164 165 0=180 1=128 2=128
+Slice                    slice_1656               1 2 165 166 167 1=0 -23302=1,-4
+Slice                    slice_a_1655             1 2 166 168 169 1=1 -23302=1,-4
+Slice                    slice_b_1654             1 2 167 170 171 1=1 -23302=1,-4
+Concat                   concat_a_1658            2 1 169 168 172 0=1
+Concat                   concat_b_1657            2 1 171 170 173 0=1
+Concat                   concat_1659              2 1 173 172 174 0=0
+Reshape                  reshape_718              1 1 174 175 0=180 1=16384
+BinaryOp                 add_9                    2 1 88 175 176 0=0
+Split                    splitncnn_6              1 2 176 177 178
+LayerNorm                ln_271                   1 1 178 179 0=180 1=1.000000e-5 2=1
+Gemm                     gemm_10                  1 1 179 180 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=360 9=180
+GELU                     gelu_232                 1 1 180 181
+Gemm                     gemm_11                  1 1 181 182 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=360
+BinaryOp                 add_10                   2 1 177 182 183 0=0
+Split                    splitncnn_7              1 2 183 184 185
+LayerNorm                ln_272                   1 1 185 186 0=180 1=1.000000e-5 2=1
+Reshape                  reshape_719              1 1 186 187 0=180 1=128 11=8 2=16
+Permute                  permute_397              1 1 187 188 0=2
+Reshape                  reshape_720              1 1 188 189 0=180 1=8 11=8 2=256
+Permute                  permute_398              1 1 189 190 0=2
+Reshape                  reshape_721              1 1 190 191 0=180 1=64 2=256
+Split                    splitncnn_8              1 3 191 192 193 194
+Reshape                  reshape_722              1 1 194 195 0=180 1=16384
+Gemm                     gemm_12                  1 1 195 196 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_723              1 1 196 197 0=180 1=64 2=256
+Reshape                  reshape_724              1 1 197 198 0=30 1=6 11=64 2=256
+Permute                  permute_399              1 1 198 199 0=2
+Reshape                  reshape_725              1 1 199 200 0=30 1=64 2=1536
+Reshape                  reshape_726              1 1 193 201 0=180 1=16384
+Gemm                     gemm_13                  1 1 201 202 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_727              1 1 202 203 0=180 1=64 2=256
+Reshape                  reshape_728              1 1 203 204 0=30 1=6 11=64 2=256
+Permute                  permute_400              1 1 204 205 0=2
+Reshape                  reshape_729              1 1 205 206 0=30 1=64 2=1536
+Reshape                  reshape_730              1 1 192 207 0=180 1=16384
+Gemm                     gemm_14                  1 1 207 208 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_731              1 1 208 209 0=180 1=64 2=256
+Reshape                  reshape_732              1 1 209 210 0=30 1=6 11=64 2=256
+Permute                  permute_401              1 1 210 211 0=2
+Reshape                  reshape_733              1 1 211 212 0=30 1=64 2=1536
+BinaryOp                 mul_11                   1 1 200 213 0=2 1=1 2=0.182574183
+MatMul                   matmultransb_2           2 1 213 206 214 0=1
+Reshape                  reshape_734              1 1 214 215 0=64 1=64 11=6 2=256
+MemoryData               pnnx_fold_2390           0 1 216 0=64 1=64 11=6 2=1
+BinaryOp                 add_12                   2 1 215 216 217 0=0
+BinaryOp                 add_13                   2 1 217 63 218 0=0
+Reshape                  reshape_735              1 1 218 219 0=64 1=64 2=1536
+Softmax                  softmax_347              1 1 219 220 0=2 1=1
+MatMul                   matmul_1581              2 1 220 212 221
+Reshape                  reshape_736              1 1 221 222 0=30 1=64 11=6 2=256
+Permute                  permute_402              1 1 222 223 0=2
+Reshape                  reshape_737              1 1 223 224 0=180 1=64 2=256
+Reshape                  reshape_738              1 1 224 225 0=180 1=16384
+Gemm                     gemm_15                  1 1 225 226 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_739              1 1 226 227 0=180 1=64 2=256
+Reshape                  reshape_740              1 1 227 228 0=180 1=8 11=8 2=256
+Permute                  permute_403              1 1 228 229 0=2
+Reshape                  reshape_741              1 1 229 230 0=180 1=8 11=128 2=16
+Permute                  permute_404              1 1 230 231 0=2
+Reshape                  reshape_742              1 1 231 232 0=180 1=16384
+BinaryOp                 add_14                   2 1 184 232 233 0=0
+Split                    splitncnn_9              1 2 233 234 235
+LayerNorm                ln_273                   1 1 235 236 0=180 1=1.000000e-5 2=1
+Gemm                     gemm_16                  1 1 236 237 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=360 9=180
+GELU                     gelu_233                 1 1 237 238
+Gemm                     gemm_17                  1 1 238 239 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=360
+BinaryOp                 add_15                   2 1 234 239 240 0=0
+Split                    splitncnn_10             1 2 240 241 242
+LayerNorm                ln_274                   1 1 242 243 0=180 1=1.000000e-5 2=1
+Reshape                  reshape_743              1 1 243 244 0=180 1=128 2=128
+Slice                    slice_1662               1 2 244 245 246 1=0 -23302=1,4
+Slice                    slice_a_1661             1 2 245 247 248 1=1 -23302=1,4
+Slice                    slice_b_1660             1 2 246 249 250 1=1 -23302=1,4
+Concat                   concat_a_1664            2 1 248 247 251 0=1
+Concat                   concat_b_1663            2 1 250 249 252 0=1
+Concat                   concat_1665              2 1 252 251 253 0=0
+Reshape                  reshape_744              1 1 253 254 0=180 1=128 11=8 2=16
+Permute                  permute_405              1 1 254 255 0=2
+Reshape                  reshape_745              1 1 255 256 0=180 1=8 11=8 2=256
+Permute                  permute_406              1 1 256 257 0=2
+Reshape                  reshape_746              1 1 257 258 0=180 1=64 2=256
+Split                    splitncnn_11             1 3 258 259 260 261
+Reshape                  reshape_747              1 1 261 262 0=180 1=16384
+Gemm                     gemm_18                  1 1 262 263 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_748              1 1 263 264 0=180 1=64 2=256
+Reshape                  reshape_749              1 1 264 265 0=30 1=6 11=64 2=256
+Permute                  permute_407              1 1 265 266 0=2
+Reshape                  reshape_750              1 1 266 267 0=30 1=64 2=1536
+Reshape                  reshape_751              1 1 260 268 0=180 1=16384
+Gemm                     gemm_19                  1 1 268 269 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_752              1 1 269 270 0=180 1=64 2=256
+Reshape                  reshape_753              1 1 270 271 0=30 1=6 11=64 2=256
+Permute                  permute_408              1 1 271 272 0=2
+Reshape                  reshape_754              1 1 272 273 0=30 1=64 2=1536
+Reshape                  reshape_755              1 1 259 274 0=180 1=16384
+Gemm                     gemm_20                  1 1 274 275 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_756              1 1 275 276 0=180 1=64 2=256
+Reshape                  reshape_757              1 1 276 277 0=30 1=6 11=64 2=256
+Permute                  permute_409              1 1 277 278 0=2
+Reshape                  reshape_758              1 1 278 279 0=30 1=64 2=1536
+BinaryOp                 mul_16                   1 1 267 280 0=2 1=1 2=0.182574183
+MatMul                   matmultransb_3           2 1 280 273 281 0=1
+Reshape                  reshape_759              1 1 281 282 0=64 1=64 11=6 2=256
+MemoryData               pnnx_fold_2778           0 1 283 0=64 1=64 11=6 2=1
+BinaryOp                 add_17                   2 1 282 283 284 0=0
+BinaryOp                 add_18                   2 1 284 149 285 0=0
+Reshape                  reshape_760              1 1 285 286 0=64 1=64 2=1536
+Softmax                  softmax_348              1 1 286 287 0=2 1=1
+MatMul                   matmul_1583              2 1 287 279 288
+Reshape                  reshape_761              1 1 288 289 0=30 1=64 11=6 2=256
+Permute                  permute_410              1 1 289 290 0=2
+Reshape                  reshape_762              1 1 290 291 0=180 1=64 2=256
+Reshape                  reshape_763              1 1 291 292 0=180 1=16384
+Gemm                     gemm_21                  1 1 292 293 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_764              1 1 293 294 0=180 1=64 2=256
+Reshape                  reshape_765              1 1 294 295 0=180 1=8 11=8 2=256
+Permute                  permute_411              1 1 295 296 0=2
+Reshape                  reshape_766              1 1 296 297 0=180 1=8 11=128 2=16
+Permute                  permute_412              1 1 297 298 0=2
+Reshape                  reshape_767              1 1 298 299 0=180 1=128 2=128
+Slice                    slice_1668               1 2 299 300 301 1=0 -23302=1,-4
+Slice                    slice_a_1667             1 2 300 302 303 1=1 -23302=1,-4
+Slice                    slice_b_1666             1 2 301 304 305 1=1 -23302=1,-4
+Concat                   concat_a_1670            2 1 303 302 306 0=1
+Concat                   concat_b_1669            2 1 305 304 307 0=1
+Concat                   concat_1671              2 1 307 306 308 0=0
+Reshape                  reshape_768              1 1 308 309 0=180 1=16384
+BinaryOp                 add_19                   2 1 241 309 310 0=0
+Split                    splitncnn_12             1 2 310 311 312
+LayerNorm                ln_275                   1 1 312 313 0=180 1=1.000000e-5 2=1
+Gemm                     gemm_22                  1 1 313 314 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=360 9=180
+GELU                     gelu_234                 1 1 314 315
+Gemm                     gemm_23                  1 1 315 316 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=360
+BinaryOp                 add_20                   2 1 311 316 317 0=0
+Split                    splitncnn_13             1 2 317 318 319
+LayerNorm                ln_276                   1 1 319 320 0=180 1=1.000000e-5 2=1
+Reshape                  reshape_769              1 1 320 321 0=180 1=128 11=8 2=16
+Permute                  permute_413              1 1 321 322 0=2
+Reshape                  reshape_770              1 1 322 323 0=180 1=8 11=8 2=256
+Permute                  permute_414              1 1 323 324 0=2
+Reshape                  reshape_771              1 1 324 325 0=180 1=64 2=256
+Split                    splitncnn_14             1 3 325 326 327 328
+Reshape                  reshape_772              1 1 328 329 0=180 1=16384
+Gemm                     gemm_24                  1 1 329 330 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_773              1 1 330 331 0=180 1=64 2=256
+Reshape                  reshape_774              1 1 331 332 0=30 1=6 11=64 2=256
+Permute                  permute_415              1 1 332 333 0=2
+Reshape                  reshape_775              1 1 333 334 0=30 1=64 2=1536
+Reshape                  reshape_776              1 1 327 335 0=180 1=16384
+Gemm                     gemm_25                  1 1 335 336 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_777              1 1 336 337 0=180 1=64 2=256
+Reshape                  reshape_778              1 1 337 338 0=30 1=6 11=64 2=256
+Permute                  permute_416              1 1 338 339 0=2
+Reshape                  reshape_779              1 1 339 340 0=30 1=64 2=1536
+Reshape                  reshape_780              1 1 326 341 0=180 1=16384
+Gemm                     gemm_26                  1 1 341 342 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_781              1 1 342 343 0=180 1=64 2=256
+Reshape                  reshape_782              1 1 343 344 0=30 1=6 11=64 2=256
+Permute                  permute_417              1 1 344 345 0=2
+Reshape                  reshape_783              1 1 345 346 0=30 1=64 2=1536
+BinaryOp                 mul_21                   1 1 334 347 0=2 1=1 2=0.182574183
+MatMul                   matmultransb_4           2 1 347 340 348 0=1
+Reshape                  reshape_784              1 1 348 349 0=64 1=64 11=6 2=256
+MemoryData               pnnx_fold_3165           0 1 350 0=64 1=64 11=6 2=1
+BinaryOp                 add_22                   2 1 349 350 351 0=0
+BinaryOp                 add_23                   2 1 351 62 352 0=0
+Reshape                  reshape_785              1 1 352 353 0=64 1=64 2=1536
+Softmax                  softmax_349              1 1 353 354 0=2 1=1
+MatMul                   matmul_1585              2 1 354 346 355
+Reshape                  reshape_786              1 1 355 356 0=30 1=64 11=6 2=256
+Permute                  permute_418              1 1 356 357 0=2
+Reshape                  reshape_787              1 1 357 358 0=180 1=64 2=256
+Reshape                  reshape_788              1 1 358 359 0=180 1=16384
+Gemm                     gemm_27                  1 1 359 360 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_789              1 1 360 361 0=180 1=64 2=256
+Reshape                  reshape_790              1 1 361 362 0=180 1=8 11=8 2=256
+Permute                  permute_419              1 1 362 363 0=2
+Reshape                  reshape_791              1 1 363 364 0=180 1=8 11=128 2=16
+Permute                  permute_420              1 1 364 365 0=2
+Reshape                  reshape_792              1 1 365 366 0=180 1=16384
+BinaryOp                 add_24                   2 1 318 366 367 0=0
+Split                    splitncnn_15             1 2 367 368 369
+LayerNorm                ln_277                   1 1 369 370 0=180 1=1.000000e-5 2=1
+Gemm                     gemm_28                  1 1 370 371 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=360 9=180
+GELU                     gelu_235                 1 1 371 372
+Gemm                     gemm_29                  1 1 372 373 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=360
+BinaryOp                 add_25                   2 1 368 373 374 0=0
+Split                    splitncnn_16             1 2 374 375 376
+LayerNorm                ln_278                   1 1 376 377 0=180 1=1.000000e-5 2=1
+Reshape                  reshape_793              1 1 377 378 0=180 1=128 2=128
+Slice                    slice_1674               1 2 378 379 380 1=0 -23302=1,4
+Slice                    slice_a_1673             1 2 379 381 382 1=1 -23302=1,4
+Slice                    slice_b_1672             1 2 380 383 384 1=1 -23302=1,4
+Concat                   concat_a_1676            2 1 382 381 385 0=1
+Concat                   concat_b_1675            2 1 384 383 386 0=1
+Concat                   concat_1677              2 1 386 385 387 0=0
+Reshape                  reshape_794              1 1 387 388 0=180 1=128 11=8 2=16
+Permute                  permute_421              1 1 388 389 0=2
+Reshape                  reshape_795              1 1 389 390 0=180 1=8 11=8 2=256
+Permute                  permute_422              1 1 390 391 0=2
+Reshape                  reshape_796              1 1 391 392 0=180 1=64 2=256
+Split                    splitncnn_17             1 3 392 393 394 395
+Reshape                  reshape_797              1 1 395 396 0=180 1=16384
+Gemm                     gemm_30                  1 1 396 397 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_798              1 1 397 398 0=180 1=64 2=256
+Reshape                  reshape_799              1 1 398 399 0=30 1=6 11=64 2=256
+Permute                  permute_423              1 1 399 400 0=2
+Reshape                  reshape_800              1 1 400 401 0=30 1=64 2=1536
+Reshape                  reshape_801              1 1 394 402 0=180 1=16384
+Gemm                     gemm_31                  1 1 402 403 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_802              1 1 403 404 0=180 1=64 2=256
+Reshape                  reshape_803              1 1 404 405 0=30 1=6 11=64 2=256
+Permute                  permute_424              1 1 405 406 0=2
+Reshape                  reshape_804              1 1 406 407 0=30 1=64 2=1536
+Reshape                  reshape_805              1 1 393 408 0=180 1=16384
+Gemm                     gemm_32                  1 1 408 409 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_806              1 1 409 410 0=180 1=64 2=256
+Reshape                  reshape_807              1 1 410 411 0=30 1=6 11=64 2=256
+Permute                  permute_425              1 1 411 412 0=2
+Reshape                  reshape_808              1 1 412 413 0=30 1=64 2=1536
+BinaryOp                 mul_26                   1 1 401 414 0=2 1=1 2=0.182574183
+MatMul                   matmultransb_5           2 1 414 407 415 0=1
+Reshape                  reshape_809              1 1 415 416 0=64 1=64 11=6 2=256
+MemoryData               pnnx_fold_3553           0 1 417 0=64 1=64 11=6 2=1
+BinaryOp                 add_27                   2 1 416 417 418 0=0
+BinaryOp                 add_28                   2 1 418 148 419 0=0
+Reshape                  reshape_810              1 1 419 420 0=64 1=64 2=1536
+Softmax                  softmax_350              1 1 420 421 0=2 1=1
+MatMul                   matmul_1587              2 1 421 413 422
+Reshape                  reshape_811              1 1 422 423 0=30 1=64 11=6 2=256
+Permute                  permute_426              1 1 423 424 0=2
+Reshape                  reshape_812              1 1 424 425 0=180 1=64 2=256
+Reshape                  reshape_813              1 1 425 426 0=180 1=16384
+Gemm                     gemm_33                  1 1 426 427 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_814              1 1 427 428 0=180 1=64 2=256
+Reshape                  reshape_815              1 1 428 429 0=180 1=8 11=8 2=256
+Permute                  permute_427              1 1 429 430 0=2
+Reshape                  reshape_816              1 1 430 431 0=180 1=8 11=128 2=16
+Permute                  permute_428              1 1 431 432 0=2
+Reshape                  reshape_817              1 1 432 433 0=180 1=128 2=128
+Slice                    slice_1680               1 2 433 434 435 1=0 -23302=1,-4
+Slice                    slice_a_1679             1 2 434 436 437 1=1 -23302=1,-4
+Slice                    slice_b_1678             1 2 435 438 439 1=1 -23302=1,-4
+Concat                   concat_a_1682            2 1 437 436 440 0=1
+Concat                   concat_b_1681            2 1 439 438 441 0=1
+Concat                   concat_1683              2 1 441 440 442 0=0
+Reshape                  reshape_818              1 1 442 443 0=180 1=16384
+BinaryOp                 add_29                   2 1 375 443 444 0=0
+Split                    splitncnn_18             1 2 444 445 446
+LayerNorm                ln_279                   1 1 446 447 0=180 1=1.000000e-5 2=1
+Gemm                     gemm_34                  1 1 447 448 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=360 9=180
+GELU                     gelu_236                 1 1 448 449
+Gemm                     gemm_35                  1 1 449 450 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=360
+BinaryOp                 add_30                   2 1 445 450 451 0=0
+Permute                  transpose_1871           1 1 451 452 0=1
+Reshape                  reshape_819              1 1 452 453 0=128 1=128 2=180
+Convolution              conv_219                 1 1 453 454 0=180 1=3 11=3 12=1 13=1 14=1 2=1 3=1 4=1 5=1 6=291600
+Reshape                  flatten_1915             1 1 454 455 0=16384 1=180
+Permute                  transpose_1872           1 1 455 456 0=1
+BinaryOp                 add_31                   2 1 456 12 457 0=0
+Split                    splitncnn_19             1 3 457 458 459 460
+LayerNorm                ln_280                   1 1 460 461 0=180 1=1.000000e-5 2=1
+Reshape                  reshape_820              1 1 461 462 0=180 1=128 11=8 2=16
+Permute                  permute_429              1 1 462 463 0=2
+Reshape                  reshape_821              1 1 463 464 0=180 1=8 11=8 2=256
+Permute                  permute_430              1 1 464 465 0=2
+Reshape                  reshape_822              1 1 465 466 0=180 1=64 2=256
+Split                    splitncnn_20             1 3 466 467 468 469
+Reshape                  reshape_823              1 1 469 470 0=180 1=16384
+Gemm                     gemm_36                  1 1 470 471 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_824              1 1 471 472 0=180 1=64 2=256
+Reshape                  reshape_825              1 1 472 473 0=30 1=6 11=64 2=256
+Permute                  permute_431              1 1 473 474 0=2
+Reshape                  reshape_826              1 1 474 475 0=30 1=64 2=1536
+Reshape                  reshape_827              1 1 468 476 0=180 1=16384
+Gemm                     gemm_37                  1 1 476 477 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_828              1 1 477 478 0=180 1=64 2=256
+Reshape                  reshape_829              1 1 478 479 0=30 1=6 11=64 2=256
+Permute                  permute_432              1 1 479 480 0=2
+Reshape                  reshape_830              1 1 480 481 0=30 1=64 2=1536
+Reshape                  reshape_831              1 1 467 482 0=180 1=16384
+Gemm                     gemm_38                  1 1 482 483 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_832              1 1 483 484 0=180 1=64 2=256
+Reshape                  reshape_833              1 1 484 485 0=30 1=6 11=64 2=256
+Permute                  permute_433              1 1 485 486 0=2
+Reshape                  reshape_834              1 1 486 487 0=30 1=64 2=1536
+BinaryOp                 mul_32                   1 1 475 488 0=2 1=1 2=0.182574183
+MatMul                   matmultransb_6           2 1 488 481 489 0=1
+Reshape                  reshape_835              1 1 489 490 0=64 1=64 11=6 2=256
+MemoryData               pnnx_fold_3974           0 1 491 0=64 1=64 11=6 2=1
+BinaryOp                 add_33                   2 1 490 491 492 0=0
+BinaryOp                 add_34                   2 1 492 61 493 0=0
+Reshape                  reshape_836              1 1 493 494 0=64 1=64 2=1536
+Softmax                  softmax_351              1 1 494 495 0=2 1=1
+MatMul                   matmul_1589              2 1 495 487 496
+Reshape                  reshape_837              1 1 496 497 0=30 1=64 11=6 2=256
+Permute                  permute_434              1 1 497 498 0=2
+Reshape                  reshape_838              1 1 498 499 0=180 1=64 2=256
+Reshape                  reshape_839              1 1 499 500 0=180 1=16384
+Gemm                     gemm_39                  1 1 500 501 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_840              1 1 501 502 0=180 1=64 2=256
+Reshape                  reshape_841              1 1 502 503 0=180 1=8 11=8 2=256
+Permute                  permute_435              1 1 503 504 0=2
+Reshape                  reshape_842              1 1 504 505 0=180 1=8 11=128 2=16
+Permute                  permute_436              1 1 505 506 0=2
+Reshape                  reshape_843              1 1 506 507 0=180 1=16384
+BinaryOp                 add_35                   2 1 458 507 508 0=0
+Split                    splitncnn_21             1 2 508 509 510
+LayerNorm                ln_281                   1 1 510 511 0=180 1=1.000000e-5 2=1
+Gemm                     gemm_40                  1 1 511 512 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=360 9=180
+GELU                     gelu_237                 1 1 512 513
+Gemm                     gemm_41                  1 1 513 514 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=360
+BinaryOp                 add_36                   2 1 509 514 515 0=0
+Split                    splitncnn_22             1 2 515 516 517
+LayerNorm                ln_282                   1 1 517 518 0=180 1=1.000000e-5 2=1
+Reshape                  reshape_844              1 1 518 519 0=180 1=128 2=128
+Slice                    slice_1686               1 2 519 520 521 1=0 -23302=1,4
+Slice                    slice_a_1685             1 2 520 522 523 1=1 -23302=1,4
+Slice                    slice_b_1684             1 2 521 524 525 1=1 -23302=1,4
+Concat                   concat_a_1688            2 1 523 522 526 0=1
+Concat                   concat_b_1687            2 1 525 524 527 0=1
+Concat                   concat_1689              2 1 527 526 528 0=0
+Reshape                  reshape_845              1 1 528 529 0=180 1=128 11=8 2=16
+Permute                  permute_437              1 1 529 530 0=2
+Reshape                  reshape_846              1 1 530 531 0=180 1=8 11=8 2=256
+Permute                  permute_438              1 1 531 532 0=2
+Reshape                  reshape_847              1 1 532 533 0=180 1=64 2=256
+Split                    splitncnn_23             1 3 533 534 535 536
+Reshape                  reshape_848              1 1 536 537 0=180 1=16384
+Gemm                     gemm_42                  1 1 537 538 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_849              1 1 538 539 0=180 1=64 2=256
+Reshape                  reshape_850              1 1 539 540 0=30 1=6 11=64 2=256
+Permute                  permute_439              1 1 540 541 0=2
+Reshape                  reshape_851              1 1 541 542 0=30 1=64 2=1536
+Reshape                  reshape_852              1 1 535 543 0=180 1=16384
+Gemm                     gemm_43                  1 1 543 544 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_853              1 1 544 545 0=180 1=64 2=256
+Reshape                  reshape_854              1 1 545 546 0=30 1=6 11=64 2=256
+Permute                  permute_440              1 1 546 547 0=2
+Reshape                  reshape_855              1 1 547 548 0=30 1=64 2=1536
+Reshape                  reshape_856              1 1 534 549 0=180 1=16384
+Gemm                     gemm_44                  1 1 549 550 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_857              1 1 550 551 0=180 1=64 2=256
+Reshape                  reshape_858              1 1 551 552 0=30 1=6 11=64 2=256
+Permute                  permute_441              1 1 552 553 0=2
+Reshape                  reshape_859              1 1 553 554 0=30 1=64 2=1536
+BinaryOp                 mul_37                   1 1 542 555 0=2 1=1 2=0.182574183
+MatMul                   matmultransb_7           2 1 555 548 556 0=1
+Reshape                  reshape_860              1 1 556 557 0=64 1=64 11=6 2=256
+MemoryData               pnnx_fold_4362           0 1 558 0=64 1=64 11=6 2=1
+BinaryOp                 add_38                   2 1 557 558 559 0=0
+BinaryOp                 add_39                   2 1 559 147 560 0=0
+Reshape                  reshape_861              1 1 560 561 0=64 1=64 2=1536
+Softmax                  softmax_352              1 1 561 562 0=2 1=1
+MatMul                   matmul_1591              2 1 562 554 563
+Reshape                  reshape_862              1 1 563 564 0=30 1=64 11=6 2=256
+Permute                  permute_442              1 1 564 565 0=2
+Reshape                  reshape_863              1 1 565 566 0=180 1=64 2=256
+Reshape                  reshape_864              1 1 566 567 0=180 1=16384
+Gemm                     gemm_45                  1 1 567 568 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_865              1 1 568 569 0=180 1=64 2=256
+Reshape                  reshape_866              1 1 569 570 0=180 1=8 11=8 2=256
+Permute                  permute_443              1 1 570 571 0=2
+Reshape                  reshape_867              1 1 571 572 0=180 1=8 11=128 2=16
+Permute                  permute_444              1 1 572 573 0=2
+Reshape                  reshape_868              1 1 573 574 0=180 1=128 2=128
+Slice                    slice_1692               1 2 574 575 576 1=0 -23302=1,-4
+Slice                    slice_a_1691             1 2 575 577 578 1=1 -23302=1,-4
+Slice                    slice_b_1690             1 2 576 579 580 1=1 -23302=1,-4
+Concat                   concat_a_1694            2 1 578 577 581 0=1
+Concat                   concat_b_1693            2 1 580 579 582 0=1
+Concat                   concat_1695              2 1 582 581 583 0=0
+Reshape                  reshape_869              1 1 583 584 0=180 1=16384
+BinaryOp                 add_40                   2 1 516 584 585 0=0
+Split                    splitncnn_24             1 2 585 586 587
+LayerNorm                ln_283                   1 1 587 588 0=180 1=1.000000e-5 2=1
+Gemm                     gemm_46                  1 1 588 589 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=360 9=180
+GELU                     gelu_238                 1 1 589 590
+Gemm                     gemm_47                  1 1 590 591 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=360
+BinaryOp                 add_41                   2 1 586 591 592 0=0
+Split                    splitncnn_25             1 2 592 593 594
+LayerNorm                ln_284                   1 1 594 595 0=180 1=1.000000e-5 2=1
+Reshape                  reshape_870              1 1 595 596 0=180 1=128 11=8 2=16
+Permute                  permute_445              1 1 596 597 0=2
+Reshape                  reshape_871              1 1 597 598 0=180 1=8 11=8 2=256
+Permute                  permute_446              1 1 598 599 0=2
+Reshape                  reshape_872              1 1 599 600 0=180 1=64 2=256
+Split                    splitncnn_26             1 3 600 601 602 603
+Reshape                  reshape_873              1 1 603 604 0=180 1=16384
+Gemm                     gemm_48                  1 1 604 605 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_874              1 1 605 606 0=180 1=64 2=256
+Reshape                  reshape_875              1 1 606 607 0=30 1=6 11=64 2=256
+Permute                  permute_447              1 1 607 608 0=2
+Reshape                  reshape_876              1 1 608 609 0=30 1=64 2=1536
+Reshape                  reshape_877              1 1 602 610 0=180 1=16384
+Gemm                     gemm_49                  1 1 610 611 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_878              1 1 611 612 0=180 1=64 2=256
+Reshape                  reshape_879              1 1 612 613 0=30 1=6 11=64 2=256
+Permute                  permute_448              1 1 613 614 0=2
+Reshape                  reshape_880              1 1 614 615 0=30 1=64 2=1536
+Reshape                  reshape_881              1 1 601 616 0=180 1=16384
+Gemm                     gemm_50                  1 1 616 617 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_882              1 1 617 618 0=180 1=64 2=256
+Reshape                  reshape_883              1 1 618 619 0=30 1=6 11=64 2=256
+Permute                  permute_449              1 1 619 620 0=2
+Reshape                  reshape_884              1 1 620 621 0=30 1=64 2=1536
+BinaryOp                 mul_42                   1 1 609 622 0=2 1=1 2=0.182574183
+MatMul                   matmultransb_8           2 1 622 615 623 0=1
+Reshape                  reshape_885              1 1 623 624 0=64 1=64 11=6 2=256
+MemoryData               pnnx_fold_4749           0 1 625 0=64 1=64 11=6 2=1
+BinaryOp                 add_43                   2 1 624 625 626 0=0
+BinaryOp                 add_44                   2 1 626 60 627 0=0
+Reshape                  reshape_886              1 1 627 628 0=64 1=64 2=1536
+Softmax                  softmax_353              1 1 628 629 0=2 1=1
+MatMul                   matmul_1593              2 1 629 621 630
+Reshape                  reshape_887              1 1 630 631 0=30 1=64 11=6 2=256
+Permute                  permute_450              1 1 631 632 0=2
+Reshape                  reshape_888              1 1 632 633 0=180 1=64 2=256
+Reshape                  reshape_889              1 1 633 634 0=180 1=16384
+Gemm                     gemm_51                  1 1 634 635 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_890              1 1 635 636 0=180 1=64 2=256
+Reshape                  reshape_891              1 1 636 637 0=180 1=8 11=8 2=256
+Permute                  permute_451              1 1 637 638 0=2
+Reshape                  reshape_892              1 1 638 639 0=180 1=8 11=128 2=16
+Permute                  permute_452              1 1 639 640 0=2
+Reshape                  reshape_893              1 1 640 641 0=180 1=16384
+BinaryOp                 add_45                   2 1 593 641 642 0=0
+Split                    splitncnn_27             1 2 642 643 644
+LayerNorm                ln_285                   1 1 644 645 0=180 1=1.000000e-5 2=1
+Gemm                     gemm_52                  1 1 645 646 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=360 9=180
+GELU                     gelu_239                 1 1 646 647
+Gemm                     gemm_53                  1 1 647 648 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=360
+BinaryOp                 add_46                   2 1 643 648 649 0=0
+Split                    splitncnn_28             1 2 649 650 651
+LayerNorm                ln_286                   1 1 651 652 0=180 1=1.000000e-5 2=1
+Reshape                  reshape_894              1 1 652 653 0=180 1=128 2=128
+Slice                    slice_1698               1 2 653 654 655 1=0 -23302=1,4
+Slice                    slice_a_1697             1 2 654 656 657 1=1 -23302=1,4
+Slice                    slice_b_1696             1 2 655 658 659 1=1 -23302=1,4
+Concat                   concat_a_1700            2 1 657 656 660 0=1
+Concat                   concat_b_1699            2 1 659 658 661 0=1
+Concat                   concat_1701              2 1 661 660 662 0=0
+Reshape                  reshape_895              1 1 662 663 0=180 1=128 11=8 2=16
+Permute                  permute_453              1 1 663 664 0=2
+Reshape                  reshape_896              1 1 664 665 0=180 1=8 11=8 2=256
+Permute                  permute_454              1 1 665 666 0=2
+Reshape                  reshape_897              1 1 666 667 0=180 1=64 2=256
+Split                    splitncnn_29             1 3 667 668 669 670
+Reshape                  reshape_898              1 1 670 671 0=180 1=16384
+Gemm                     gemm_54                  1 1 671 672 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_899              1 1 672 673 0=180 1=64 2=256
+Reshape                  reshape_900              1 1 673 674 0=30 1=6 11=64 2=256
+Permute                  permute_455              1 1 674 675 0=2
+Reshape                  reshape_901              1 1 675 676 0=30 1=64 2=1536
+Reshape                  reshape_902              1 1 669 677 0=180 1=16384
+Gemm                     gemm_55                  1 1 677 678 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_903              1 1 678 679 0=180 1=64 2=256
+Reshape                  reshape_904              1 1 679 680 0=30 1=6 11=64 2=256
+Permute                  permute_456              1 1 680 681 0=2
+Reshape                  reshape_905              1 1 681 682 0=30 1=64 2=1536
+Reshape                  reshape_906              1 1 668 683 0=180 1=16384
+Gemm                     gemm_56                  1 1 683 684 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_907              1 1 684 685 0=180 1=64 2=256
+Reshape                  reshape_908              1 1 685 686 0=30 1=6 11=64 2=256
+Permute                  permute_457              1 1 686 687 0=2
+Reshape                  reshape_909              1 1 687 688 0=30 1=64 2=1536
+BinaryOp                 mul_47                   1 1 676 689 0=2 1=1 2=0.182574183
+MatMul                   matmultransb_9           2 1 689 682 690 0=1
+Reshape                  reshape_910              1 1 690 691 0=64 1=64 11=6 2=256
+MemoryData               pnnx_fold_5137           0 1 692 0=64 1=64 11=6 2=1
+BinaryOp                 add_48                   2 1 691 692 693 0=0
+BinaryOp                 add_49                   2 1 693 146 694 0=0
+Reshape                  reshape_911              1 1 694 695 0=64 1=64 2=1536
+Softmax                  softmax_354              1 1 695 696 0=2 1=1
+MatMul                   matmul_1595              2 1 696 688 697
+Reshape                  reshape_912              1 1 697 698 0=30 1=64 11=6 2=256
+Permute                  permute_458              1 1 698 699 0=2
+Reshape                  reshape_913              1 1 699 700 0=180 1=64 2=256
+Reshape                  reshape_914              1 1 700 701 0=180 1=16384
+Gemm                     gemm_57                  1 1 701 702 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_915              1 1 702 703 0=180 1=64 2=256
+Reshape                  reshape_916              1 1 703 704 0=180 1=8 11=8 2=256
+Permute                  permute_459              1 1 704 705 0=2
+Reshape                  reshape_917              1 1 705 706 0=180 1=8 11=128 2=16
+Permute                  permute_460              1 1 706 707 0=2
+Reshape                  reshape_918              1 1 707 708 0=180 1=128 2=128
+Slice                    slice_1704               1 2 708 709 710 1=0 -23302=1,-4
+Slice                    slice_a_1703             1 2 709 711 712 1=1 -23302=1,-4
+Slice                    slice_b_1702             1 2 710 713 714 1=1 -23302=1,-4
+Concat                   concat_a_1706            2 1 712 711 715 0=1
+Concat                   concat_b_1705            2 1 714 713 716 0=1
+Concat                   concat_1707              2 1 716 715 717 0=0
+Reshape                  reshape_919              1 1 717 718 0=180 1=16384
+BinaryOp                 add_50                   2 1 650 718 719 0=0
+Split                    splitncnn_30             1 2 719 720 721
+LayerNorm                ln_287                   1 1 721 722 0=180 1=1.000000e-5 2=1
+Gemm                     gemm_58                  1 1 722 723 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=360 9=180
+GELU                     gelu_240                 1 1 723 724
+Gemm                     gemm_59                  1 1 724 725 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=360
+BinaryOp                 add_51                   2 1 720 725 726 0=0
+Split                    splitncnn_31             1 2 726 727 728
+LayerNorm                ln_288                   1 1 728 729 0=180 1=1.000000e-5 2=1
+Reshape                  reshape_920              1 1 729 730 0=180 1=128 11=8 2=16
+Permute                  permute_461              1 1 730 731 0=2
+Reshape                  reshape_921              1 1 731 732 0=180 1=8 11=8 2=256
+Permute                  permute_462              1 1 732 733 0=2
+Reshape                  reshape_922              1 1 733 734 0=180 1=64 2=256
+Split                    splitncnn_32             1 3 734 735 736 737
+Reshape                  reshape_923              1 1 737 738 0=180 1=16384
+Gemm                     gemm_60                  1 1 738 739 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_924              1 1 739 740 0=180 1=64 2=256
+Reshape                  reshape_925              1 1 740 741 0=30 1=6 11=64 2=256
+Permute                  permute_463              1 1 741 742 0=2
+Reshape                  reshape_926              1 1 742 743 0=30 1=64 2=1536
+Reshape                  reshape_927              1 1 736 744 0=180 1=16384
+Gemm                     gemm_61                  1 1 744 745 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_928              1 1 745 746 0=180 1=64 2=256
+Reshape                  reshape_929              1 1 746 747 0=30 1=6 11=64 2=256
+Permute                  permute_464              1 1 747 748 0=2
+Reshape                  reshape_930              1 1 748 749 0=30 1=64 2=1536
+Reshape                  reshape_931              1 1 735 750 0=180 1=16384
+Gemm                     gemm_62                  1 1 750 751 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_932              1 1 751 752 0=180 1=64 2=256
+Reshape                  reshape_933              1 1 752 753 0=30 1=6 11=64 2=256
+Permute                  permute_465              1 1 753 754 0=2
+Reshape                  reshape_934              1 1 754 755 0=30 1=64 2=1536
+BinaryOp                 mul_52                   1 1 743 756 0=2 1=1 2=0.182574183
+MatMul                   matmultransb_10          2 1 756 749 757 0=1
+Reshape                  reshape_935              1 1 757 758 0=64 1=64 11=6 2=256
+MemoryData               pnnx_fold_5524           0 1 759 0=64 1=64 11=6 2=1
+BinaryOp                 add_53                   2 1 758 759 760 0=0
+BinaryOp                 add_54                   2 1 760 59 761 0=0
+Reshape                  reshape_936              1 1 761 762 0=64 1=64 2=1536
+Softmax                  softmax_355              1 1 762 763 0=2 1=1
+MatMul                   matmul_1597              2 1 763 755 764
+Reshape                  reshape_937              1 1 764 765 0=30 1=64 11=6 2=256
+Permute                  permute_466              1 1 765 766 0=2
+Reshape                  reshape_938              1 1 766 767 0=180 1=64 2=256
+Reshape                  reshape_939              1 1 767 768 0=180 1=16384
+Gemm                     gemm_63                  1 1 768 769 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_940              1 1 769 770 0=180 1=64 2=256
+Reshape                  reshape_941              1 1 770 771 0=180 1=8 11=8 2=256
+Permute                  permute_467              1 1 771 772 0=2
+Reshape                  reshape_942              1 1 772 773 0=180 1=8 11=128 2=16
+Permute                  permute_468              1 1 773 774 0=2
+Reshape                  reshape_943              1 1 774 775 0=180 1=16384
+BinaryOp                 add_55                   2 1 727 775 776 0=0
+Split                    splitncnn_33             1 2 776 777 778
+LayerNorm                ln_289                   1 1 778 779 0=180 1=1.000000e-5 2=1
+Gemm                     gemm_64                  1 1 779 780 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=360 9=180
+GELU                     gelu_241                 1 1 780 781
+Gemm                     gemm_65                  1 1 781 782 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=360
+BinaryOp                 add_56                   2 1 777 782 783 0=0
+Split                    splitncnn_34             1 2 783 784 785
+LayerNorm                ln_290                   1 1 785 786 0=180 1=1.000000e-5 2=1
+Reshape                  reshape_944              1 1 786 787 0=180 1=128 2=128
+Slice                    slice_1710               1 2 787 788 789 1=0 -23302=1,4
+Slice                    slice_a_1709             1 2 788 790 791 1=1 -23302=1,4
+Slice                    slice_b_1708             1 2 789 792 793 1=1 -23302=1,4
+Concat                   concat_a_1712            2 1 791 790 794 0=1
+Concat                   concat_b_1711            2 1 793 792 795 0=1
+Concat                   concat_1713              2 1 795 794 796 0=0
+Reshape                  reshape_945              1 1 796 797 0=180 1=128 11=8 2=16
+Permute                  permute_469              1 1 797 798 0=2
+Reshape                  reshape_946              1 1 798 799 0=180 1=8 11=8 2=256
+Permute                  permute_470              1 1 799 800 0=2
+Reshape                  reshape_947              1 1 800 801 0=180 1=64 2=256
+Split                    splitncnn_35             1 3 801 802 803 804
+Reshape                  reshape_948              1 1 804 805 0=180 1=16384
+Gemm                     gemm_66                  1 1 805 806 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_949              1 1 806 807 0=180 1=64 2=256
+Reshape                  reshape_950              1 1 807 808 0=30 1=6 11=64 2=256
+Permute                  permute_471              1 1 808 809 0=2
+Reshape                  reshape_951              1 1 809 810 0=30 1=64 2=1536
+Reshape                  reshape_952              1 1 803 811 0=180 1=16384
+Gemm                     gemm_67                  1 1 811 812 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_953              1 1 812 813 0=180 1=64 2=256
+Reshape                  reshape_954              1 1 813 814 0=30 1=6 11=64 2=256
+Permute                  permute_472              1 1 814 815 0=2
+Reshape                  reshape_955              1 1 815 816 0=30 1=64 2=1536
+Reshape                  reshape_956              1 1 802 817 0=180 1=16384
+Gemm                     gemm_68                  1 1 817 818 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_957              1 1 818 819 0=180 1=64 2=256
+Reshape                  reshape_958              1 1 819 820 0=30 1=6 11=64 2=256
+Permute                  permute_473              1 1 820 821 0=2
+Reshape                  reshape_959              1 1 821 822 0=30 1=64 2=1536
+BinaryOp                 mul_57                   1 1 810 823 0=2 1=1 2=0.182574183
+MatMul                   matmultransb_11          2 1 823 816 824 0=1
+Reshape                  reshape_960              1 1 824 825 0=64 1=64 11=6 2=256
+MemoryData               pnnx_fold_5912           0 1 826 0=64 1=64 11=6 2=1
+BinaryOp                 add_58                   2 1 825 826 827 0=0
+BinaryOp                 add_59                   2 1 827 145 828 0=0
+Reshape                  reshape_961              1 1 828 829 0=64 1=64 2=1536
+Softmax                  softmax_356              1 1 829 830 0=2 1=1
+MatMul                   matmul_1599              2 1 830 822 831
+Reshape                  reshape_962              1 1 831 832 0=30 1=64 11=6 2=256
+Permute                  permute_474              1 1 832 833 0=2
+Reshape                  reshape_963              1 1 833 834 0=180 1=64 2=256
+Reshape                  reshape_964              1 1 834 835 0=180 1=16384
+Gemm                     gemm_69                  1 1 835 836 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_965              1 1 836 837 0=180 1=64 2=256
+Reshape                  reshape_966              1 1 837 838 0=180 1=8 11=8 2=256
+Permute                  permute_475              1 1 838 839 0=2
+Reshape                  reshape_967              1 1 839 840 0=180 1=8 11=128 2=16
+Permute                  permute_476              1 1 840 841 0=2
+Reshape                  reshape_968              1 1 841 842 0=180 1=128 2=128
+Slice                    slice_1716               1 2 842 843 844 1=0 -23302=1,-4
+Slice                    slice_a_1715             1 2 843 845 846 1=1 -23302=1,-4
+Slice                    slice_b_1714             1 2 844 847 848 1=1 -23302=1,-4
+Concat                   concat_a_1718            2 1 846 845 849 0=1
+Concat                   concat_b_1717            2 1 848 847 850 0=1
+Concat                   concat_1719              2 1 850 849 851 0=0
+Reshape                  reshape_969              1 1 851 852 0=180 1=16384
+BinaryOp                 add_60                   2 1 784 852 853 0=0
+Split                    splitncnn_36             1 2 853 854 855
+LayerNorm                ln_291                   1 1 855 856 0=180 1=1.000000e-5 2=1
+Gemm                     gemm_70                  1 1 856 857 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=360 9=180
+GELU                     gelu_242                 1 1 857 858
+Gemm                     gemm_71                  1 1 858 859 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=360
+BinaryOp                 add_61                   2 1 854 859 860 0=0
+Permute                  transpose_1879           1 1 860 861 0=1
+Reshape                  reshape_970              1 1 861 862 0=128 1=128 2=180
+Convolution              conv_220                 1 1 862 863 0=180 1=3 11=3 12=1 13=1 14=1 2=1 3=1 4=1 5=1 6=291600
+Reshape                  flatten_1916             1 1 863 864 0=16384 1=180
+Permute                  transpose_1880           1 1 864 865 0=1
+BinaryOp                 add_62                   2 1 865 459 866 0=0
+Split                    splitncnn_37             1 3 866 867 868 869
+LayerNorm                ln_292                   1 1 869 870 0=180 1=1.000000e-5 2=1
+Reshape                  reshape_971              1 1 870 871 0=180 1=128 11=8 2=16
+Permute                  permute_477              1 1 871 872 0=2
+Reshape                  reshape_972              1 1 872 873 0=180 1=8 11=8 2=256
+Permute                  permute_478              1 1 873 874 0=2
+Reshape                  reshape_973              1 1 874 875 0=180 1=64 2=256
+Split                    splitncnn_38             1 3 875 876 877 878
+Reshape                  reshape_974              1 1 878 879 0=180 1=16384
+Gemm                     gemm_72                  1 1 879 880 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_975              1 1 880 881 0=180 1=64 2=256
+Reshape                  reshape_976              1 1 881 882 0=30 1=6 11=64 2=256
+Permute                  permute_479              1 1 882 883 0=2
+Reshape                  reshape_977              1 1 883 884 0=30 1=64 2=1536
+Reshape                  reshape_978              1 1 877 885 0=180 1=16384
+Gemm                     gemm_73                  1 1 885 886 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_979              1 1 886 887 0=180 1=64 2=256
+Reshape                  reshape_980              1 1 887 888 0=30 1=6 11=64 2=256
+Permute                  permute_480              1 1 888 889 0=2
+Reshape                  reshape_981              1 1 889 890 0=30 1=64 2=1536
+Reshape                  reshape_982              1 1 876 891 0=180 1=16384
+Gemm                     gemm_74                  1 1 891 892 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_983              1 1 892 893 0=180 1=64 2=256
+Reshape                  reshape_984              1 1 893 894 0=30 1=6 11=64 2=256
+Permute                  permute_481              1 1 894 895 0=2
+Reshape                  reshape_985              1 1 895 896 0=30 1=64 2=1536
+BinaryOp                 mul_63                   1 1 884 897 0=2 1=1 2=0.182574183
+MatMul                   matmultransb_12          2 1 897 890 898 0=1
+Reshape                  reshape_986              1 1 898 899 0=64 1=64 11=6 2=256
+MemoryData               pnnx_fold_6333           0 1 900 0=64 1=64 11=6 2=1
+BinaryOp                 add_64                   2 1 899 900 901 0=0
+BinaryOp                 add_65                   2 1 901 58 902 0=0
+Reshape                  reshape_987              1 1 902 903 0=64 1=64 2=1536
+Softmax                  softmax_357              1 1 903 904 0=2 1=1
+MatMul                   matmul_1601              2 1 904 896 905
+Reshape                  reshape_988              1 1 905 906 0=30 1=64 11=6 2=256
+Permute                  permute_482              1 1 906 907 0=2
+Reshape                  reshape_989              1 1 907 908 0=180 1=64 2=256
+Reshape                  reshape_990              1 1 908 909 0=180 1=16384
+Gemm                     gemm_75                  1 1 909 910 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_991              1 1 910 911 0=180 1=64 2=256
+Reshape                  reshape_992              1 1 911 912 0=180 1=8 11=8 2=256
+Permute                  permute_483              1 1 912 913 0=2
+Reshape                  reshape_993              1 1 913 914 0=180 1=8 11=128 2=16
+Permute                  permute_484              1 1 914 915 0=2
+Reshape                  reshape_994              1 1 915 916 0=180 1=16384
+BinaryOp                 add_66                   2 1 867 916 917 0=0
+Split                    splitncnn_39             1 2 917 918 919
+LayerNorm                ln_293                   1 1 919 920 0=180 1=1.000000e-5 2=1
+Gemm                     gemm_76                  1 1 920 921 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=360 9=180
+GELU                     gelu_243                 1 1 921 922
+Gemm                     gemm_77                  1 1 922 923 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=360
+BinaryOp                 add_67                   2 1 918 923 924 0=0
+Split                    splitncnn_40             1 2 924 925 926
+LayerNorm                ln_294                   1 1 926 927 0=180 1=1.000000e-5 2=1
+Reshape                  reshape_995              1 1 927 928 0=180 1=128 2=128
+Slice                    slice_1722               1 2 928 929 930 1=0 -23302=1,4
+Slice                    slice_a_1721             1 2 929 931 932 1=1 -23302=1,4
+Slice                    slice_b_1720             1 2 930 933 934 1=1 -23302=1,4
+Concat                   concat_a_1724            2 1 932 931 935 0=1
+Concat                   concat_b_1723            2 1 934 933 936 0=1
+Concat                   concat_1725              2 1 936 935 937 0=0
+Reshape                  reshape_996              1 1 937 938 0=180 1=128 11=8 2=16
+Permute                  permute_485              1 1 938 939 0=2
+Reshape                  reshape_997              1 1 939 940 0=180 1=8 11=8 2=256
+Permute                  permute_486              1 1 940 941 0=2
+Reshape                  reshape_998              1 1 941 942 0=180 1=64 2=256
+Split                    splitncnn_41             1 3 942 943 944 945
+Reshape                  reshape_999              1 1 945 946 0=180 1=16384
+Gemm                     gemm_78                  1 1 946 947 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1000             1 1 947 948 0=180 1=64 2=256
+Reshape                  reshape_1001             1 1 948 949 0=30 1=6 11=64 2=256
+Permute                  permute_487              1 1 949 950 0=2
+Reshape                  reshape_1002             1 1 950 951 0=30 1=64 2=1536
+Reshape                  reshape_1003             1 1 944 952 0=180 1=16384
+Gemm                     gemm_79                  1 1 952 953 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1004             1 1 953 954 0=180 1=64 2=256
+Reshape                  reshape_1005             1 1 954 955 0=30 1=6 11=64 2=256
+Permute                  permute_488              1 1 955 956 0=2
+Reshape                  reshape_1006             1 1 956 957 0=30 1=64 2=1536
+Reshape                  reshape_1007             1 1 943 958 0=180 1=16384
+Gemm                     gemm_80                  1 1 958 959 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1008             1 1 959 960 0=180 1=64 2=256
+Reshape                  reshape_1009             1 1 960 961 0=30 1=6 11=64 2=256
+Permute                  permute_489              1 1 961 962 0=2
+Reshape                  reshape_1010             1 1 962 963 0=30 1=64 2=1536
+BinaryOp                 mul_68                   1 1 951 964 0=2 1=1 2=0.182574183
+MatMul                   matmultransb_13          2 1 964 957 965 0=1
+Reshape                  reshape_1011             1 1 965 966 0=64 1=64 11=6 2=256
+MemoryData               pnnx_fold_6721           0 1 967 0=64 1=64 11=6 2=1
+BinaryOp                 add_69                   2 1 966 967 968 0=0
+BinaryOp                 add_70                   2 1 968 144 969 0=0
+Reshape                  reshape_1012             1 1 969 970 0=64 1=64 2=1536
+Softmax                  softmax_358              1 1 970 971 0=2 1=1
+MatMul                   matmul_1603              2 1 971 963 972
+Reshape                  reshape_1013             1 1 972 973 0=30 1=64 11=6 2=256
+Permute                  permute_490              1 1 973 974 0=2
+Reshape                  reshape_1014             1 1 974 975 0=180 1=64 2=256
+Reshape                  reshape_1015             1 1 975 976 0=180 1=16384
+Gemm                     gemm_81                  1 1 976 977 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1016             1 1 977 978 0=180 1=64 2=256
+Reshape                  reshape_1017             1 1 978 979 0=180 1=8 11=8 2=256
+Permute                  permute_491              1 1 979 980 0=2
+Reshape                  reshape_1018             1 1 980 981 0=180 1=8 11=128 2=16
+Permute                  permute_492              1 1 981 982 0=2
+Reshape                  reshape_1019             1 1 982 983 0=180 1=128 2=128
+Slice                    slice_1728               1 2 983 984 985 1=0 -23302=1,-4
+Slice                    slice_a_1727             1 2 984 986 987 1=1 -23302=1,-4
+Slice                    slice_b_1726             1 2 985 988 989 1=1 -23302=1,-4
+Concat                   concat_a_1730            2 1 987 986 990 0=1
+Concat                   concat_b_1729            2 1 989 988 991 0=1
+Concat                   concat_1731              2 1 991 990 992 0=0
+Reshape                  reshape_1020             1 1 992 993 0=180 1=16384
+BinaryOp                 add_71                   2 1 925 993 994 0=0
+Split                    splitncnn_42             1 2 994 995 996
+LayerNorm                ln_295                   1 1 996 997 0=180 1=1.000000e-5 2=1
+Gemm                     gemm_82                  1 1 997 998 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=360 9=180
+GELU                     gelu_244                 1 1 998 999
+Gemm                     gemm_83                  1 1 999 1000 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=360
+BinaryOp                 add_72                   2 1 995 1000 1001 0=0
+Split                    splitncnn_43             1 2 1001 1002 1003
+LayerNorm                ln_296                   1 1 1003 1004 0=180 1=1.000000e-5 2=1
+Reshape                  reshape_1021             1 1 1004 1005 0=180 1=128 11=8 2=16
+Permute                  permute_493              1 1 1005 1006 0=2
+Reshape                  reshape_1022             1 1 1006 1007 0=180 1=8 11=8 2=256
+Permute                  permute_494              1 1 1007 1008 0=2
+Reshape                  reshape_1023             1 1 1008 1009 0=180 1=64 2=256
+Split                    splitncnn_44             1 3 1009 1010 1011 1012
+Reshape                  reshape_1024             1 1 1012 1013 0=180 1=16384
+Gemm                     gemm_84                  1 1 1013 1014 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1025             1 1 1014 1015 0=180 1=64 2=256
+Reshape                  reshape_1026             1 1 1015 1016 0=30 1=6 11=64 2=256
+Permute                  permute_495              1 1 1016 1017 0=2
+Reshape                  reshape_1027             1 1 1017 1018 0=30 1=64 2=1536
+Reshape                  reshape_1028             1 1 1011 1019 0=180 1=16384
+Gemm                     gemm_85                  1 1 1019 1020 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1029             1 1 1020 1021 0=180 1=64 2=256
+Reshape                  reshape_1030             1 1 1021 1022 0=30 1=6 11=64 2=256
+Permute                  permute_496              1 1 1022 1023 0=2
+Reshape                  reshape_1031             1 1 1023 1024 0=30 1=64 2=1536
+Reshape                  reshape_1032             1 1 1010 1025 0=180 1=16384
+Gemm                     gemm_86                  1 1 1025 1026 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1033             1 1 1026 1027 0=180 1=64 2=256
+Reshape                  reshape_1034             1 1 1027 1028 0=30 1=6 11=64 2=256
+Permute                  permute_497              1 1 1028 1029 0=2
+Reshape                  reshape_1035             1 1 1029 1030 0=30 1=64 2=1536
+BinaryOp                 mul_73                   1 1 1018 1031 0=2 1=1 2=0.182574183
+MatMul                   matmultransb_14          2 1 1031 1024 1032 0=1
+Reshape                  reshape_1036             1 1 1032 1033 0=64 1=64 11=6 2=256
+MemoryData               pnnx_fold_7108           0 1 1034 0=64 1=64 11=6 2=1
+BinaryOp                 add_74                   2 1 1033 1034 1035 0=0
+BinaryOp                 add_75                   2 1 1035 57 1036 0=0
+Reshape                  reshape_1037             1 1 1036 1037 0=64 1=64 2=1536
+Softmax                  softmax_359              1 1 1037 1038 0=2 1=1
+MatMul                   matmul_1605              2 1 1038 1030 1039
+Reshape                  reshape_1038             1 1 1039 1040 0=30 1=64 11=6 2=256
+Permute                  permute_498              1 1 1040 1041 0=2
+Reshape                  reshape_1039             1 1 1041 1042 0=180 1=64 2=256
+Reshape                  reshape_1040             1 1 1042 1043 0=180 1=16384
+Gemm                     gemm_87                  1 1 1043 1044 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1041             1 1 1044 1045 0=180 1=64 2=256
+Reshape                  reshape_1042             1 1 1045 1046 0=180 1=8 11=8 2=256
+Permute                  permute_499              1 1 1046 1047 0=2
+Reshape                  reshape_1043             1 1 1047 1048 0=180 1=8 11=128 2=16
+Permute                  permute_500              1 1 1048 1049 0=2
+Reshape                  reshape_1044             1 1 1049 1050 0=180 1=16384
+BinaryOp                 add_76                   2 1 1002 1050 1051 0=0
+Split                    splitncnn_45             1 2 1051 1052 1053
+LayerNorm                ln_297                   1 1 1053 1054 0=180 1=1.000000e-5 2=1
+Gemm                     gemm_88                  1 1 1054 1055 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=360 9=180
+GELU                     gelu_245                 1 1 1055 1056
+Gemm                     gemm_89                  1 1 1056 1057 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=360
+BinaryOp                 add_77                   2 1 1052 1057 1058 0=0
+Split                    splitncnn_46             1 2 1058 1059 1060
+LayerNorm                ln_298                   1 1 1060 1061 0=180 1=1.000000e-5 2=1
+Reshape                  reshape_1045             1 1 1061 1062 0=180 1=128 2=128
+Slice                    slice_1734               1 2 1062 1063 1064 1=0 -23302=1,4
+Slice                    slice_a_1733             1 2 1063 1065 1066 1=1 -23302=1,4
+Slice                    slice_b_1732             1 2 1064 1067 1068 1=1 -23302=1,4
+Concat                   concat_a_1736            2 1 1066 1065 1069 0=1
+Concat                   concat_b_1735            2 1 1068 1067 1070 0=1
+Concat                   concat_1737              2 1 1070 1069 1071 0=0
+Reshape                  reshape_1046             1 1 1071 1072 0=180 1=128 11=8 2=16
+Permute                  permute_501              1 1 1072 1073 0=2
+Reshape                  reshape_1047             1 1 1073 1074 0=180 1=8 11=8 2=256
+Permute                  permute_502              1 1 1074 1075 0=2
+Reshape                  reshape_1048             1 1 1075 1076 0=180 1=64 2=256
+Split                    splitncnn_47             1 3 1076 1077 1078 1079
+Reshape                  reshape_1049             1 1 1079 1080 0=180 1=16384
+Gemm                     gemm_90                  1 1 1080 1081 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1050             1 1 1081 1082 0=180 1=64 2=256
+Reshape                  reshape_1051             1 1 1082 1083 0=30 1=6 11=64 2=256
+Permute                  permute_503              1 1 1083 1084 0=2
+Reshape                  reshape_1052             1 1 1084 1085 0=30 1=64 2=1536
+Reshape                  reshape_1053             1 1 1078 1086 0=180 1=16384
+Gemm                     gemm_91                  1 1 1086 1087 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1054             1 1 1087 1088 0=180 1=64 2=256
+Reshape                  reshape_1055             1 1 1088 1089 0=30 1=6 11=64 2=256
+Permute                  permute_504              1 1 1089 1090 0=2
+Reshape                  reshape_1056             1 1 1090 1091 0=30 1=64 2=1536
+Reshape                  reshape_1057             1 1 1077 1092 0=180 1=16384
+Gemm                     gemm_92                  1 1 1092 1093 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1058             1 1 1093 1094 0=180 1=64 2=256
+Reshape                  reshape_1059             1 1 1094 1095 0=30 1=6 11=64 2=256
+Permute                  permute_505              1 1 1095 1096 0=2
+Reshape                  reshape_1060             1 1 1096 1097 0=30 1=64 2=1536
+BinaryOp                 mul_78                   1 1 1085 1098 0=2 1=1 2=0.182574183
+MatMul                   matmultransb_15          2 1 1098 1091 1099 0=1
+Reshape                  reshape_1061             1 1 1099 1100 0=64 1=64 11=6 2=256
+MemoryData               pnnx_fold_7496           0 1 1101 0=64 1=64 11=6 2=1
+BinaryOp                 add_79                   2 1 1100 1101 1102 0=0
+BinaryOp                 add_80                   2 1 1102 143 1103 0=0
+Reshape                  reshape_1062             1 1 1103 1104 0=64 1=64 2=1536
+Softmax                  softmax_360              1 1 1104 1105 0=2 1=1
+MatMul                   matmul_1607              2 1 1105 1097 1106
+Reshape                  reshape_1063             1 1 1106 1107 0=30 1=64 11=6 2=256
+Permute                  permute_506              1 1 1107 1108 0=2
+Reshape                  reshape_1064             1 1 1108 1109 0=180 1=64 2=256
+Reshape                  reshape_1065             1 1 1109 1110 0=180 1=16384
+Gemm                     gemm_93                  1 1 1110 1111 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1066             1 1 1111 1112 0=180 1=64 2=256
+Reshape                  reshape_1067             1 1 1112 1113 0=180 1=8 11=8 2=256
+Permute                  permute_507              1 1 1113 1114 0=2
+Reshape                  reshape_1068             1 1 1114 1115 0=180 1=8 11=128 2=16
+Permute                  permute_508              1 1 1115 1116 0=2
+Reshape                  reshape_1069             1 1 1116 1117 0=180 1=128 2=128
+Slice                    slice_1740               1 2 1117 1118 1119 1=0 -23302=1,-4
+Slice                    slice_a_1739             1 2 1118 1120 1121 1=1 -23302=1,-4
+Slice                    slice_b_1738             1 2 1119 1122 1123 1=1 -23302=1,-4
+Concat                   concat_a_1742            2 1 1121 1120 1124 0=1
+Concat                   concat_b_1741            2 1 1123 1122 1125 0=1
+Concat                   concat_1743              2 1 1125 1124 1126 0=0
+Reshape                  reshape_1070             1 1 1126 1127 0=180 1=16384
+BinaryOp                 add_81                   2 1 1059 1127 1128 0=0
+Split                    splitncnn_48             1 2 1128 1129 1130
+LayerNorm                ln_299                   1 1 1130 1131 0=180 1=1.000000e-5 2=1
+Gemm                     gemm_94                  1 1 1131 1132 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=360 9=180
+GELU                     gelu_246                 1 1 1132 1133
+Gemm                     gemm_95                  1 1 1133 1134 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=360
+BinaryOp                 add_82                   2 1 1129 1134 1135 0=0
+Split                    splitncnn_49             1 2 1135 1136 1137
+LayerNorm                ln_300                   1 1 1137 1138 0=180 1=1.000000e-5 2=1
+Reshape                  reshape_1071             1 1 1138 1139 0=180 1=128 11=8 2=16
+Permute                  permute_509              1 1 1139 1140 0=2
+Reshape                  reshape_1072             1 1 1140 1141 0=180 1=8 11=8 2=256
+Permute                  permute_510              1 1 1141 1142 0=2
+Reshape                  reshape_1073             1 1 1142 1143 0=180 1=64 2=256
+Split                    splitncnn_50             1 3 1143 1144 1145 1146
+Reshape                  reshape_1074             1 1 1146 1147 0=180 1=16384
+Gemm                     gemm_96                  1 1 1147 1148 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1075             1 1 1148 1149 0=180 1=64 2=256
+Reshape                  reshape_1076             1 1 1149 1150 0=30 1=6 11=64 2=256
+Permute                  permute_511              1 1 1150 1151 0=2
+Reshape                  reshape_1077             1 1 1151 1152 0=30 1=64 2=1536
+Reshape                  reshape_1078             1 1 1145 1153 0=180 1=16384
+Gemm                     gemm_97                  1 1 1153 1154 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1079             1 1 1154 1155 0=180 1=64 2=256
+Reshape                  reshape_1080             1 1 1155 1156 0=30 1=6 11=64 2=256
+Permute                  permute_512              1 1 1156 1157 0=2
+Reshape                  reshape_1081             1 1 1157 1158 0=30 1=64 2=1536
+Reshape                  reshape_1082             1 1 1144 1159 0=180 1=16384
+Gemm                     gemm_98                  1 1 1159 1160 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1083             1 1 1160 1161 0=180 1=64 2=256
+Reshape                  reshape_1084             1 1 1161 1162 0=30 1=6 11=64 2=256
+Permute                  permute_513              1 1 1162 1163 0=2
+Reshape                  reshape_1085             1 1 1163 1164 0=30 1=64 2=1536
+BinaryOp                 mul_83                   1 1 1152 1165 0=2 1=1 2=0.182574183
+MatMul                   matmultransb_16          2 1 1165 1158 1166 0=1
+Reshape                  reshape_1086             1 1 1166 1167 0=64 1=64 11=6 2=256
+MemoryData               pnnx_fold_7883           0 1 1168 0=64 1=64 11=6 2=1
+BinaryOp                 add_84                   2 1 1167 1168 1169 0=0
+BinaryOp                 add_85                   2 1 1169 56 1170 0=0
+Reshape                  reshape_1087             1 1 1170 1171 0=64 1=64 2=1536
+Softmax                  softmax_361              1 1 1171 1172 0=2 1=1
+MatMul                   matmul_1609              2 1 1172 1164 1173
+Reshape                  reshape_1088             1 1 1173 1174 0=30 1=64 11=6 2=256
+Permute                  permute_514              1 1 1174 1175 0=2
+Reshape                  reshape_1089             1 1 1175 1176 0=180 1=64 2=256
+Reshape                  reshape_1090             1 1 1176 1177 0=180 1=16384
+Gemm                     gemm_99                  1 1 1177 1178 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1091             1 1 1178 1179 0=180 1=64 2=256
+Reshape                  reshape_1092             1 1 1179 1180 0=180 1=8 11=8 2=256
+Permute                  permute_515              1 1 1180 1181 0=2
+Reshape                  reshape_1093             1 1 1181 1182 0=180 1=8 11=128 2=16
+Permute                  permute_516              1 1 1182 1183 0=2
+Reshape                  reshape_1094             1 1 1183 1184 0=180 1=16384
+BinaryOp                 add_86                   2 1 1136 1184 1185 0=0
+Split                    splitncnn_51             1 2 1185 1186 1187
+LayerNorm                ln_301                   1 1 1187 1188 0=180 1=1.000000e-5 2=1
+Gemm                     gemm_100                 1 1 1188 1189 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=360 9=180
+GELU                     gelu_247                 1 1 1189 1190
+Gemm                     gemm_101                 1 1 1190 1191 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=360
+BinaryOp                 add_87                   2 1 1186 1191 1192 0=0
+Split                    splitncnn_52             1 2 1192 1193 1194
+LayerNorm                ln_302                   1 1 1194 1195 0=180 1=1.000000e-5 2=1
+Reshape                  reshape_1095             1 1 1195 1196 0=180 1=128 2=128
+Slice                    slice_1746               1 2 1196 1197 1198 1=0 -23302=1,4
+Slice                    slice_a_1745             1 2 1197 1199 1200 1=1 -23302=1,4
+Slice                    slice_b_1744             1 2 1198 1201 1202 1=1 -23302=1,4
+Concat                   concat_a_1748            2 1 1200 1199 1203 0=1
+Concat                   concat_b_1747            2 1 1202 1201 1204 0=1
+Concat                   concat_1749              2 1 1204 1203 1205 0=0
+Reshape                  reshape_1096             1 1 1205 1206 0=180 1=128 11=8 2=16
+Permute                  permute_517              1 1 1206 1207 0=2
+Reshape                  reshape_1097             1 1 1207 1208 0=180 1=8 11=8 2=256
+Permute                  permute_518              1 1 1208 1209 0=2
+Reshape                  reshape_1098             1 1 1209 1210 0=180 1=64 2=256
+Split                    splitncnn_53             1 3 1210 1211 1212 1213
+Reshape                  reshape_1099             1 1 1213 1214 0=180 1=16384
+Gemm                     gemm_102                 1 1 1214 1215 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1100             1 1 1215 1216 0=180 1=64 2=256
+Reshape                  reshape_1101             1 1 1216 1217 0=30 1=6 11=64 2=256
+Permute                  permute_519              1 1 1217 1218 0=2
+Reshape                  reshape_1102             1 1 1218 1219 0=30 1=64 2=1536
+Reshape                  reshape_1103             1 1 1212 1220 0=180 1=16384
+Gemm                     gemm_103                 1 1 1220 1221 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1104             1 1 1221 1222 0=180 1=64 2=256
+Reshape                  reshape_1105             1 1 1222 1223 0=30 1=6 11=64 2=256
+Permute                  permute_520              1 1 1223 1224 0=2
+Reshape                  reshape_1106             1 1 1224 1225 0=30 1=64 2=1536
+Reshape                  reshape_1107             1 1 1211 1226 0=180 1=16384
+Gemm                     gemm_104                 1 1 1226 1227 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1108             1 1 1227 1228 0=180 1=64 2=256
+Reshape                  reshape_1109             1 1 1228 1229 0=30 1=6 11=64 2=256
+Permute                  permute_521              1 1 1229 1230 0=2
+Reshape                  reshape_1110             1 1 1230 1231 0=30 1=64 2=1536
+BinaryOp                 mul_88                   1 1 1219 1232 0=2 1=1 2=0.182574183
+MatMul                   matmultransb_17          2 1 1232 1225 1233 0=1
+Reshape                  reshape_1111             1 1 1233 1234 0=64 1=64 11=6 2=256
+MemoryData               pnnx_fold_8271           0 1 1235 0=64 1=64 11=6 2=1
+BinaryOp                 add_89                   2 1 1234 1235 1236 0=0
+BinaryOp                 add_90                   2 1 1236 142 1237 0=0
+Reshape                  reshape_1112             1 1 1237 1238 0=64 1=64 2=1536
+Softmax                  softmax_362              1 1 1238 1239 0=2 1=1
+MatMul                   matmul_1611              2 1 1239 1231 1240
+Reshape                  reshape_1113             1 1 1240 1241 0=30 1=64 11=6 2=256
+Permute                  permute_522              1 1 1241 1242 0=2
+Reshape                  reshape_1114             1 1 1242 1243 0=180 1=64 2=256
+Reshape                  reshape_1115             1 1 1243 1244 0=180 1=16384
+Gemm                     gemm_105                 1 1 1244 1245 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1116             1 1 1245 1246 0=180 1=64 2=256
+Reshape                  reshape_1117             1 1 1246 1247 0=180 1=8 11=8 2=256
+Permute                  permute_523              1 1 1247 1248 0=2
+Reshape                  reshape_1118             1 1 1248 1249 0=180 1=8 11=128 2=16
+Permute                  permute_524              1 1 1249 1250 0=2
+Reshape                  reshape_1119             1 1 1250 1251 0=180 1=128 2=128
+Slice                    slice_1752               1 2 1251 1252 1253 1=0 -23302=1,-4
+Slice                    slice_a_1751             1 2 1252 1254 1255 1=1 -23302=1,-4
+Slice                    slice_b_1750             1 2 1253 1256 1257 1=1 -23302=1,-4
+Concat                   concat_a_1754            2 1 1255 1254 1258 0=1
+Concat                   concat_b_1753            2 1 1257 1256 1259 0=1
+Concat                   concat_1755              2 1 1259 1258 1260 0=0
+Reshape                  reshape_1120             1 1 1260 1261 0=180 1=16384
+BinaryOp                 add_91                   2 1 1193 1261 1262 0=0
+Split                    splitncnn_54             1 2 1262 1263 1264
+LayerNorm                ln_303                   1 1 1264 1265 0=180 1=1.000000e-5 2=1
+Gemm                     gemm_106                 1 1 1265 1266 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=360 9=180
+GELU                     gelu_248                 1 1 1266 1267
+Gemm                     gemm_107                 1 1 1267 1268 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=360
+BinaryOp                 add_92                   2 1 1263 1268 1269 0=0
+Permute                  transpose_1887           1 1 1269 1270 0=1
+Reshape                  reshape_1121             1 1 1270 1271 0=128 1=128 2=180
+Convolution              conv_221                 1 1 1271 1272 0=180 1=3 11=3 12=1 13=1 14=1 2=1 3=1 4=1 5=1 6=291600
+Reshape                  flatten_1917             1 1 1272 1273 0=16384 1=180
+Permute                  transpose_1888           1 1 1273 1274 0=1
+BinaryOp                 add_93                   2 1 1274 868 1275 0=0
+Split                    splitncnn_55             1 3 1275 1276 1277 1278
+LayerNorm                ln_304                   1 1 1278 1279 0=180 1=1.000000e-5 2=1
+Reshape                  reshape_1122             1 1 1279 1280 0=180 1=128 11=8 2=16
+Permute                  permute_525              1 1 1280 1281 0=2
+Reshape                  reshape_1123             1 1 1281 1282 0=180 1=8 11=8 2=256
+Permute                  permute_526              1 1 1282 1283 0=2
+Reshape                  reshape_1124             1 1 1283 1284 0=180 1=64 2=256
+Split                    splitncnn_56             1 3 1284 1285 1286 1287
+Reshape                  reshape_1125             1 1 1287 1288 0=180 1=16384
+Gemm                     gemm_108                 1 1 1288 1289 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1126             1 1 1289 1290 0=180 1=64 2=256
+Reshape                  reshape_1127             1 1 1290 1291 0=30 1=6 11=64 2=256
+Permute                  permute_527              1 1 1291 1292 0=2
+Reshape                  reshape_1128             1 1 1292 1293 0=30 1=64 2=1536
+Reshape                  reshape_1129             1 1 1286 1294 0=180 1=16384
+Gemm                     gemm_109                 1 1 1294 1295 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1130             1 1 1295 1296 0=180 1=64 2=256
+Reshape                  reshape_1131             1 1 1296 1297 0=30 1=6 11=64 2=256
+Permute                  permute_528              1 1 1297 1298 0=2
+Reshape                  reshape_1132             1 1 1298 1299 0=30 1=64 2=1536
+Reshape                  reshape_1133             1 1 1285 1300 0=180 1=16384
+Gemm                     gemm_110                 1 1 1300 1301 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1134             1 1 1301 1302 0=180 1=64 2=256
+Reshape                  reshape_1135             1 1 1302 1303 0=30 1=6 11=64 2=256
+Permute                  permute_529              1 1 1303 1304 0=2
+Reshape                  reshape_1136             1 1 1304 1305 0=30 1=64 2=1536
+BinaryOp                 mul_94                   1 1 1293 1306 0=2 1=1 2=0.182574183
+MatMul                   matmultransb_18          2 1 1306 1299 1307 0=1
+Reshape                  reshape_1137             1 1 1307 1308 0=64 1=64 11=6 2=256
+MemoryData               pnnx_fold_8692           0 1 1309 0=64 1=64 11=6 2=1
+BinaryOp                 add_95                   2 1 1308 1309 1310 0=0
+BinaryOp                 add_96                   2 1 1310 55 1311 0=0
+Reshape                  reshape_1138             1 1 1311 1312 0=64 1=64 2=1536
+Softmax                  softmax_363              1 1 1312 1313 0=2 1=1
+MatMul                   matmul_1613              2 1 1313 1305 1314
+Reshape                  reshape_1139             1 1 1314 1315 0=30 1=64 11=6 2=256
+Permute                  permute_530              1 1 1315 1316 0=2
+Reshape                  reshape_1140             1 1 1316 1317 0=180 1=64 2=256
+Reshape                  reshape_1141             1 1 1317 1318 0=180 1=16384
+Gemm                     gemm_111                 1 1 1318 1319 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1142             1 1 1319 1320 0=180 1=64 2=256
+Reshape                  reshape_1143             1 1 1320 1321 0=180 1=8 11=8 2=256
+Permute                  permute_531              1 1 1321 1322 0=2
+Reshape                  reshape_1144             1 1 1322 1323 0=180 1=8 11=128 2=16
+Permute                  permute_532              1 1 1323 1324 0=2
+Reshape                  reshape_1145             1 1 1324 1325 0=180 1=16384
+BinaryOp                 add_97                   2 1 1276 1325 1326 0=0
+Split                    splitncnn_57             1 2 1326 1327 1328
+LayerNorm                ln_305                   1 1 1328 1329 0=180 1=1.000000e-5 2=1
+Gemm                     gemm_112                 1 1 1329 1330 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=360 9=180
+GELU                     gelu_249                 1 1 1330 1331
+Gemm                     gemm_113                 1 1 1331 1332 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=360
+BinaryOp                 add_98                   2 1 1327 1332 1333 0=0
+Split                    splitncnn_58             1 2 1333 1334 1335
+LayerNorm                ln_306                   1 1 1335 1336 0=180 1=1.000000e-5 2=1
+Reshape                  reshape_1146             1 1 1336 1337 0=180 1=128 2=128
+Slice                    slice_1758               1 2 1337 1338 1339 1=0 -23302=1,4
+Slice                    slice_a_1757             1 2 1338 1340 1341 1=1 -23302=1,4
+Slice                    slice_b_1756             1 2 1339 1342 1343 1=1 -23302=1,4
+Concat                   concat_a_1760            2 1 1341 1340 1344 0=1
+Concat                   concat_b_1759            2 1 1343 1342 1345 0=1
+Concat                   concat_1761              2 1 1345 1344 1346 0=0
+Reshape                  reshape_1147             1 1 1346 1347 0=180 1=128 11=8 2=16
+Permute                  permute_533              1 1 1347 1348 0=2
+Reshape                  reshape_1148             1 1 1348 1349 0=180 1=8 11=8 2=256
+Permute                  permute_534              1 1 1349 1350 0=2
+Reshape                  reshape_1149             1 1 1350 1351 0=180 1=64 2=256
+Split                    splitncnn_59             1 3 1351 1352 1353 1354
+Reshape                  reshape_1150             1 1 1354 1355 0=180 1=16384
+Gemm                     gemm_114                 1 1 1355 1356 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1151             1 1 1356 1357 0=180 1=64 2=256
+Reshape                  reshape_1152             1 1 1357 1358 0=30 1=6 11=64 2=256
+Permute                  permute_535              1 1 1358 1359 0=2
+Reshape                  reshape_1153             1 1 1359 1360 0=30 1=64 2=1536
+Reshape                  reshape_1154             1 1 1353 1361 0=180 1=16384
+Gemm                     gemm_115                 1 1 1361 1362 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1155             1 1 1362 1363 0=180 1=64 2=256
+Reshape                  reshape_1156             1 1 1363 1364 0=30 1=6 11=64 2=256
+Permute                  permute_536              1 1 1364 1365 0=2
+Reshape                  reshape_1157             1 1 1365 1366 0=30 1=64 2=1536
+Reshape                  reshape_1158             1 1 1352 1367 0=180 1=16384
+Gemm                     gemm_116                 1 1 1367 1368 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1159             1 1 1368 1369 0=180 1=64 2=256
+Reshape                  reshape_1160             1 1 1369 1370 0=30 1=6 11=64 2=256
+Permute                  permute_537              1 1 1370 1371 0=2
+Reshape                  reshape_1161             1 1 1371 1372 0=30 1=64 2=1536
+BinaryOp                 mul_99                   1 1 1360 1373 0=2 1=1 2=0.182574183
+MatMul                   matmultransb_19          2 1 1373 1366 1374 0=1
+Reshape                  reshape_1162             1 1 1374 1375 0=64 1=64 11=6 2=256
+MemoryData               pnnx_fold_9080           0 1 1376 0=64 1=64 11=6 2=1
+BinaryOp                 add_100                  2 1 1375 1376 1377 0=0
+BinaryOp                 add_101                  2 1 1377 141 1378 0=0
+Reshape                  reshape_1163             1 1 1378 1379 0=64 1=64 2=1536
+Softmax                  softmax_364              1 1 1379 1380 0=2 1=1
+MatMul                   matmul_1615              2 1 1380 1372 1381
+Reshape                  reshape_1164             1 1 1381 1382 0=30 1=64 11=6 2=256
+Permute                  permute_538              1 1 1382 1383 0=2
+Reshape                  reshape_1165             1 1 1383 1384 0=180 1=64 2=256
+Reshape                  reshape_1166             1 1 1384 1385 0=180 1=16384
+Gemm                     gemm_117                 1 1 1385 1386 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1167             1 1 1386 1387 0=180 1=64 2=256
+Reshape                  reshape_1168             1 1 1387 1388 0=180 1=8 11=8 2=256
+Permute                  permute_539              1 1 1388 1389 0=2
+Reshape                  reshape_1169             1 1 1389 1390 0=180 1=8 11=128 2=16
+Permute                  permute_540              1 1 1390 1391 0=2
+Reshape                  reshape_1170             1 1 1391 1392 0=180 1=128 2=128
+Slice                    slice_1764               1 2 1392 1393 1394 1=0 -23302=1,-4
+Slice                    slice_a_1763             1 2 1393 1395 1396 1=1 -23302=1,-4
+Slice                    slice_b_1762             1 2 1394 1397 1398 1=1 -23302=1,-4
+Concat                   concat_a_1766            2 1 1396 1395 1399 0=1
+Concat                   concat_b_1765            2 1 1398 1397 1400 0=1
+Concat                   concat_1767              2 1 1400 1399 1401 0=0
+Reshape                  reshape_1171             1 1 1401 1402 0=180 1=16384
+BinaryOp                 add_102                  2 1 1334 1402 1403 0=0
+Split                    splitncnn_60             1 2 1403 1404 1405
+LayerNorm                ln_307                   1 1 1405 1406 0=180 1=1.000000e-5 2=1
+Gemm                     gemm_118                 1 1 1406 1407 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=360 9=180
+GELU                     gelu_250                 1 1 1407 1408
+Gemm                     gemm_119                 1 1 1408 1409 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=360
+BinaryOp                 add_103                  2 1 1404 1409 1410 0=0
+Split                    splitncnn_61             1 2 1410 1411 1412
+LayerNorm                ln_308                   1 1 1412 1413 0=180 1=1.000000e-5 2=1
+Reshape                  reshape_1172             1 1 1413 1414 0=180 1=128 11=8 2=16
+Permute                  permute_541              1 1 1414 1415 0=2
+Reshape                  reshape_1173             1 1 1415 1416 0=180 1=8 11=8 2=256
+Permute                  permute_542              1 1 1416 1417 0=2
+Reshape                  reshape_1174             1 1 1417 1418 0=180 1=64 2=256
+Split                    splitncnn_62             1 3 1418 1419 1420 1421
+Reshape                  reshape_1175             1 1 1421 1422 0=180 1=16384
+Gemm                     gemm_120                 1 1 1422 1423 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1176             1 1 1423 1424 0=180 1=64 2=256
+Reshape                  reshape_1177             1 1 1424 1425 0=30 1=6 11=64 2=256
+Permute                  permute_543              1 1 1425 1426 0=2
+Reshape                  reshape_1178             1 1 1426 1427 0=30 1=64 2=1536
+Reshape                  reshape_1179             1 1 1420 1428 0=180 1=16384
+Gemm                     gemm_121                 1 1 1428 1429 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1180             1 1 1429 1430 0=180 1=64 2=256
+Reshape                  reshape_1181             1 1 1430 1431 0=30 1=6 11=64 2=256
+Permute                  permute_544              1 1 1431 1432 0=2
+Reshape                  reshape_1182             1 1 1432 1433 0=30 1=64 2=1536
+Reshape                  reshape_1183             1 1 1419 1434 0=180 1=16384
+Gemm                     gemm_122                 1 1 1434 1435 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1184             1 1 1435 1436 0=180 1=64 2=256
+Reshape                  reshape_1185             1 1 1436 1437 0=30 1=6 11=64 2=256
+Permute                  permute_545              1 1 1437 1438 0=2
+Reshape                  reshape_1186             1 1 1438 1439 0=30 1=64 2=1536
+BinaryOp                 mul_104                  1 1 1427 1440 0=2 1=1 2=0.182574183
+MatMul                   matmultransb_20          2 1 1440 1433 1441 0=1
+Reshape                  reshape_1187             1 1 1441 1442 0=64 1=64 11=6 2=256
+MemoryData               pnnx_fold_9467           0 1 1443 0=64 1=64 11=6 2=1
+BinaryOp                 add_105                  2 1 1442 1443 1444 0=0
+BinaryOp                 add_106                  2 1 1444 54 1445 0=0
+Reshape                  reshape_1188             1 1 1445 1446 0=64 1=64 2=1536
+Softmax                  softmax_365              1 1 1446 1447 0=2 1=1
+MatMul                   matmul_1617              2 1 1447 1439 1448
+Reshape                  reshape_1189             1 1 1448 1449 0=30 1=64 11=6 2=256
+Permute                  permute_546              1 1 1449 1450 0=2
+Reshape                  reshape_1190             1 1 1450 1451 0=180 1=64 2=256
+Reshape                  reshape_1191             1 1 1451 1452 0=180 1=16384
+Gemm                     gemm_123                 1 1 1452 1453 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1192             1 1 1453 1454 0=180 1=64 2=256
+Reshape                  reshape_1193             1 1 1454 1455 0=180 1=8 11=8 2=256
+Permute                  permute_547              1 1 1455 1456 0=2
+Reshape                  reshape_1194             1 1 1456 1457 0=180 1=8 11=128 2=16
+Permute                  permute_548              1 1 1457 1458 0=2
+Reshape                  reshape_1195             1 1 1458 1459 0=180 1=16384
+BinaryOp                 add_107                  2 1 1411 1459 1460 0=0
+Split                    splitncnn_63             1 2 1460 1461 1462
+LayerNorm                ln_309                   1 1 1462 1463 0=180 1=1.000000e-5 2=1
+Gemm                     gemm_124                 1 1 1463 1464 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=360 9=180
+GELU                     gelu_251                 1 1 1464 1465
+Gemm                     gemm_125                 1 1 1465 1466 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=360
+BinaryOp                 add_108                  2 1 1461 1466 1467 0=0
+Split                    splitncnn_64             1 2 1467 1468 1469
+LayerNorm                ln_310                   1 1 1469 1470 0=180 1=1.000000e-5 2=1
+Reshape                  reshape_1196             1 1 1470 1471 0=180 1=128 2=128
+Slice                    slice_1770               1 2 1471 1472 1473 1=0 -23302=1,4
+Slice                    slice_a_1769             1 2 1472 1474 1475 1=1 -23302=1,4
+Slice                    slice_b_1768             1 2 1473 1476 1477 1=1 -23302=1,4
+Concat                   concat_a_1772            2 1 1475 1474 1478 0=1
+Concat                   concat_b_1771            2 1 1477 1476 1479 0=1
+Concat                   concat_1773              2 1 1479 1478 1480 0=0
+Reshape                  reshape_1197             1 1 1480 1481 0=180 1=128 11=8 2=16
+Permute                  permute_549              1 1 1481 1482 0=2
+Reshape                  reshape_1198             1 1 1482 1483 0=180 1=8 11=8 2=256
+Permute                  permute_550              1 1 1483 1484 0=2
+Reshape                  reshape_1199             1 1 1484 1485 0=180 1=64 2=256
+Split                    splitncnn_65             1 3 1485 1486 1487 1488
+Reshape                  reshape_1200             1 1 1488 1489 0=180 1=16384
+Gemm                     gemm_126                 1 1 1489 1490 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1201             1 1 1490 1491 0=180 1=64 2=256
+Reshape                  reshape_1202             1 1 1491 1492 0=30 1=6 11=64 2=256
+Permute                  permute_551              1 1 1492 1493 0=2
+Reshape                  reshape_1203             1 1 1493 1494 0=30 1=64 2=1536
+Reshape                  reshape_1204             1 1 1487 1495 0=180 1=16384
+Gemm                     gemm_127                 1 1 1495 1496 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1205             1 1 1496 1497 0=180 1=64 2=256
+Reshape                  reshape_1206             1 1 1497 1498 0=30 1=6 11=64 2=256
+Permute                  permute_552              1 1 1498 1499 0=2
+Reshape                  reshape_1207             1 1 1499 1500 0=30 1=64 2=1536
+Reshape                  reshape_1208             1 1 1486 1501 0=180 1=16384
+Gemm                     gemm_128                 1 1 1501 1502 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1209             1 1 1502 1503 0=180 1=64 2=256
+Reshape                  reshape_1210             1 1 1503 1504 0=30 1=6 11=64 2=256
+Permute                  permute_553              1 1 1504 1505 0=2
+Reshape                  reshape_1211             1 1 1505 1506 0=30 1=64 2=1536
+BinaryOp                 mul_109                  1 1 1494 1507 0=2 1=1 2=0.182574183
+MatMul                   matmultransb_21          2 1 1507 1500 1508 0=1
+Reshape                  reshape_1212             1 1 1508 1509 0=64 1=64 11=6 2=256
+MemoryData               pnnx_fold_9855           0 1 1510 0=64 1=64 11=6 2=1
+BinaryOp                 add_110                  2 1 1509 1510 1511 0=0
+BinaryOp                 add_111                  2 1 1511 140 1512 0=0
+Reshape                  reshape_1213             1 1 1512 1513 0=64 1=64 2=1536
+Softmax                  softmax_366              1 1 1513 1514 0=2 1=1
+MatMul                   matmul_1619              2 1 1514 1506 1515
+Reshape                  reshape_1214             1 1 1515 1516 0=30 1=64 11=6 2=256
+Permute                  permute_554              1 1 1516 1517 0=2
+Reshape                  reshape_1215             1 1 1517 1518 0=180 1=64 2=256
+Reshape                  reshape_1216             1 1 1518 1519 0=180 1=16384
+Gemm                     gemm_129                 1 1 1519 1520 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1217             1 1 1520 1521 0=180 1=64 2=256
+Reshape                  reshape_1218             1 1 1521 1522 0=180 1=8 11=8 2=256
+Permute                  permute_555              1 1 1522 1523 0=2
+Reshape                  reshape_1219             1 1 1523 1524 0=180 1=8 11=128 2=16
+Permute                  permute_556              1 1 1524 1525 0=2
+Reshape                  reshape_1220             1 1 1525 1526 0=180 1=128 2=128
+Slice                    slice_1776               1 2 1526 1527 1528 1=0 -23302=1,-4
+Slice                    slice_a_1775             1 2 1527 1529 1530 1=1 -23302=1,-4
+Slice                    slice_b_1774             1 2 1528 1531 1532 1=1 -23302=1,-4
+Concat                   concat_a_1778            2 1 1530 1529 1533 0=1
+Concat                   concat_b_1777            2 1 1532 1531 1534 0=1
+Concat                   concat_1779              2 1 1534 1533 1535 0=0
+Reshape                  reshape_1221             1 1 1535 1536 0=180 1=16384
+BinaryOp                 add_112                  2 1 1468 1536 1537 0=0
+Split                    splitncnn_66             1 2 1537 1538 1539
+LayerNorm                ln_311                   1 1 1539 1540 0=180 1=1.000000e-5 2=1
+Gemm                     gemm_130                 1 1 1540 1541 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=360 9=180
+GELU                     gelu_252                 1 1 1541 1542
+Gemm                     gemm_131                 1 1 1542 1543 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=360
+BinaryOp                 add_113                  2 1 1538 1543 1544 0=0
+Split                    splitncnn_67             1 2 1544 1545 1546
+LayerNorm                ln_312                   1 1 1546 1547 0=180 1=1.000000e-5 2=1
+Reshape                  reshape_1222             1 1 1547 1548 0=180 1=128 11=8 2=16
+Permute                  permute_557              1 1 1548 1549 0=2
+Reshape                  reshape_1223             1 1 1549 1550 0=180 1=8 11=8 2=256
+Permute                  permute_558              1 1 1550 1551 0=2
+Reshape                  reshape_1224             1 1 1551 1552 0=180 1=64 2=256
+Split                    splitncnn_68             1 3 1552 1553 1554 1555
+Reshape                  reshape_1225             1 1 1555 1556 0=180 1=16384
+Gemm                     gemm_132                 1 1 1556 1557 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1226             1 1 1557 1558 0=180 1=64 2=256
+Reshape                  reshape_1227             1 1 1558 1559 0=30 1=6 11=64 2=256
+Permute                  permute_559              1 1 1559 1560 0=2
+Reshape                  reshape_1228             1 1 1560 1561 0=30 1=64 2=1536
+Reshape                  reshape_1229             1 1 1554 1562 0=180 1=16384
+Gemm                     gemm_133                 1 1 1562 1563 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1230             1 1 1563 1564 0=180 1=64 2=256
+Reshape                  reshape_1231             1 1 1564 1565 0=30 1=6 11=64 2=256
+Permute                  permute_560              1 1 1565 1566 0=2
+Reshape                  reshape_1232             1 1 1566 1567 0=30 1=64 2=1536
+Reshape                  reshape_1233             1 1 1553 1568 0=180 1=16384
+Gemm                     gemm_134                 1 1 1568 1569 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1234             1 1 1569 1570 0=180 1=64 2=256
+Reshape                  reshape_1235             1 1 1570 1571 0=30 1=6 11=64 2=256
+Permute                  permute_561              1 1 1571 1572 0=2
+Reshape                  reshape_1236             1 1 1572 1573 0=30 1=64 2=1536
+BinaryOp                 mul_114                  1 1 1561 1574 0=2 1=1 2=0.182574183
+MatMul                   matmultransb_22          2 1 1574 1567 1575 0=1
+Reshape                  reshape_1237             1 1 1575 1576 0=64 1=64 11=6 2=256
+MemoryData               pnnx_fold_10242          0 1 1577 0=64 1=64 11=6 2=1
+BinaryOp                 add_115                  2 1 1576 1577 1578 0=0
+BinaryOp                 add_116                  2 1 1578 53 1579 0=0
+Reshape                  reshape_1238             1 1 1579 1580 0=64 1=64 2=1536
+Softmax                  softmax_367              1 1 1580 1581 0=2 1=1
+MatMul                   matmul_1621              2 1 1581 1573 1582
+Reshape                  reshape_1239             1 1 1582 1583 0=30 1=64 11=6 2=256
+Permute                  permute_562              1 1 1583 1584 0=2
+Reshape                  reshape_1240             1 1 1584 1585 0=180 1=64 2=256
+Reshape                  reshape_1241             1 1 1585 1586 0=180 1=16384
+Gemm                     gemm_135                 1 1 1586 1587 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1242             1 1 1587 1588 0=180 1=64 2=256
+Reshape                  reshape_1243             1 1 1588 1589 0=180 1=8 11=8 2=256
+Permute                  permute_563              1 1 1589 1590 0=2
+Reshape                  reshape_1244             1 1 1590 1591 0=180 1=8 11=128 2=16
+Permute                  permute_564              1 1 1591 1592 0=2
+Reshape                  reshape_1245             1 1 1592 1593 0=180 1=16384
+BinaryOp                 add_117                  2 1 1545 1593 1594 0=0
+Split                    splitncnn_69             1 2 1594 1595 1596
+LayerNorm                ln_313                   1 1 1596 1597 0=180 1=1.000000e-5 2=1
+Gemm                     gemm_136                 1 1 1597 1598 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=360 9=180
+GELU                     gelu_253                 1 1 1598 1599
+Gemm                     gemm_137                 1 1 1599 1600 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=360
+BinaryOp                 add_118                  2 1 1595 1600 1601 0=0
+Split                    splitncnn_70             1 2 1601 1602 1603
+LayerNorm                ln_314                   1 1 1603 1604 0=180 1=1.000000e-5 2=1
+Reshape                  reshape_1246             1 1 1604 1605 0=180 1=128 2=128
+Slice                    slice_1782               1 2 1605 1606 1607 1=0 -23302=1,4
+Slice                    slice_a_1781             1 2 1606 1608 1609 1=1 -23302=1,4
+Slice                    slice_b_1780             1 2 1607 1610 1611 1=1 -23302=1,4
+Concat                   concat_a_1784            2 1 1609 1608 1612 0=1
+Concat                   concat_b_1783            2 1 1611 1610 1613 0=1
+Concat                   concat_1785              2 1 1613 1612 1614 0=0
+Reshape                  reshape_1247             1 1 1614 1615 0=180 1=128 11=8 2=16
+Permute                  permute_565              1 1 1615 1616 0=2
+Reshape                  reshape_1248             1 1 1616 1617 0=180 1=8 11=8 2=256
+Permute                  permute_566              1 1 1617 1618 0=2
+Reshape                  reshape_1249             1 1 1618 1619 0=180 1=64 2=256
+Split                    splitncnn_71             1 3 1619 1620 1621 1622
+Reshape                  reshape_1250             1 1 1622 1623 0=180 1=16384
+Gemm                     gemm_138                 1 1 1623 1624 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1251             1 1 1624 1625 0=180 1=64 2=256
+Reshape                  reshape_1252             1 1 1625 1626 0=30 1=6 11=64 2=256
+Permute                  permute_567              1 1 1626 1627 0=2
+Reshape                  reshape_1253             1 1 1627 1628 0=30 1=64 2=1536
+Reshape                  reshape_1254             1 1 1621 1629 0=180 1=16384
+Gemm                     gemm_139                 1 1 1629 1630 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1255             1 1 1630 1631 0=180 1=64 2=256
+Reshape                  reshape_1256             1 1 1631 1632 0=30 1=6 11=64 2=256
+Permute                  permute_568              1 1 1632 1633 0=2
+Reshape                  reshape_1257             1 1 1633 1634 0=30 1=64 2=1536
+Reshape                  reshape_1258             1 1 1620 1635 0=180 1=16384
+Gemm                     gemm_140                 1 1 1635 1636 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1259             1 1 1636 1637 0=180 1=64 2=256
+Reshape                  reshape_1260             1 1 1637 1638 0=30 1=6 11=64 2=256
+Permute                  permute_569              1 1 1638 1639 0=2
+Reshape                  reshape_1261             1 1 1639 1640 0=30 1=64 2=1536
+BinaryOp                 mul_119                  1 1 1628 1641 0=2 1=1 2=0.182574183
+MatMul                   matmultransb_23          2 1 1641 1634 1642 0=1
+Reshape                  reshape_1262             1 1 1642 1643 0=64 1=64 11=6 2=256
+MemoryData               pnnx_fold_10630          0 1 1644 0=64 1=64 11=6 2=1
+BinaryOp                 add_120                  2 1 1643 1644 1645 0=0
+BinaryOp                 add_121                  2 1 1645 139 1646 0=0
+Reshape                  reshape_1263             1 1 1646 1647 0=64 1=64 2=1536
+Softmax                  softmax_368              1 1 1647 1648 0=2 1=1
+MatMul                   matmul_1623              2 1 1648 1640 1649
+Reshape                  reshape_1264             1 1 1649 1650 0=30 1=64 11=6 2=256
+Permute                  permute_570              1 1 1650 1651 0=2
+Reshape                  reshape_1265             1 1 1651 1652 0=180 1=64 2=256
+Reshape                  reshape_1266             1 1 1652 1653 0=180 1=16384
+Gemm                     gemm_141                 1 1 1653 1654 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1267             1 1 1654 1655 0=180 1=64 2=256
+Reshape                  reshape_1268             1 1 1655 1656 0=180 1=8 11=8 2=256
+Permute                  permute_571              1 1 1656 1657 0=2
+Reshape                  reshape_1269             1 1 1657 1658 0=180 1=8 11=128 2=16
+Permute                  permute_572              1 1 1658 1659 0=2
+Reshape                  reshape_1270             1 1 1659 1660 0=180 1=128 2=128
+Slice                    slice_1788               1 2 1660 1661 1662 1=0 -23302=1,-4
+Slice                    slice_a_1787             1 2 1661 1663 1664 1=1 -23302=1,-4
+Slice                    slice_b_1786             1 2 1662 1665 1666 1=1 -23302=1,-4
+Concat                   concat_a_1790            2 1 1664 1663 1667 0=1
+Concat                   concat_b_1789            2 1 1666 1665 1668 0=1
+Concat                   concat_1791              2 1 1668 1667 1669 0=0
+Reshape                  reshape_1271             1 1 1669 1670 0=180 1=16384
+BinaryOp                 add_122                  2 1 1602 1670 1671 0=0
+Split                    splitncnn_72             1 2 1671 1672 1673
+LayerNorm                ln_315                   1 1 1673 1674 0=180 1=1.000000e-5 2=1
+Gemm                     gemm_142                 1 1 1674 1675 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=360 9=180
+GELU                     gelu_254                 1 1 1675 1676
+Gemm                     gemm_143                 1 1 1676 1677 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=360
+BinaryOp                 add_123                  2 1 1672 1677 1678 0=0
+Permute                  transpose_1895           1 1 1678 1679 0=1
+Reshape                  reshape_1272             1 1 1679 1680 0=128 1=128 2=180
+Convolution              conv_222                 1 1 1680 1681 0=180 1=3 11=3 12=1 13=1 14=1 2=1 3=1 4=1 5=1 6=291600
+Reshape                  flatten_1918             1 1 1681 1682 0=16384 1=180
+Permute                  transpose_1896           1 1 1682 1683 0=1
+BinaryOp                 add_124                  2 1 1683 1277 1684 0=0
+Split                    splitncnn_73             1 3 1684 1685 1686 1687
+LayerNorm                ln_316                   1 1 1687 1688 0=180 1=1.000000e-5 2=1
+Reshape                  reshape_1273             1 1 1688 1689 0=180 1=128 11=8 2=16
+Permute                  permute_573              1 1 1689 1690 0=2
+Reshape                  reshape_1274             1 1 1690 1691 0=180 1=8 11=8 2=256
+Permute                  permute_574              1 1 1691 1692 0=2
+Reshape                  reshape_1275             1 1 1692 1693 0=180 1=64 2=256
+Split                    splitncnn_74             1 3 1693 1694 1695 1696
+Reshape                  reshape_1276             1 1 1696 1697 0=180 1=16384
+Gemm                     gemm_144                 1 1 1697 1698 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1277             1 1 1698 1699 0=180 1=64 2=256
+Reshape                  reshape_1278             1 1 1699 1700 0=30 1=6 11=64 2=256
+Permute                  permute_575              1 1 1700 1701 0=2
+Reshape                  reshape_1279             1 1 1701 1702 0=30 1=64 2=1536
+Reshape                  reshape_1280             1 1 1695 1703 0=180 1=16384
+Gemm                     gemm_145                 1 1 1703 1704 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1281             1 1 1704 1705 0=180 1=64 2=256
+Reshape                  reshape_1282             1 1 1705 1706 0=30 1=6 11=64 2=256
+Permute                  permute_576              1 1 1706 1707 0=2
+Reshape                  reshape_1283             1 1 1707 1708 0=30 1=64 2=1536
+Reshape                  reshape_1284             1 1 1694 1709 0=180 1=16384
+Gemm                     gemm_146                 1 1 1709 1710 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1285             1 1 1710 1711 0=180 1=64 2=256
+Reshape                  reshape_1286             1 1 1711 1712 0=30 1=6 11=64 2=256
+Permute                  permute_577              1 1 1712 1713 0=2
+Reshape                  reshape_1287             1 1 1713 1714 0=30 1=64 2=1536
+BinaryOp                 mul_125                  1 1 1702 1715 0=2 1=1 2=0.182574183
+MatMul                   matmultransb_24          2 1 1715 1708 1716 0=1
+Reshape                  reshape_1288             1 1 1716 1717 0=64 1=64 11=6 2=256
+MemoryData               pnnx_fold_11051          0 1 1718 0=64 1=64 11=6 2=1
+BinaryOp                 add_126                  2 1 1717 1718 1719 0=0
+BinaryOp                 add_127                  2 1 1719 52 1720 0=0
+Reshape                  reshape_1289             1 1 1720 1721 0=64 1=64 2=1536
+Softmax                  softmax_369              1 1 1721 1722 0=2 1=1
+MatMul                   matmul_1625              2 1 1722 1714 1723
+Reshape                  reshape_1290             1 1 1723 1724 0=30 1=64 11=6 2=256
+Permute                  permute_578              1 1 1724 1725 0=2
+Reshape                  reshape_1291             1 1 1725 1726 0=180 1=64 2=256
+Reshape                  reshape_1292             1 1 1726 1727 0=180 1=16384
+Gemm                     gemm_147                 1 1 1727 1728 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1293             1 1 1728 1729 0=180 1=64 2=256
+Reshape                  reshape_1294             1 1 1729 1730 0=180 1=8 11=8 2=256
+Permute                  permute_579              1 1 1730 1731 0=2
+Reshape                  reshape_1295             1 1 1731 1732 0=180 1=8 11=128 2=16
+Permute                  permute_580              1 1 1732 1733 0=2
+Reshape                  reshape_1296             1 1 1733 1734 0=180 1=16384
+BinaryOp                 add_128                  2 1 1685 1734 1735 0=0
+Split                    splitncnn_75             1 2 1735 1736 1737
+LayerNorm                ln_317                   1 1 1737 1738 0=180 1=1.000000e-5 2=1
+Gemm                     gemm_148                 1 1 1738 1739 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=360 9=180
+GELU                     gelu_255                 1 1 1739 1740
+Gemm                     gemm_149                 1 1 1740 1741 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=360
+BinaryOp                 add_129                  2 1 1736 1741 1742 0=0
+Split                    splitncnn_76             1 2 1742 1743 1744
+LayerNorm                ln_318                   1 1 1744 1745 0=180 1=1.000000e-5 2=1
+Reshape                  reshape_1297             1 1 1745 1746 0=180 1=128 2=128
+Slice                    slice_1794               1 2 1746 1747 1748 1=0 -23302=1,4
+Slice                    slice_a_1793             1 2 1747 1749 1750 1=1 -23302=1,4
+Slice                    slice_b_1792             1 2 1748 1751 1752 1=1 -23302=1,4
+Concat                   concat_a_1796            2 1 1750 1749 1753 0=1
+Concat                   concat_b_1795            2 1 1752 1751 1754 0=1
+Concat                   concat_1797              2 1 1754 1753 1755 0=0
+Reshape                  reshape_1298             1 1 1755 1756 0=180 1=128 11=8 2=16
+Permute                  permute_581              1 1 1756 1757 0=2
+Reshape                  reshape_1299             1 1 1757 1758 0=180 1=8 11=8 2=256
+Permute                  permute_582              1 1 1758 1759 0=2
+Reshape                  reshape_1300             1 1 1759 1760 0=180 1=64 2=256
+Split                    splitncnn_77             1 3 1760 1761 1762 1763
+Reshape                  reshape_1301             1 1 1763 1764 0=180 1=16384
+Gemm                     gemm_150                 1 1 1764 1765 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1302             1 1 1765 1766 0=180 1=64 2=256
+Reshape                  reshape_1303             1 1 1766 1767 0=30 1=6 11=64 2=256
+Permute                  permute_583              1 1 1767 1768 0=2
+Reshape                  reshape_1304             1 1 1768 1769 0=30 1=64 2=1536
+Reshape                  reshape_1305             1 1 1762 1770 0=180 1=16384
+Gemm                     gemm_151                 1 1 1770 1771 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1306             1 1 1771 1772 0=180 1=64 2=256
+Reshape                  reshape_1307             1 1 1772 1773 0=30 1=6 11=64 2=256
+Permute                  permute_584              1 1 1773 1774 0=2
+Reshape                  reshape_1308             1 1 1774 1775 0=30 1=64 2=1536
+Reshape                  reshape_1309             1 1 1761 1776 0=180 1=16384
+Gemm                     gemm_152                 1 1 1776 1777 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1310             1 1 1777 1778 0=180 1=64 2=256
+Reshape                  reshape_1311             1 1 1778 1779 0=30 1=6 11=64 2=256
+Permute                  permute_585              1 1 1779 1780 0=2
+Reshape                  reshape_1312             1 1 1780 1781 0=30 1=64 2=1536
+BinaryOp                 mul_130                  1 1 1769 1782 0=2 1=1 2=0.182574183
+MatMul                   matmultransb_25          2 1 1782 1775 1783 0=1
+Reshape                  reshape_1313             1 1 1783 1784 0=64 1=64 11=6 2=256
+MemoryData               pnnx_fold_11439          0 1 1785 0=64 1=64 11=6 2=1
+BinaryOp                 add_131                  2 1 1784 1785 1786 0=0
+BinaryOp                 add_132                  2 1 1786 138 1787 0=0
+Reshape                  reshape_1314             1 1 1787 1788 0=64 1=64 2=1536
+Softmax                  softmax_370              1 1 1788 1789 0=2 1=1
+MatMul                   matmul_1627              2 1 1789 1781 1790
+Reshape                  reshape_1315             1 1 1790 1791 0=30 1=64 11=6 2=256
+Permute                  permute_586              1 1 1791 1792 0=2
+Reshape                  reshape_1316             1 1 1792 1793 0=180 1=64 2=256
+Reshape                  reshape_1317             1 1 1793 1794 0=180 1=16384
+Gemm                     gemm_153                 1 1 1794 1795 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1318             1 1 1795 1796 0=180 1=64 2=256
+Reshape                  reshape_1319             1 1 1796 1797 0=180 1=8 11=8 2=256
+Permute                  permute_587              1 1 1797 1798 0=2
+Reshape                  reshape_1320             1 1 1798 1799 0=180 1=8 11=128 2=16
+Permute                  permute_588              1 1 1799 1800 0=2
+Reshape                  reshape_1321             1 1 1800 1801 0=180 1=128 2=128
+Slice                    slice_1800               1 2 1801 1802 1803 1=0 -23302=1,-4
+Slice                    slice_a_1799             1 2 1802 1804 1805 1=1 -23302=1,-4
+Slice                    slice_b_1798             1 2 1803 1806 1807 1=1 -23302=1,-4
+Concat                   concat_a_1802            2 1 1805 1804 1808 0=1
+Concat                   concat_b_1801            2 1 1807 1806 1809 0=1
+Concat                   concat_1803              2 1 1809 1808 1810 0=0
+Reshape                  reshape_1322             1 1 1810 1811 0=180 1=16384
+BinaryOp                 add_133                  2 1 1743 1811 1812 0=0
+Split                    splitncnn_78             1 2 1812 1813 1814
+LayerNorm                ln_319                   1 1 1814 1815 0=180 1=1.000000e-5 2=1
+Gemm                     gemm_154                 1 1 1815 1816 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=360 9=180
+GELU                     gelu_256                 1 1 1816 1817
+Gemm                     gemm_155                 1 1 1817 1818 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=360
+BinaryOp                 add_134                  2 1 1813 1818 1819 0=0
+Split                    splitncnn_79             1 2 1819 1820 1821
+LayerNorm                ln_320                   1 1 1821 1822 0=180 1=1.000000e-5 2=1
+Reshape                  reshape_1323             1 1 1822 1823 0=180 1=128 11=8 2=16
+Permute                  permute_589              1 1 1823 1824 0=2
+Reshape                  reshape_1324             1 1 1824 1825 0=180 1=8 11=8 2=256
+Permute                  permute_590              1 1 1825 1826 0=2
+Reshape                  reshape_1325             1 1 1826 1827 0=180 1=64 2=256
+Split                    splitncnn_80             1 3 1827 1828 1829 1830
+Reshape                  reshape_1326             1 1 1830 1831 0=180 1=16384
+Gemm                     gemm_156                 1 1 1831 1832 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1327             1 1 1832 1833 0=180 1=64 2=256
+Reshape                  reshape_1328             1 1 1833 1834 0=30 1=6 11=64 2=256
+Permute                  permute_591              1 1 1834 1835 0=2
+Reshape                  reshape_1329             1 1 1835 1836 0=30 1=64 2=1536
+Reshape                  reshape_1330             1 1 1829 1837 0=180 1=16384
+Gemm                     gemm_157                 1 1 1837 1838 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1331             1 1 1838 1839 0=180 1=64 2=256
+Reshape                  reshape_1332             1 1 1839 1840 0=30 1=6 11=64 2=256
+Permute                  permute_592              1 1 1840 1841 0=2
+Reshape                  reshape_1333             1 1 1841 1842 0=30 1=64 2=1536
+Reshape                  reshape_1334             1 1 1828 1843 0=180 1=16384
+Gemm                     gemm_158                 1 1 1843 1844 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1335             1 1 1844 1845 0=180 1=64 2=256
+Reshape                  reshape_1336             1 1 1845 1846 0=30 1=6 11=64 2=256
+Permute                  permute_593              1 1 1846 1847 0=2
+Reshape                  reshape_1337             1 1 1847 1848 0=30 1=64 2=1536
+BinaryOp                 mul_135                  1 1 1836 1849 0=2 1=1 2=0.182574183
+MatMul                   matmultransb_26          2 1 1849 1842 1850 0=1
+Reshape                  reshape_1338             1 1 1850 1851 0=64 1=64 11=6 2=256
+MemoryData               pnnx_fold_11826          0 1 1852 0=64 1=64 11=6 2=1
+BinaryOp                 add_136                  2 1 1851 1852 1853 0=0
+BinaryOp                 add_137                  2 1 1853 51 1854 0=0
+Reshape                  reshape_1339             1 1 1854 1855 0=64 1=64 2=1536
+Softmax                  softmax_371              1 1 1855 1856 0=2 1=1
+MatMul                   matmul_1629              2 1 1856 1848 1857
+Reshape                  reshape_1340             1 1 1857 1858 0=30 1=64 11=6 2=256
+Permute                  permute_594              1 1 1858 1859 0=2
+Reshape                  reshape_1341             1 1 1859 1860 0=180 1=64 2=256
+Reshape                  reshape_1342             1 1 1860 1861 0=180 1=16384
+Gemm                     gemm_159                 1 1 1861 1862 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1343             1 1 1862 1863 0=180 1=64 2=256
+Reshape                  reshape_1344             1 1 1863 1864 0=180 1=8 11=8 2=256
+Permute                  permute_595              1 1 1864 1865 0=2
+Reshape                  reshape_1345             1 1 1865 1866 0=180 1=8 11=128 2=16
+Permute                  permute_596              1 1 1866 1867 0=2
+Reshape                  reshape_1346             1 1 1867 1868 0=180 1=16384
+BinaryOp                 add_138                  2 1 1820 1868 1869 0=0
+Split                    splitncnn_81             1 2 1869 1870 1871
+LayerNorm                ln_321                   1 1 1871 1872 0=180 1=1.000000e-5 2=1
+Gemm                     gemm_160                 1 1 1872 1873 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=360 9=180
+GELU                     gelu_257                 1 1 1873 1874
+Gemm                     gemm_161                 1 1 1874 1875 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=360
+BinaryOp                 add_139                  2 1 1870 1875 1876 0=0
+Split                    splitncnn_82             1 2 1876 1877 1878
+LayerNorm                ln_322                   1 1 1878 1879 0=180 1=1.000000e-5 2=1
+Reshape                  reshape_1347             1 1 1879 1880 0=180 1=128 2=128
+Slice                    slice_1806               1 2 1880 1881 1882 1=0 -23302=1,4
+Slice                    slice_a_1805             1 2 1881 1883 1884 1=1 -23302=1,4
+Slice                    slice_b_1804             1 2 1882 1885 1886 1=1 -23302=1,4
+Concat                   concat_a_1808            2 1 1884 1883 1887 0=1
+Concat                   concat_b_1807            2 1 1886 1885 1888 0=1
+Concat                   concat_1809              2 1 1888 1887 1889 0=0
+Reshape                  reshape_1348             1 1 1889 1890 0=180 1=128 11=8 2=16
+Permute                  permute_597              1 1 1890 1891 0=2
+Reshape                  reshape_1349             1 1 1891 1892 0=180 1=8 11=8 2=256
+Permute                  permute_598              1 1 1892 1893 0=2
+Reshape                  reshape_1350             1 1 1893 1894 0=180 1=64 2=256
+Split                    splitncnn_83             1 3 1894 1895 1896 1897
+Reshape                  reshape_1351             1 1 1897 1898 0=180 1=16384
+Gemm                     gemm_162                 1 1 1898 1899 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1352             1 1 1899 1900 0=180 1=64 2=256
+Reshape                  reshape_1353             1 1 1900 1901 0=30 1=6 11=64 2=256
+Permute                  permute_599              1 1 1901 1902 0=2
+Reshape                  reshape_1354             1 1 1902 1903 0=30 1=64 2=1536
+Reshape                  reshape_1355             1 1 1896 1904 0=180 1=16384
+Gemm                     gemm_163                 1 1 1904 1905 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1356             1 1 1905 1906 0=180 1=64 2=256
+Reshape                  reshape_1357             1 1 1906 1907 0=30 1=6 11=64 2=256
+Permute                  permute_600              1 1 1907 1908 0=2
+Reshape                  reshape_1358             1 1 1908 1909 0=30 1=64 2=1536
+Reshape                  reshape_1359             1 1 1895 1910 0=180 1=16384
+Gemm                     gemm_164                 1 1 1910 1911 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1360             1 1 1911 1912 0=180 1=64 2=256
+Reshape                  reshape_1361             1 1 1912 1913 0=30 1=6 11=64 2=256
+Permute                  permute_601              1 1 1913 1914 0=2
+Reshape                  reshape_1362             1 1 1914 1915 0=30 1=64 2=1536
+BinaryOp                 mul_140                  1 1 1903 1916 0=2 1=1 2=0.182574183
+MatMul                   matmultransb_27          2 1 1916 1909 1917 0=1
+Reshape                  reshape_1363             1 1 1917 1918 0=64 1=64 11=6 2=256
+MemoryData               pnnx_fold_12214          0 1 1919 0=64 1=64 11=6 2=1
+BinaryOp                 add_141                  2 1 1918 1919 1920 0=0
+BinaryOp                 add_142                  2 1 1920 137 1921 0=0
+Reshape                  reshape_1364             1 1 1921 1922 0=64 1=64 2=1536
+Softmax                  softmax_372              1 1 1922 1923 0=2 1=1
+MatMul                   matmul_1631              2 1 1923 1915 1924
+Reshape                  reshape_1365             1 1 1924 1925 0=30 1=64 11=6 2=256
+Permute                  permute_602              1 1 1925 1926 0=2
+Reshape                  reshape_1366             1 1 1926 1927 0=180 1=64 2=256
+Reshape                  reshape_1367             1 1 1927 1928 0=180 1=16384
+Gemm                     gemm_165                 1 1 1928 1929 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1368             1 1 1929 1930 0=180 1=64 2=256
+Reshape                  reshape_1369             1 1 1930 1931 0=180 1=8 11=8 2=256
+Permute                  permute_603              1 1 1931 1932 0=2
+Reshape                  reshape_1370             1 1 1932 1933 0=180 1=8 11=128 2=16
+Permute                  permute_604              1 1 1933 1934 0=2
+Reshape                  reshape_1371             1 1 1934 1935 0=180 1=128 2=128
+Slice                    slice_1812               1 2 1935 1936 1937 1=0 -23302=1,-4
+Slice                    slice_a_1811             1 2 1936 1938 1939 1=1 -23302=1,-4
+Slice                    slice_b_1810             1 2 1937 1940 1941 1=1 -23302=1,-4
+Concat                   concat_a_1814            2 1 1939 1938 1942 0=1
+Concat                   concat_b_1813            2 1 1941 1940 1943 0=1
+Concat                   concat_1815              2 1 1943 1942 1944 0=0
+Reshape                  reshape_1372             1 1 1944 1945 0=180 1=16384
+BinaryOp                 add_143                  2 1 1877 1945 1946 0=0
+Split                    splitncnn_84             1 2 1946 1947 1948
+LayerNorm                ln_323                   1 1 1948 1949 0=180 1=1.000000e-5 2=1
+Gemm                     gemm_166                 1 1 1949 1950 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=360 9=180
+GELU                     gelu_258                 1 1 1950 1951
+Gemm                     gemm_167                 1 1 1951 1952 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=360
+BinaryOp                 add_144                  2 1 1947 1952 1953 0=0
+Split                    splitncnn_85             1 2 1953 1954 1955
+LayerNorm                ln_324                   1 1 1955 1956 0=180 1=1.000000e-5 2=1
+Reshape                  reshape_1373             1 1 1956 1957 0=180 1=128 11=8 2=16
+Permute                  permute_605              1 1 1957 1958 0=2
+Reshape                  reshape_1374             1 1 1958 1959 0=180 1=8 11=8 2=256
+Permute                  permute_606              1 1 1959 1960 0=2
+Reshape                  reshape_1375             1 1 1960 1961 0=180 1=64 2=256
+Split                    splitncnn_86             1 3 1961 1962 1963 1964
+Reshape                  reshape_1376             1 1 1964 1965 0=180 1=16384
+Gemm                     gemm_168                 1 1 1965 1966 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1377             1 1 1966 1967 0=180 1=64 2=256
+Reshape                  reshape_1378             1 1 1967 1968 0=30 1=6 11=64 2=256
+Permute                  permute_607              1 1 1968 1969 0=2
+Reshape                  reshape_1379             1 1 1969 1970 0=30 1=64 2=1536
+Reshape                  reshape_1380             1 1 1963 1971 0=180 1=16384
+Gemm                     gemm_169                 1 1 1971 1972 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1381             1 1 1972 1973 0=180 1=64 2=256
+Reshape                  reshape_1382             1 1 1973 1974 0=30 1=6 11=64 2=256
+Permute                  permute_608              1 1 1974 1975 0=2
+Reshape                  reshape_1383             1 1 1975 1976 0=30 1=64 2=1536
+Reshape                  reshape_1384             1 1 1962 1977 0=180 1=16384
+Gemm                     gemm_170                 1 1 1977 1978 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1385             1 1 1978 1979 0=180 1=64 2=256
+Reshape                  reshape_1386             1 1 1979 1980 0=30 1=6 11=64 2=256
+Permute                  permute_609              1 1 1980 1981 0=2
+Reshape                  reshape_1387             1 1 1981 1982 0=30 1=64 2=1536
+BinaryOp                 mul_145                  1 1 1970 1983 0=2 1=1 2=0.182574183
+MatMul                   matmultransb_28          2 1 1983 1976 1984 0=1
+Reshape                  reshape_1388             1 1 1984 1985 0=64 1=64 11=6 2=256
+MemoryData               pnnx_fold_12601          0 1 1986 0=64 1=64 11=6 2=1
+BinaryOp                 add_146                  2 1 1985 1986 1987 0=0
+BinaryOp                 add_147                  2 1 1987 50 1988 0=0
+Reshape                  reshape_1389             1 1 1988 1989 0=64 1=64 2=1536
+Softmax                  softmax_373              1 1 1989 1990 0=2 1=1
+MatMul                   matmul_1633              2 1 1990 1982 1991
+Reshape                  reshape_1390             1 1 1991 1992 0=30 1=64 11=6 2=256
+Permute                  permute_610              1 1 1992 1993 0=2
+Reshape                  reshape_1391             1 1 1993 1994 0=180 1=64 2=256
+Reshape                  reshape_1392             1 1 1994 1995 0=180 1=16384
+Gemm                     gemm_171                 1 1 1995 1996 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1393             1 1 1996 1997 0=180 1=64 2=256
+Reshape                  reshape_1394             1 1 1997 1998 0=180 1=8 11=8 2=256
+Permute                  permute_611              1 1 1998 1999 0=2
+Reshape                  reshape_1395             1 1 1999 2000 0=180 1=8 11=128 2=16
+Permute                  permute_612              1 1 2000 2001 0=2
+Reshape                  reshape_1396             1 1 2001 2002 0=180 1=16384
+BinaryOp                 add_148                  2 1 1954 2002 2003 0=0
+Split                    splitncnn_87             1 2 2003 2004 2005
+LayerNorm                ln_325                   1 1 2005 2006 0=180 1=1.000000e-5 2=1
+Gemm                     gemm_172                 1 1 2006 2007 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=360 9=180
+GELU                     gelu_259                 1 1 2007 2008
+Gemm                     gemm_173                 1 1 2008 2009 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=360
+BinaryOp                 add_149                  2 1 2004 2009 2010 0=0
+Split                    splitncnn_88             1 2 2010 2011 2012
+LayerNorm                ln_326                   1 1 2012 2013 0=180 1=1.000000e-5 2=1
+Reshape                  reshape_1397             1 1 2013 2014 0=180 1=128 2=128
+Slice                    slice_1818               1 2 2014 2015 2016 1=0 -23302=1,4
+Slice                    slice_a_1817             1 2 2015 2017 2018 1=1 -23302=1,4
+Slice                    slice_b_1816             1 2 2016 2019 2020 1=1 -23302=1,4
+Concat                   concat_a_1820            2 1 2018 2017 2021 0=1
+Concat                   concat_b_1819            2 1 2020 2019 2022 0=1
+Concat                   concat_1821              2 1 2022 2021 2023 0=0
+Reshape                  reshape_1398             1 1 2023 2024 0=180 1=128 11=8 2=16
+Permute                  permute_613              1 1 2024 2025 0=2
+Reshape                  reshape_1399             1 1 2025 2026 0=180 1=8 11=8 2=256
+Permute                  permute_614              1 1 2026 2027 0=2
+Reshape                  reshape_1400             1 1 2027 2028 0=180 1=64 2=256
+Split                    splitncnn_89             1 3 2028 2029 2030 2031
+Reshape                  reshape_1401             1 1 2031 2032 0=180 1=16384
+Gemm                     gemm_174                 1 1 2032 2033 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1402             1 1 2033 2034 0=180 1=64 2=256
+Reshape                  reshape_1403             1 1 2034 2035 0=30 1=6 11=64 2=256
+Permute                  permute_615              1 1 2035 2036 0=2
+Reshape                  reshape_1404             1 1 2036 2037 0=30 1=64 2=1536
+Reshape                  reshape_1405             1 1 2030 2038 0=180 1=16384
+Gemm                     gemm_175                 1 1 2038 2039 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1406             1 1 2039 2040 0=180 1=64 2=256
+Reshape                  reshape_1407             1 1 2040 2041 0=30 1=6 11=64 2=256
+Permute                  permute_616              1 1 2041 2042 0=2
+Reshape                  reshape_1408             1 1 2042 2043 0=30 1=64 2=1536
+Reshape                  reshape_1409             1 1 2029 2044 0=180 1=16384
+Gemm                     gemm_176                 1 1 2044 2045 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1410             1 1 2045 2046 0=180 1=64 2=256
+Reshape                  reshape_1411             1 1 2046 2047 0=30 1=6 11=64 2=256
+Permute                  permute_617              1 1 2047 2048 0=2
+Reshape                  reshape_1412             1 1 2048 2049 0=30 1=64 2=1536
+BinaryOp                 mul_150                  1 1 2037 2050 0=2 1=1 2=0.182574183
+MatMul                   matmultransb_29          2 1 2050 2043 2051 0=1
+Reshape                  reshape_1413             1 1 2051 2052 0=64 1=64 11=6 2=256
+MemoryData               pnnx_fold_12989          0 1 2053 0=64 1=64 11=6 2=1
+BinaryOp                 add_151                  2 1 2052 2053 2054 0=0
+BinaryOp                 add_152                  2 1 2054 136 2055 0=0
+Reshape                  reshape_1414             1 1 2055 2056 0=64 1=64 2=1536
+Softmax                  softmax_374              1 1 2056 2057 0=2 1=1
+MatMul                   matmul_1635              2 1 2057 2049 2058
+Reshape                  reshape_1415             1 1 2058 2059 0=30 1=64 11=6 2=256
+Permute                  permute_618              1 1 2059 2060 0=2
+Reshape                  reshape_1416             1 1 2060 2061 0=180 1=64 2=256
+Reshape                  reshape_1417             1 1 2061 2062 0=180 1=16384
+Gemm                     gemm_177                 1 1 2062 2063 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1418             1 1 2063 2064 0=180 1=64 2=256
+Reshape                  reshape_1419             1 1 2064 2065 0=180 1=8 11=8 2=256
+Permute                  permute_619              1 1 2065 2066 0=2
+Reshape                  reshape_1420             1 1 2066 2067 0=180 1=8 11=128 2=16
+Permute                  permute_620              1 1 2067 2068 0=2
+Reshape                  reshape_1421             1 1 2068 2069 0=180 1=128 2=128
+Slice                    slice_1824               1 2 2069 2070 2071 1=0 -23302=1,-4
+Slice                    slice_a_1823             1 2 2070 2072 2073 1=1 -23302=1,-4
+Slice                    slice_b_1822             1 2 2071 2074 2075 1=1 -23302=1,-4
+Concat                   concat_a_1826            2 1 2073 2072 2076 0=1
+Concat                   concat_b_1825            2 1 2075 2074 2077 0=1
+Concat                   concat_1827              2 1 2077 2076 2078 0=0
+Reshape                  reshape_1422             1 1 2078 2079 0=180 1=16384
+BinaryOp                 add_153                  2 1 2011 2079 2080 0=0
+Split                    splitncnn_90             1 2 2080 2081 2082
+LayerNorm                ln_327                   1 1 2082 2083 0=180 1=1.000000e-5 2=1
+Gemm                     gemm_178                 1 1 2083 2084 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=360 9=180
+GELU                     gelu_260                 1 1 2084 2085
+Gemm                     gemm_179                 1 1 2085 2086 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=360
+BinaryOp                 add_154                  2 1 2081 2086 2087 0=0
+Permute                  transpose_1903           1 1 2087 2088 0=1
+Reshape                  reshape_1423             1 1 2088 2089 0=128 1=128 2=180
+Convolution              conv_223                 1 1 2089 2090 0=180 1=3 11=3 12=1 13=1 14=1 2=1 3=1 4=1 5=1 6=291600
+Reshape                  flatten_1919             1 1 2090 2091 0=16384 1=180
+Permute                  transpose_1904           1 1 2091 2092 0=1
+BinaryOp                 add_155                  2 1 2092 1686 2093 0=0
+Split                    splitncnn_91             1 3 2093 2094 2095 2096
+LayerNorm                ln_328                   1 1 2096 2097 0=180 1=1.000000e-5 2=1
+Reshape                  reshape_1424             1 1 2097 2098 0=180 1=128 11=8 2=16
+Permute                  permute_621              1 1 2098 2099 0=2
+Reshape                  reshape_1425             1 1 2099 2100 0=180 1=8 11=8 2=256
+Permute                  permute_622              1 1 2100 2101 0=2
+Reshape                  reshape_1426             1 1 2101 2102 0=180 1=64 2=256
+Split                    splitncnn_92             1 3 2102 2103 2104 2105
+Reshape                  reshape_1427             1 1 2105 2106 0=180 1=16384
+Gemm                     gemm_180                 1 1 2106 2107 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1428             1 1 2107 2108 0=180 1=64 2=256
+Reshape                  reshape_1429             1 1 2108 2109 0=30 1=6 11=64 2=256
+Permute                  permute_623              1 1 2109 2110 0=2
+Reshape                  reshape_1430             1 1 2110 2111 0=30 1=64 2=1536
+Reshape                  reshape_1431             1 1 2104 2112 0=180 1=16384
+Gemm                     gemm_181                 1 1 2112 2113 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1432             1 1 2113 2114 0=180 1=64 2=256
+Reshape                  reshape_1433             1 1 2114 2115 0=30 1=6 11=64 2=256
+Permute                  permute_624              1 1 2115 2116 0=2
+Reshape                  reshape_1434             1 1 2116 2117 0=30 1=64 2=1536
+Reshape                  reshape_1435             1 1 2103 2118 0=180 1=16384
+Gemm                     gemm_182                 1 1 2118 2119 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1436             1 1 2119 2120 0=180 1=64 2=256
+Reshape                  reshape_1437             1 1 2120 2121 0=30 1=6 11=64 2=256
+Permute                  permute_625              1 1 2121 2122 0=2
+Reshape                  reshape_1438             1 1 2122 2123 0=30 1=64 2=1536
+BinaryOp                 mul_156                  1 1 2111 2124 0=2 1=1 2=0.182574183
+MatMul                   matmultransb_30          2 1 2124 2117 2125 0=1
+Reshape                  reshape_1439             1 1 2125 2126 0=64 1=64 11=6 2=256
+MemoryData               pnnx_fold_13410          0 1 2127 0=64 1=64 11=6 2=1
+BinaryOp                 add_157                  2 1 2126 2127 2128 0=0
+BinaryOp                 add_158                  2 1 2128 49 2129 0=0
+Reshape                  reshape_1440             1 1 2129 2130 0=64 1=64 2=1536
+Softmax                  softmax_375              1 1 2130 2131 0=2 1=1
+MatMul                   matmul_1637              2 1 2131 2123 2132
+Reshape                  reshape_1441             1 1 2132 2133 0=30 1=64 11=6 2=256
+Permute                  permute_626              1 1 2133 2134 0=2
+Reshape                  reshape_1442             1 1 2134 2135 0=180 1=64 2=256
+Reshape                  reshape_1443             1 1 2135 2136 0=180 1=16384
+Gemm                     gemm_183                 1 1 2136 2137 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1444             1 1 2137 2138 0=180 1=64 2=256
+Reshape                  reshape_1445             1 1 2138 2139 0=180 1=8 11=8 2=256
+Permute                  permute_627              1 1 2139 2140 0=2
+Reshape                  reshape_1446             1 1 2140 2141 0=180 1=8 11=128 2=16
+Permute                  permute_628              1 1 2141 2142 0=2
+Reshape                  reshape_1447             1 1 2142 2143 0=180 1=16384
+BinaryOp                 add_159                  2 1 2094 2143 2144 0=0
+Split                    splitncnn_93             1 2 2144 2145 2146
+LayerNorm                ln_329                   1 1 2146 2147 0=180 1=1.000000e-5 2=1
+Gemm                     gemm_184                 1 1 2147 2148 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=360 9=180
+GELU                     gelu_261                 1 1 2148 2149
+Gemm                     gemm_185                 1 1 2149 2150 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=360
+BinaryOp                 add_160                  2 1 2145 2150 2151 0=0
+Split                    splitncnn_94             1 2 2151 2152 2153
+LayerNorm                ln_330                   1 1 2153 2154 0=180 1=1.000000e-5 2=1
+Reshape                  reshape_1448             1 1 2154 2155 0=180 1=128 2=128
+Slice                    slice_1830               1 2 2155 2156 2157 1=0 -23302=1,4
+Slice                    slice_a_1829             1 2 2156 2158 2159 1=1 -23302=1,4
+Slice                    slice_b_1828             1 2 2157 2160 2161 1=1 -23302=1,4
+Concat                   concat_a_1832            2 1 2159 2158 2162 0=1
+Concat                   concat_b_1831            2 1 2161 2160 2163 0=1
+Concat                   concat_1833              2 1 2163 2162 2164 0=0
+Reshape                  reshape_1449             1 1 2164 2165 0=180 1=128 11=8 2=16
+Permute                  permute_629              1 1 2165 2166 0=2
+Reshape                  reshape_1450             1 1 2166 2167 0=180 1=8 11=8 2=256
+Permute                  permute_630              1 1 2167 2168 0=2
+Reshape                  reshape_1451             1 1 2168 2169 0=180 1=64 2=256
+Split                    splitncnn_95             1 3 2169 2170 2171 2172
+Reshape                  reshape_1452             1 1 2172 2173 0=180 1=16384
+Gemm                     gemm_186                 1 1 2173 2174 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1453             1 1 2174 2175 0=180 1=64 2=256
+Reshape                  reshape_1454             1 1 2175 2176 0=30 1=6 11=64 2=256
+Permute                  permute_631              1 1 2176 2177 0=2
+Reshape                  reshape_1455             1 1 2177 2178 0=30 1=64 2=1536
+Reshape                  reshape_1456             1 1 2171 2179 0=180 1=16384
+Gemm                     gemm_187                 1 1 2179 2180 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1457             1 1 2180 2181 0=180 1=64 2=256
+Reshape                  reshape_1458             1 1 2181 2182 0=30 1=6 11=64 2=256
+Permute                  permute_632              1 1 2182 2183 0=2
+Reshape                  reshape_1459             1 1 2183 2184 0=30 1=64 2=1536
+Reshape                  reshape_1460             1 1 2170 2185 0=180 1=16384
+Gemm                     gemm_188                 1 1 2185 2186 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1461             1 1 2186 2187 0=180 1=64 2=256
+Reshape                  reshape_1462             1 1 2187 2188 0=30 1=6 11=64 2=256
+Permute                  permute_633              1 1 2188 2189 0=2
+Reshape                  reshape_1463             1 1 2189 2190 0=30 1=64 2=1536
+BinaryOp                 mul_161                  1 1 2178 2191 0=2 1=1 2=0.182574183
+MatMul                   matmultransb_31          2 1 2191 2184 2192 0=1
+Reshape                  reshape_1464             1 1 2192 2193 0=64 1=64 11=6 2=256
+MemoryData               pnnx_fold_13798          0 1 2194 0=64 1=64 11=6 2=1
+BinaryOp                 add_162                  2 1 2193 2194 2195 0=0
+BinaryOp                 add_163                  2 1 2195 135 2196 0=0
+Reshape                  reshape_1465             1 1 2196 2197 0=64 1=64 2=1536
+Softmax                  softmax_376              1 1 2197 2198 0=2 1=1
+MatMul                   matmul_1639              2 1 2198 2190 2199
+Reshape                  reshape_1466             1 1 2199 2200 0=30 1=64 11=6 2=256
+Permute                  permute_634              1 1 2200 2201 0=2
+Reshape                  reshape_1467             1 1 2201 2202 0=180 1=64 2=256
+Reshape                  reshape_1468             1 1 2202 2203 0=180 1=16384
+Gemm                     gemm_189                 1 1 2203 2204 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1469             1 1 2204 2205 0=180 1=64 2=256
+Reshape                  reshape_1470             1 1 2205 2206 0=180 1=8 11=8 2=256
+Permute                  permute_635              1 1 2206 2207 0=2
+Reshape                  reshape_1471             1 1 2207 2208 0=180 1=8 11=128 2=16
+Permute                  permute_636              1 1 2208 2209 0=2
+Reshape                  reshape_1472             1 1 2209 2210 0=180 1=128 2=128
+Slice                    slice_1836               1 2 2210 2211 2212 1=0 -23302=1,-4
+Slice                    slice_a_1835             1 2 2211 2213 2214 1=1 -23302=1,-4
+Slice                    slice_b_1834             1 2 2212 2215 2216 1=1 -23302=1,-4
+Concat                   concat_a_1838            2 1 2214 2213 2217 0=1
+Concat                   concat_b_1837            2 1 2216 2215 2218 0=1
+Concat                   concat_1839              2 1 2218 2217 2219 0=0
+Reshape                  reshape_1473             1 1 2219 2220 0=180 1=16384
+BinaryOp                 add_164                  2 1 2152 2220 2221 0=0
+Split                    splitncnn_96             1 2 2221 2222 2223
+LayerNorm                ln_331                   1 1 2223 2224 0=180 1=1.000000e-5 2=1
+Gemm                     gemm_190                 1 1 2224 2225 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=360 9=180
+GELU                     gelu_262                 1 1 2225 2226
+Gemm                     gemm_191                 1 1 2226 2227 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=360
+BinaryOp                 add_165                  2 1 2222 2227 2228 0=0
+Split                    splitncnn_97             1 2 2228 2229 2230
+LayerNorm                ln_332                   1 1 2230 2231 0=180 1=1.000000e-5 2=1
+Reshape                  reshape_1474             1 1 2231 2232 0=180 1=128 11=8 2=16
+Permute                  permute_637              1 1 2232 2233 0=2
+Reshape                  reshape_1475             1 1 2233 2234 0=180 1=8 11=8 2=256
+Permute                  permute_638              1 1 2234 2235 0=2
+Reshape                  reshape_1476             1 1 2235 2236 0=180 1=64 2=256
+Split                    splitncnn_98             1 3 2236 2237 2238 2239
+Reshape                  reshape_1477             1 1 2239 2240 0=180 1=16384
+Gemm                     gemm_192                 1 1 2240 2241 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1478             1 1 2241 2242 0=180 1=64 2=256
+Reshape                  reshape_1479             1 1 2242 2243 0=30 1=6 11=64 2=256
+Permute                  permute_639              1 1 2243 2244 0=2
+Reshape                  reshape_1480             1 1 2244 2245 0=30 1=64 2=1536
+Reshape                  reshape_1481             1 1 2238 2246 0=180 1=16384
+Gemm                     gemm_193                 1 1 2246 2247 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1482             1 1 2247 2248 0=180 1=64 2=256
+Reshape                  reshape_1483             1 1 2248 2249 0=30 1=6 11=64 2=256
+Permute                  permute_640              1 1 2249 2250 0=2
+Reshape                  reshape_1484             1 1 2250 2251 0=30 1=64 2=1536
+Reshape                  reshape_1485             1 1 2237 2252 0=180 1=16384
+Gemm                     gemm_194                 1 1 2252 2253 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1486             1 1 2253 2254 0=180 1=64 2=256
+Reshape                  reshape_1487             1 1 2254 2255 0=30 1=6 11=64 2=256
+Permute                  permute_641              1 1 2255 2256 0=2
+Reshape                  reshape_1488             1 1 2256 2257 0=30 1=64 2=1536
+BinaryOp                 mul_166                  1 1 2245 2258 0=2 1=1 2=0.182574183
+MatMul                   matmultransb_32          2 1 2258 2251 2259 0=1
+Reshape                  reshape_1489             1 1 2259 2260 0=64 1=64 11=6 2=256
+MemoryData               pnnx_fold_14185          0 1 2261 0=64 1=64 11=6 2=1
+BinaryOp                 add_167                  2 1 2260 2261 2262 0=0
+BinaryOp                 add_168                  2 1 2262 48 2263 0=0
+Reshape                  reshape_1490             1 1 2263 2264 0=64 1=64 2=1536
+Softmax                  softmax_377              1 1 2264 2265 0=2 1=1
+MatMul                   matmul_1641              2 1 2265 2257 2266
+Reshape                  reshape_1491             1 1 2266 2267 0=30 1=64 11=6 2=256
+Permute                  permute_642              1 1 2267 2268 0=2
+Reshape                  reshape_1492             1 1 2268 2269 0=180 1=64 2=256
+Reshape                  reshape_1493             1 1 2269 2270 0=180 1=16384
+Gemm                     gemm_195                 1 1 2270 2271 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1494             1 1 2271 2272 0=180 1=64 2=256
+Reshape                  reshape_1495             1 1 2272 2273 0=180 1=8 11=8 2=256
+Permute                  permute_643              1 1 2273 2274 0=2
+Reshape                  reshape_1496             1 1 2274 2275 0=180 1=8 11=128 2=16
+Permute                  permute_644              1 1 2275 2276 0=2
+Reshape                  reshape_1497             1 1 2276 2277 0=180 1=16384
+BinaryOp                 add_169                  2 1 2229 2277 2278 0=0
+Split                    splitncnn_99             1 2 2278 2279 2280
+LayerNorm                ln_333                   1 1 2280 2281 0=180 1=1.000000e-5 2=1
+Gemm                     gemm_196                 1 1 2281 2282 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=360 9=180
+GELU                     gelu_263                 1 1 2282 2283
+Gemm                     gemm_197                 1 1 2283 2284 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=360
+BinaryOp                 add_170                  2 1 2279 2284 2285 0=0
+Split                    splitncnn_100            1 2 2285 2286 2287
+LayerNorm                ln_334                   1 1 2287 2288 0=180 1=1.000000e-5 2=1
+Reshape                  reshape_1498             1 1 2288 2289 0=180 1=128 2=128
+Slice                    slice_1842               1 2 2289 2290 2291 1=0 -23302=1,4
+Slice                    slice_a_1841             1 2 2290 2292 2293 1=1 -23302=1,4
+Slice                    slice_b_1840             1 2 2291 2294 2295 1=1 -23302=1,4
+Concat                   concat_a_1844            2 1 2293 2292 2296 0=1
+Concat                   concat_b_1843            2 1 2295 2294 2297 0=1
+Concat                   concat_1845              2 1 2297 2296 2298 0=0
+Reshape                  reshape_1499             1 1 2298 2299 0=180 1=128 11=8 2=16
+Permute                  permute_645              1 1 2299 2300 0=2
+Reshape                  reshape_1500             1 1 2300 2301 0=180 1=8 11=8 2=256
+Permute                  permute_646              1 1 2301 2302 0=2
+Reshape                  reshape_1501             1 1 2302 2303 0=180 1=64 2=256
+Split                    splitncnn_101            1 3 2303 2304 2305 2306
+Reshape                  reshape_1502             1 1 2306 2307 0=180 1=16384
+Gemm                     gemm_198                 1 1 2307 2308 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1503             1 1 2308 2309 0=180 1=64 2=256
+Reshape                  reshape_1504             1 1 2309 2310 0=30 1=6 11=64 2=256
+Permute                  permute_647              1 1 2310 2311 0=2
+Reshape                  reshape_1505             1 1 2311 2312 0=30 1=64 2=1536
+Reshape                  reshape_1506             1 1 2305 2313 0=180 1=16384
+Gemm                     gemm_199                 1 1 2313 2314 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1507             1 1 2314 2315 0=180 1=64 2=256
+Reshape                  reshape_1508             1 1 2315 2316 0=30 1=6 11=64 2=256
+Permute                  permute_648              1 1 2316 2317 0=2
+Reshape                  reshape_1509             1 1 2317 2318 0=30 1=64 2=1536
+Reshape                  reshape_1510             1 1 2304 2319 0=180 1=16384
+Gemm                     gemm_200                 1 1 2319 2320 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1511             1 1 2320 2321 0=180 1=64 2=256
+Reshape                  reshape_1512             1 1 2321 2322 0=30 1=6 11=64 2=256
+Permute                  permute_649              1 1 2322 2323 0=2
+Reshape                  reshape_1513             1 1 2323 2324 0=30 1=64 2=1536
+BinaryOp                 mul_171                  1 1 2312 2325 0=2 1=1 2=0.182574183
+MatMul                   matmultransb_33          2 1 2325 2318 2326 0=1
+Reshape                  reshape_1514             1 1 2326 2327 0=64 1=64 11=6 2=256
+MemoryData               pnnx_fold_14573          0 1 2328 0=64 1=64 11=6 2=1
+BinaryOp                 add_172                  2 1 2327 2328 2329 0=0
+BinaryOp                 add_173                  2 1 2329 134 2330 0=0
+Reshape                  reshape_1515             1 1 2330 2331 0=64 1=64 2=1536
+Softmax                  softmax_378              1 1 2331 2332 0=2 1=1
+MatMul                   matmul_1643              2 1 2332 2324 2333
+Reshape                  reshape_1516             1 1 2333 2334 0=30 1=64 11=6 2=256
+Permute                  permute_650              1 1 2334 2335 0=2
+Reshape                  reshape_1517             1 1 2335 2336 0=180 1=64 2=256
+Reshape                  reshape_1518             1 1 2336 2337 0=180 1=16384
+Gemm                     gemm_201                 1 1 2337 2338 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1519             1 1 2338 2339 0=180 1=64 2=256
+Reshape                  reshape_1520             1 1 2339 2340 0=180 1=8 11=8 2=256
+Permute                  permute_651              1 1 2340 2341 0=2
+Reshape                  reshape_1521             1 1 2341 2342 0=180 1=8 11=128 2=16
+Permute                  permute_652              1 1 2342 2343 0=2
+Reshape                  reshape_1522             1 1 2343 2344 0=180 1=128 2=128
+Slice                    slice_1848               1 2 2344 2345 2346 1=0 -23302=1,-4
+Slice                    slice_a_1847             1 2 2345 2347 2348 1=1 -23302=1,-4
+Slice                    slice_b_1846             1 2 2346 2349 2350 1=1 -23302=1,-4
+Concat                   concat_a_1850            2 1 2348 2347 2351 0=1
+Concat                   concat_b_1849            2 1 2350 2349 2352 0=1
+Concat                   concat_1851              2 1 2352 2351 2353 0=0
+Reshape                  reshape_1523             1 1 2353 2354 0=180 1=16384
+BinaryOp                 add_174                  2 1 2286 2354 2355 0=0
+Split                    splitncnn_102            1 2 2355 2356 2357
+LayerNorm                ln_335                   1 1 2357 2358 0=180 1=1.000000e-5 2=1
+Gemm                     gemm_202                 1 1 2358 2359 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=360 9=180
+GELU                     gelu_264                 1 1 2359 2360
+Gemm                     gemm_203                 1 1 2360 2361 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=360
+BinaryOp                 add_175                  2 1 2356 2361 2362 0=0
+Split                    splitncnn_103            1 2 2362 2363 2364
+LayerNorm                ln_336                   1 1 2364 2365 0=180 1=1.000000e-5 2=1
+Reshape                  reshape_1524             1 1 2365 2366 0=180 1=128 11=8 2=16
+Permute                  permute_653              1 1 2366 2367 0=2
+Reshape                  reshape_1525             1 1 2367 2368 0=180 1=8 11=8 2=256
+Permute                  permute_654              1 1 2368 2369 0=2
+Reshape                  reshape_1526             1 1 2369 2370 0=180 1=64 2=256
+Split                    splitncnn_104            1 3 2370 2371 2372 2373
+Reshape                  reshape_1527             1 1 2373 2374 0=180 1=16384
+Gemm                     gemm_204                 1 1 2374 2375 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1528             1 1 2375 2376 0=180 1=64 2=256
+Reshape                  reshape_1529             1 1 2376 2377 0=30 1=6 11=64 2=256
+Permute                  permute_655              1 1 2377 2378 0=2
+Reshape                  reshape_1530             1 1 2378 2379 0=30 1=64 2=1536
+Reshape                  reshape_1531             1 1 2372 2380 0=180 1=16384
+Gemm                     gemm_205                 1 1 2380 2381 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1532             1 1 2381 2382 0=180 1=64 2=256
+Reshape                  reshape_1533             1 1 2382 2383 0=30 1=6 11=64 2=256
+Permute                  permute_656              1 1 2383 2384 0=2
+Reshape                  reshape_1534             1 1 2384 2385 0=30 1=64 2=1536
+Reshape                  reshape_1535             1 1 2371 2386 0=180 1=16384
+Gemm                     gemm_206                 1 1 2386 2387 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1536             1 1 2387 2388 0=180 1=64 2=256
+Reshape                  reshape_1537             1 1 2388 2389 0=30 1=6 11=64 2=256
+Permute                  permute_657              1 1 2389 2390 0=2
+Reshape                  reshape_1538             1 1 2390 2391 0=30 1=64 2=1536
+BinaryOp                 mul_176                  1 1 2379 2392 0=2 1=1 2=0.182574183
+MatMul                   matmultransb_34          2 1 2392 2385 2393 0=1
+Reshape                  reshape_1539             1 1 2393 2394 0=64 1=64 11=6 2=256
+MemoryData               pnnx_fold_14960          0 1 2395 0=64 1=64 11=6 2=1
+BinaryOp                 add_177                  2 1 2394 2395 2396 0=0
+BinaryOp                 add_178                  2 1 2396 47 2397 0=0
+Reshape                  reshape_1540             1 1 2397 2398 0=64 1=64 2=1536
+Softmax                  softmax_379              1 1 2398 2399 0=2 1=1
+MatMul                   matmul_1645              2 1 2399 2391 2400
+Reshape                  reshape_1541             1 1 2400 2401 0=30 1=64 11=6 2=256
+Permute                  permute_658              1 1 2401 2402 0=2
+Reshape                  reshape_1542             1 1 2402 2403 0=180 1=64 2=256
+Reshape                  reshape_1543             1 1 2403 2404 0=180 1=16384
+Gemm                     gemm_207                 1 1 2404 2405 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1544             1 1 2405 2406 0=180 1=64 2=256
+Reshape                  reshape_1545             1 1 2406 2407 0=180 1=8 11=8 2=256
+Permute                  permute_659              1 1 2407 2408 0=2
+Reshape                  reshape_1546             1 1 2408 2409 0=180 1=8 11=128 2=16
+Permute                  permute_660              1 1 2409 2410 0=2
+Reshape                  reshape_1547             1 1 2410 2411 0=180 1=16384
+BinaryOp                 add_179                  2 1 2363 2411 2412 0=0
+Split                    splitncnn_105            1 2 2412 2413 2414
+LayerNorm                ln_337                   1 1 2414 2415 0=180 1=1.000000e-5 2=1
+Gemm                     gemm_208                 1 1 2415 2416 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=360 9=180
+GELU                     gelu_265                 1 1 2416 2417
+Gemm                     gemm_209                 1 1 2417 2418 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=360
+BinaryOp                 add_180                  2 1 2413 2418 2419 0=0
+Split                    splitncnn_106            1 2 2419 2420 2421
+LayerNorm                ln_338                   1 1 2421 2422 0=180 1=1.000000e-5 2=1
+Reshape                  reshape_1548             1 1 2422 2423 0=180 1=128 2=128
+Slice                    slice_1854               1 2 2423 2424 2425 1=0 -23302=1,4
+Slice                    slice_a_1853             1 2 2424 2426 2427 1=1 -23302=1,4
+Slice                    slice_b_1852             1 2 2425 2428 2429 1=1 -23302=1,4
+Concat                   concat_a_1856            2 1 2427 2426 2430 0=1
+Concat                   concat_b_1855            2 1 2429 2428 2431 0=1
+Concat                   concat_1857              2 1 2431 2430 2432 0=0
+Reshape                  reshape_1549             1 1 2432 2433 0=180 1=128 11=8 2=16
+Permute                  permute_661              1 1 2433 2434 0=2
+Reshape                  reshape_1550             1 1 2434 2435 0=180 1=8 11=8 2=256
+Permute                  permute_662              1 1 2435 2436 0=2
+Reshape                  reshape_1551             1 1 2436 2437 0=180 1=64 2=256
+Split                    splitncnn_107            1 3 2437 2438 2439 2440
+Reshape                  reshape_1552             1 1 2440 2441 0=180 1=16384
+Gemm                     gemm_210                 1 1 2441 2442 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1553             1 1 2442 2443 0=180 1=64 2=256
+Reshape                  reshape_1554             1 1 2443 2444 0=30 1=6 11=64 2=256
+Permute                  permute_663              1 1 2444 2445 0=2
+Reshape                  reshape_1555             1 1 2445 2446 0=30 1=64 2=1536
+Reshape                  reshape_1556             1 1 2439 2447 0=180 1=16384
+Gemm                     gemm_211                 1 1 2447 2448 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1557             1 1 2448 2449 0=180 1=64 2=256
+Reshape                  reshape_1558             1 1 2449 2450 0=30 1=6 11=64 2=256
+Permute                  permute_664              1 1 2450 2451 0=2
+Reshape                  reshape_1559             1 1 2451 2452 0=30 1=64 2=1536
+Reshape                  reshape_1560             1 1 2438 2453 0=180 1=16384
+Gemm                     gemm_212                 1 1 2453 2454 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1561             1 1 2454 2455 0=180 1=64 2=256
+Reshape                  reshape_1562             1 1 2455 2456 0=30 1=6 11=64 2=256
+Permute                  permute_665              1 1 2456 2457 0=2
+Reshape                  reshape_1563             1 1 2457 2458 0=30 1=64 2=1536
+BinaryOp                 mul_181                  1 1 2446 2459 0=2 1=1 2=0.182574183
+MatMul                   matmultransb_35          2 1 2459 2452 2460 0=1
+Reshape                  reshape_1564             1 1 2460 2461 0=64 1=64 11=6 2=256
+MemoryData               pnnx_fold_15348          0 1 2462 0=64 1=64 11=6 2=1
+BinaryOp                 add_182                  2 1 2461 2462 2463 0=0
+BinaryOp                 add_183                  2 1 2463 133 2464 0=0
+Reshape                  reshape_1565             1 1 2464 2465 0=64 1=64 2=1536
+Softmax                  softmax_380              1 1 2465 2466 0=2 1=1
+MatMul                   matmul_1647              2 1 2466 2458 2467
+Reshape                  reshape_1566             1 1 2467 2468 0=30 1=64 11=6 2=256
+Permute                  permute_666              1 1 2468 2469 0=2
+Reshape                  reshape_1567             1 1 2469 2470 0=180 1=64 2=256
+Reshape                  reshape_1568             1 1 2470 2471 0=180 1=16384
+Gemm                     gemm_213                 1 1 2471 2472 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=180
+Reshape                  reshape_1569             1 1 2472 2473 0=180 1=64 2=256
+Reshape                  reshape_1570             1 1 2473 2474 0=180 1=8 11=8 2=256
+Permute                  permute_667              1 1 2474 2475 0=2
+Reshape                  reshape_1571             1 1 2475 2476 0=180 1=8 11=128 2=16
+Permute                  permute_668              1 1 2476 2477 0=2
+Reshape                  reshape_1572             1 1 2477 2478 0=180 1=128 2=128
+Slice                    slice_1860               1 2 2478 2479 2480 1=0 -23302=1,-4
+Slice                    slice_a_1859             1 2 2479 2481 2482 1=1 -23302=1,-4
+Slice                    slice_b_1858             1 2 2480 2483 2484 1=1 -23302=1,-4
+Concat                   concat_a_1862            2 1 2482 2481 2485 0=1
+Concat                   concat_b_1861            2 1 2484 2483 2486 0=1
+Concat                   concat_1863              2 1 2486 2485 2487 0=0
+Reshape                  reshape_1573             1 1 2487 2488 0=180 1=16384
+BinaryOp                 add_184                  2 1 2420 2488 2489 0=0
+Split                    splitncnn_108            1 2 2489 2490 2491
+LayerNorm                ln_339                   1 1 2491 2492 0=180 1=1.000000e-5 2=1
+Gemm                     gemm_214                 1 1 2492 2493 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=360 9=180
+GELU                     gelu_266                 1 1 2493 2494
+Gemm                     gemm_215                 1 1 2494 2495 10=4 2=0 3=1 4=0 5=1 6=1 7=16384 8=180 9=360
+BinaryOp                 add_185                  2 1 2490 2495 2496 0=0
+Permute                  transpose_1911           1 1 2496 2497 0=1
+Reshape                  reshape_1574             1 1 2497 2498 0=128 1=128 2=180
+Convolution              conv_224                 1 1 2498 2499 0=180 1=3 11=3 12=1 13=1 14=1 2=1 3=1 4=1 5=1 6=291600
+Reshape                  flatten_1920             1 1 2499 2500 0=16384 1=180
+Permute                  transpose_1912           1 1 2500 2501 0=1
+BinaryOp                 add_186                  2 1 2501 2095 2502 0=0
+LayerNorm                ln_340                   1 1 2502 2503 0=180 1=1.000000e-5 2=1
+Permute                  transpose_1913           1 1 2503 2504 0=1
+Reshape                  reshape_1575             1 1 2504 2505 0=128 1=128 2=180
+Convolution              conv_225                 1 1 2505 2506 0=180 1=3 11=3 12=1 13=1 14=1 2=1 3=1 4=1 5=1 6=291600
+BinaryOp                 add_187                  2 1 2506 6 2507 0=0
+Convolution              convrelu_0               1 1 2507 2508 0=64 1=3 -23310=1,0.01 11=3 12=1 13=1 14=1 2=1 3=1 4=1 5=1 6=103680 9=2
+Interp                   upsample_nearest_216     1 1 2508 2509 0=1 1=2.0 2=2.0 6=0
+Convolution              convrelu_1               1 1 2509 2510 0=64 1=3 -23310=1,0.2 11=3 12=1 13=1 14=1 2=1 3=1 4=1 5=1 6=36864 9=2
+Interp                   upsample_nearest_217     1 1 2510 2511 0=1 1=2.0 2=2.0 6=0
+Convolution              convrelu_2               1 1 2511 2512 0=64 1=3 -23310=1,0.2 11=3 12=1 13=1 14=1 2=1 3=1 4=1 5=1 6=36864 9=2
+Convolution              convrelu_3               1 1 2512 2513 0=64 1=3 -23310=1,0.2 11=3 12=1 13=1 14=1 2=1 3=1 4=1 5=1 6=36864 9=2
+Convolution              conv_230                 1 1 2513 2514 0=3 1=3 11=3 12=1 13=1 14=1 2=1 3=1 4=1 5=1 6=1728
+BinaryOp                 add_188                  2 1 2514 3 out0 0=0

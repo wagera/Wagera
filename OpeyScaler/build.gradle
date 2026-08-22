@@ -1,0 +1,18 @@
+// Gradle ile derlemek isteyenler icin. Depoda dogrulanmis yol tools/build-apk.sh betigidir;
+// bu dosyalar Android Studio'da acabilmek icin bulunur.
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:8.5.2"
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
