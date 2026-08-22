@@ -146,4 +146,21 @@
     <string name="model_cugan2d_desc">For noisy or heavily compressed drawings.</string>
     <string name="model_cugan3_desc">Three times in a single pass; drawings and illustration.</string>
     <string name="model_cugan4_desc">Four times in a single pass; drawings and illustration.</string>
+    <!-- Theme, navigation and onboarding -->
+    <string name="theme_system">Auto</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="nav_upscale">Upscale</string>
+    <string name="nav_history">History</string>
+    <string name="nav_requests">Requests</string>
+    <string name="onboarding_title">Upscale photos on your phone</string>
+    <string name="onboarding_point_1">Nine AI models, from 2K to 512K.</string>
+    <string name="onboarding_point_2">Everything runs on the device; no photo is ever uploaded.</string>
+    <string name="onboarding_point_3">Pick how hard the phone works — quality never changes.</string>
+    <string name="onboarding_start">Get started</string>
+    <string name="section_history">SAVED PHOTOS</string>
+    <string name="history_empty">Photos you upscale will appear here.</string>
+    <string name="history_count">%1$d photo(s) · Pictures / AstraUpscale</string>
+    <string name="history_item">%1$d × %2$d · %3$s</string>
+    <string name="history_refresh">Refresh</string>
 </resources>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- AstraUpscale renk olcegi — KARANLIK tema (siyah agirlikli). -->
+<resources>
+    <color name="bg">#FF050506</color>
+    <color name="surface_low">#FF0B0C0E</color>
+    <color name="surface">#FF0F1013</color>
+    <color name="surface_high">#FF16171B</color>
+    <color name="surface_press">#FF1D1F24</color>
+
+    <color name="hairline">#FF1D1F23</color>
+    <color name="hairline_strong">#FF2A2D33</color>
+
+    <color name="content">#FFF5F6F8</color>
+    <color name="content_soft">#FFC5C9CF</color>
+    <color name="content_dim">#FF8B9098</color>
+    <color name="content_faint">#FF5F646C</color>
+    <color name="content_ghost">#FF3A3E45</color>
+
+    <!-- Kartin ust kenarinda yukaridan gelen cok hafif isik -->
+    <color name="sheen">#0EFFFFFF</color>
+    <color name="sheen_soft">#03FFFFFF</color>
+
+    <color name="glow_12">#1FFFFFFF</color>
+    <color name="glow_08">#14FFFFFF</color>
+</resources>

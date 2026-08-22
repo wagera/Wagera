@@ -1,6 +1,6 @@
 {
-  "versionCode": 5,
-  "versionName": "4.0",
+  "versionCode": 6,
+  "versionName": "5.0",
   "apkUrl": "https://github.com/wagera/Wagera/raw/main/AstraUpscale/release/AstraUpscale.apk",
-  "notes": "AstraUpscale: new identity, bilingual interface, user requests page."
+  "notes": "Light and dark themes, bottom navigation, onboarding screen and a history page."
 }

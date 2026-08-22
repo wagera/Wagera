@@ -1,31 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    AstraUpscale tek renkli (monokrom) olcegi.
-    Renk yerine derinlik: her yuzey bir onceki katmandan bir tik acilir,
+    AstraUpscale renk olcegi — AYDINLIK tema.
+
+    Renk yerine derinlik: her yuzey bir onceki katmandan bir tik ayrilir,
     ayrimlar 1 px sac cizgileriyle yapilir. Vurgu rengi yoktur; secili oge
-    beyaza doner ve zemin siyaha gecer.
+    "content" rengine boyanir ve yazisi "bg" rengine doner. Ayni kural karanlik
+    temada kendiliginden tersine doner.
 -->
 <resources>
-    <!-- Siyah katmanlar: sayfa zemininden yukari dogru -->
-    <color name="ink">#FF050506</color>
-    <color name="ink_raised">#FF0B0C0E</color>
-    <color name="ink_card">#FF0F1013</color>
-    <color name="ink_chip">#FF16171B</color>
-    <color name="ink_press">#FF1D1F24</color>
+    <!-- Yuzeyler: sayfa zemininden yukari dogru -->
+    <color name="bg">#FFF6F7F9</color>
+    <color name="surface_low">#FFF0F1F4</color>
+    <color name="surface">#FFFFFFFF</color>
+    <color name="surface_high">#FFEDEEF2</color>
+    <color name="surface_press">#FFE2E4EA</color>
 
     <!-- Sac cizgileri -->
-    <color name="hairline">#FF1D1F23</color>
-    <color name="hairline_strong">#FF2A2D33</color>
+    <color name="hairline">#FFE3E5EA</color>
+    <color name="hairline_strong">#FFD3D6DD</color>
 
-    <!-- Beyaz katmanlar -->
-    <color name="paper">#FFF5F6F8</color>
-    <color name="paper_soft">#FFC5C9CF</color>
-    <color name="paper_dim">#FF8B9098</color>
-    <color name="paper_faint">#FF5F646C</color>
-    <color name="paper_ghost">#FF3A3E45</color>
+    <!-- Icerik: birincilden en sessize -->
+    <color name="content">#FF14161C</color>
+    <color name="content_soft">#FF3C414B</color>
+    <color name="content_dim">#FF697079</color>
+    <color name="content_faint">#FF8E949E</color>
+    <color name="content_ghost">#FFB6BAC3</color>
 
-    <!-- Beyazin saydam tonlari (vurgu ve parilti icin) -->
-    <color name="glow_12">#1FFFFFFF</color>
-    <color name="glow_08">#14FFFFFF</color>
-    <color name="glow_04">#0AFFFFFF</color>
+    <!-- Kart ustundeki isik: aydinlik temada gorunmez -->
+    <color name="sheen">#00FFFFFF</color>
+    <color name="sheen_soft">#00FFFFFF</color>
+
+    <!-- Dokunma parlamasi -->
+    <color name="glow_12">#14000000</color>
+    <color name="glow_08">#0D000000</color>
 </resources>

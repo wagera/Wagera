@@ -143,4 +143,21 @@
     <string name="model_cugan2d_desc">Gürültülü veya aşırı sıkıştırılmış çizimler için.</string>
     <string name="model_cugan3_desc">Tek geçişte üç kat; çizim ve illüstrasyon.</string>
     <string name="model_cugan4_desc">Tek geçişte dört kat; çizim ve illüstrasyon.</string>
+    <!-- Tema, gezinme ve tanıtım -->
+    <string name="theme_system">Oto</string>
+    <string name="theme_light">Açık</string>
+    <string name="theme_dark">Koyu</string>
+    <string name="nav_upscale">Büyüt</string>
+    <string name="nav_history">Geçmiş</string>
+    <string name="nav_requests">İstekler</string>
+    <string name="onboarding_title">Fotoğrafları telefonunda büyüt</string>
+    <string name="onboarding_point_1">Dokuz yapay zekâ modeli, 2K\'dan 512K\'ya.</string>
+    <string name="onboarding_point_2">Her şey cihazda çalışır; hiçbir fotoğraf yüklenmez.</string>
+    <string name="onboarding_point_3">Telefonu ne kadar zorlayacağını sen seç — kalite değişmez.</string>
+    <string name="onboarding_start">Başla</string>
+    <string name="section_history">KAYDEDİLEN FOTOĞRAFLAR</string>
+    <string name="history_empty">Büyüttüğün fotoğraflar burada görünecek.</string>
+    <string name="history_count">%1$d fotoğraf · Pictures / AstraUpscale</string>
+    <string name="history_item">%1$d × %2$d · %3$s</string>
+    <string name="history_refresh">Yenile</string>
 </resources>
