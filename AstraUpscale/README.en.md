@@ -204,6 +204,7 @@ On a desktop (4-core x86_64, no GPU) with real images:
 | Memory source vs file source (two-pass path) | bit-identical |
 | Our JPEG encoder vs PNG output | 46 dB PSNR — expected at q92 |
 | Noise cleanup (σ ≈ 12) | 26.8 → 32.8 dB, edges preserved |
+| Report queue (`tools/desktop/QueueTest.java`) | 11 checks pass: Turkish text and emoji round-trip intact, a corrupt line does not break the queue, sent entries are removed correctly, the 500-entry cap keeps the newest |
 
 ## Build
 

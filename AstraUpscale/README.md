@@ -65,6 +65,11 @@ da kayıtlar kaybolmaz.
 Mesajla birlikte gönderilenler: uygulama sürümü, dil, Android sürümü, cihaz
 modeli, işlemci ve bellek. **Fotoğraflar asla gönderilmez.**
 
+Kuyruk `tools/desktop/QueueTest.java` ile masaüstünde sınandı; 11 denetimin
+tamamı geçti: Türkçe metin ve emoji kayıpsız gidip geliyor, bozuk bir satır
+kuyruğun tamamını bozmuyor, gönderilen kayıtlar doğru siliniyor ve 500 kayıtlık
+üst sınır en yenileri koruyor.
+
 ## Arayüz
 
 Tek renkli, siyah ağırlıklı bir tasarım. Vurgu rengi yoktur: seçili öge beyaza

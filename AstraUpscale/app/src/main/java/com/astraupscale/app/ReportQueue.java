@@ -44,27 +44,34 @@ public final class ReportQueue {
     }
 
     /** Kuyruga bir kayit ekler. */
-    public static synchronized void add(Context ctx, String target, JSONObject payload) {
+    public static void add(Context ctx, String target, JSONObject payload) {
+        add(file(ctx), target, payload);
+    }
+
+    /** Kuyruga bir kayit ekler (dosya uzerinden; masaustunde de calisir). */
+    public static synchronized void add(File f, String target, JSONObject payload) {
         try {
             JSONObject line = new JSONObject();
             line.put("target", target);
             line.put("payload", payload);
             line.put("queuedAt", System.currentTimeMillis());
 
-            File f = file(ctx);
             try (FileOutputStream out = new FileOutputStream(f, true)) {
                 out.write((line.toString() + "\n").getBytes(UTF8));
             }
-            trim(ctx);
+            trim(f);
         } catch (Throwable ignored) {
             // Kuyruga yazamamak uygulamayi etkilememeli.
         }
     }
 
     /** Kuyruktaki tum kayitlari sirayla okur. */
-    public static synchronized List<Entry> all(Context ctx) {
+    public static List<Entry> all(Context ctx) {
+        return all(file(ctx));
+    }
+
+    public static synchronized List<Entry> all(File f) {
         List<Entry> out = new ArrayList<>();
-        File f = file(ctx);
         if (!f.exists()) return out;
         try (RandomAccessFile raf = new RandomAccessFile(f, "r")) {
             String line;
@@ -85,30 +92,34 @@ public final class ReportQueue {
         return out;
     }
 
-    public static synchronized int size(Context ctx) {
+    public static int size(Context ctx) {
         return all(ctx).size();
     }
 
     /** Basariyla gonderilen ilk {@code count} kaydi siler. */
-    public static synchronized void removeFirst(Context ctx, int count) {
+    public static void removeFirst(Context ctx, int count) {
+        removeFirst(file(ctx), count);
+    }
+
+    public static synchronized void removeFirst(File f, int count) {
         if (count <= 0) return;
-        List<Entry> rest = all(ctx);
+        List<Entry> rest = all(f);
         if (count >= rest.size()) {
             //noinspection ResultOfMethodCallIgnored
-            file(ctx).delete();
+            f.delete();
             return;
         }
-        rewrite(ctx, rest.subList(count, rest.size()));
+        rewrite(f, rest.subList(count, rest.size()));
     }
 
-    private static void trim(Context ctx) {
-        List<Entry> entries = all(ctx);
+    private static void trim(File f) {
+        List<Entry> entries = all(f);
         if (entries.size() <= MAX_ENTRIES) return;
-        rewrite(ctx, entries.subList(entries.size() - MAX_ENTRIES, entries.size()));
+        rewrite(f, entries.subList(entries.size() - MAX_ENTRIES, entries.size()));
     }
 
-    private static void rewrite(Context ctx, List<Entry> entries) {
-        try (FileOutputStream out = new FileOutputStream(file(ctx), false)) {
+    private static void rewrite(File f, List<Entry> entries) {
+        try (FileOutputStream out = new FileOutputStream(f, false)) {
             for (Entry e : entries) {
                 JSONObject line = new JSONObject();
                 line.put("target", e.target);
