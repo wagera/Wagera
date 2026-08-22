@@ -6,7 +6,7 @@ Fotoğrafları cihaz üzerinde **2K'dan 512K'ya** kadar büyüten Android uygula
 Real-ESRGAN, SwinIR ve Real-CUGAN modelleri APK'nın içinde taşınır; işlem
 tamamen telefonda yapılır ve hiçbir görüntü dışarı çıkmaz.
 
-<img src="docs/arayuz-tr.png" width="320" align="right" alt="Arayüz" />
+<img src="docs/tema-koyu.png" width="250" alt="Koyu tema" /> <img src="docs/tema-acik.png" width="250" alt="Açık tema" />
 
 | | |
 |---|---|
@@ -16,6 +16,8 @@ tamamen telefonda yapılır ve hiçbir görüntü dışarı çıkmaz.
 | Gürültü temizleme | 64K ve üzerinde otomatik: kaynak, büyütmeden önce temizlenir |
 | Zorlama seviyesi | Sakin / Dengeli / Tam güç |
 | Diller | Türkçe ve İngilizce; başlıktaki düğmeyle değiştirilir |
+| Tema | Açık ve koyu; sistem ayarını izler, elle de sabitlenebilir |
+| Sayfalar | Büyüt · Geçmiş · İstekler (alt gezinme çubuğu) |
 | Çıkış | JPEG (kalite ayarlanabilir) veya kayıpsız PNG |
 | Kayıt yeri | Galeri › Pictures › AstraUpscale |
 
@@ -72,20 +74,27 @@ kuyruğun tamamını bozmuyor, gönderilen kayıtlar doğru siliniyor ve 500 kay
 
 ## Arayüz
 
-Tek renkli, siyah ağırlıklı bir tasarım. Vurgu rengi yoktur: seçili öge beyaza
-döner, yazısı siyaha geçer. Ayrımlar 1 piksellik saç çizgileriyle, derinlik ise
-birbirinden bir tık açılan siyah katmanlarla kurulur; kartların üst kenarında
-yukarıdan gelen çok hafif bir ışık vardır.
+Tek renkli bir tasarım; vurgu rengi yoktur. Kural şudur: **seçili öge içerik
+rengine boyanır, yazısı zemin rengine döner.** Bu kural iki temada da
+kendiliğinden tersine döner — koyu temada beyaz zeminli siyah yazı, açık temada
+siyah zeminli beyaz yazı. Ayrımlar 1 piksellik saç çizgileriyle, derinlik ise
+birbirinden bir tık ayrılan yüzeylerle kurulur.
 
-| Katman | Değer | Kullanım |
-|---|---|---|
-| `ink` | `#050506` | sayfa zemini |
-| `ink_raised` | `#0B0C0E` | sekme çubuğu, basılı durum |
-| `ink_card` | `#0F1013` | kart |
-| `ink_chip` | `#16171B` | çip, ikincil düğme |
-| `hairline` | `#1D1F23` | ayrım çizgisi |
-| `paper` | `#F5F6F8` | birincil yazı, seçili zemin |
-| `paper_dim` / `paper_faint` / `paper_ghost` | `#8B9098` / `#5F646C` / `#3A3E45` | azalan önem |
+Renkler anlamsal belirteçlerle tanımlıdır; `values` açık, `values-night` koyu
+temayı taşır. Uygulamada tek bir renk sabiti yoktur.
+
+| Belirteç | Açık | Koyu | Kullanım |
+|---|---|---|---|
+| `bg` | `#F6F7F9` | `#050506` | sayfa zemini |
+| `surface_low` | `#F0F1F4` | `#0B0C0E` | başlık ve alt gezinme çubuğu |
+| `surface` | `#FFFFFF` | `#0F1013` | kart |
+| `surface_high` | `#EDEEF2` | `#16171B` | çip, ikincil düğme |
+| `hairline` | `#E3E5EA` | `#1D1F23` | ayrım çizgisi |
+| `content` | `#14161C` | `#F5F6F8` | birincil yazı, seçili zemin |
+| `content_dim` / `content_faint` / `content_ghost` | `#697079` / `#8E949E` / `#B6BAC3` | `#8B9098` / `#5F646C` / `#3A3E45` | azalan önem |
+
+Üç sayfa alt gezinme çubuğuyla dolaşılır: **Büyüt**, **Geçmiş** (kaydedilen
+fotoğraflar) ve **İstekler**. İlk açılışta kısa bir tanıtım ekranı çıkar.
 
 İşaret dört kollu, kolları içbükey kesilen bir yıldızdır; uygulama simgesinde,
 başlıkta, boş önizlemede ve sonuç kartında aynı vektör kullanılır.

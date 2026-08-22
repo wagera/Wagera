@@ -6,7 +6,7 @@ An Android app that upscales photos on the device, from **2K up to 512K**.
 Real-ESRGAN, SwinIR and Real-CUGAN models ship inside the APK; everything runs
 on the phone and no image ever leaves it.
 
-<img src="docs/interface-en.png" width="320" align="right" alt="Interface" />
+<img src="docs/tema-koyu.png" width="250" alt="Dark theme" /> <img src="docs/tema-acik.png" width="250" alt="Light theme" />
 
 | | |
 |---|---|
@@ -16,6 +16,8 @@ on the phone and no image ever leaves it.
 | Noise cleanup | Automatic at 64K and above: the source is cleaned before upscaling |
 | Load level | Gentle / Balanced / Full power |
 | Languages | Turkish and English, switched from the header |
+| Theme | Light and dark; follows the system setting, can be pinned manually |
+| Pages | Upscale · History · Requests (bottom navigation) |
 | Output | JPEG (adjustable quality) or lossless PNG |
 | Saved to | Gallery › Pictures › AstraUpscale |
 
@@ -118,6 +120,30 @@ The upscaling job runs in a foreground service and holds a partial wake lock, so
 it continues with the screen off or another app in front. Network access is only
 used for the update check and for feedback delivery; image processing never
 touches the network.
+
+## Interface
+
+A single-colour design with no accent hue. The rule is: **the selected element
+is painted in the content colour and its text turns the background colour.**
+That inverts by itself in both themes — white on black in dark, black on white
+in light. Separations are 1-pixel hairlines and depth comes from surfaces that
+step apart one notch at a time.
+
+Colours are semantic tokens; `values` carries the light theme and
+`values-night` the dark one. There is not a single hard-coded colour in the app.
+
+| Token | Light | Dark | Used for |
+|---|---|---|---|
+| `bg` | `#F6F7F9` | `#050506` | page background |
+| `surface_low` | `#F0F1F4` | `#0B0C0E` | header and bottom bar |
+| `surface` | `#FFFFFF` | `#0F1013` | card |
+| `surface_high` | `#EDEEF2` | `#16171B` | chip, secondary button |
+| `hairline` | `#E3E5EA` | `#1D1F23` | separator |
+| `content` | `#14161C` | `#F5F6F8` | primary text, selected fill |
+| `content_dim` / `content_faint` / `content_ghost` | `#697079` / `#8E949E` / `#B6BAC3` | `#8B9098` / `#5F646C` / `#3A3E45` | decreasing importance |
+
+Three pages are reached from the bottom navigation: **Upscale**, **History**
+(saved photos) and **Requests**. A short onboarding screen appears on first run.
 
 ## How it works
 

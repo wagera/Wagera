@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="AppTheme" parent="@android:style/Theme.Material.NoActionBar">
-        <item name="android:colorPrimary">@color/paper</item>
-        <item name="android:colorAccent">@color/paper</item>
-        <item name="android:colorControlNormal">@color/paper_faint</item>
-        <item name="android:colorControlActivated">@color/paper</item>
+    <style name="AppTheme" parent="@android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:colorPrimary">@color/content</item>
+        <item name="android:colorAccent">@color/content</item>
+        <item name="android:colorControlNormal">@color/content_faint</item>
+        <item name="android:colorControlActivated">@color/content</item>
         <item name="android:colorControlHighlight">@color/glow_12</item>
-        <item name="android:windowBackground">@color/ink</item>
-        <item name="android:statusBarColor">@color/ink</item>
-        <item name="android:navigationBarColor">@color/ink</item>
-        <item name="android:textColorPrimary">@color/paper</item>
-        <item name="android:textColorSecondary">@color/paper_dim</item>
-        <item name="android:textColorHint">@color/paper_faint</item>
+        <item name="android:windowBackground">@color/bg</item>
+        <item name="android:statusBarColor">@color/bg</item>
+        <item name="android:navigationBarColor">@color/bg</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:textColorPrimary">@color/content</item>
+        <item name="android:textColorSecondary">@color/content_dim</item>
+        <item name="android:textColorHint">@color/content_faint</item>
     </style>
 
     <!-- Bolum basliklari: kucuk, seyrek harfli, sessiz -->
     <style name="SectionLabel">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/paper_faint</item>
+        <item name="android:textColor">@color/content_faint</item>
         <item name="android:textSize">10sp</item>
         <item name="android:letterSpacing">0.22</item>
         <item name="android:fontFamily">sans-serif-medium</item>
@@ -26,11 +27,11 @@
         <item name="android:layout_marginBottom">10dp</item>
     </style>
 
-    <!-- Kart ici alt baslik: bolum basligindan bir tik daha sessiz -->
+    <!-- Kart ici alt baslik -->
     <style name="TierLabel">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/paper_faint</item>
+        <item name="android:textColor">@color/content_faint</item>
         <item name="android:textSize">10sp</item>
         <item name="android:letterSpacing">0.18</item>
         <item name="android:fontFamily">sans-serif-medium</item>

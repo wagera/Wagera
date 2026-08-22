@@ -52,11 +52,18 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
     private TextView sourceInfo, targetInfo, sharpenValue, qualityValue, progressText,
             progressPercent, resultTitle, resultInfo, modelInfo, stageInfo,
             deviceInfo, loadInfo, denoiseInfo, offlineNote, updateText,
-            tabUpscale, tabRequests, languageButton, queueStatus, updateRecheck;
+            languageButton, themeButton, queueStatus, updateRecheck,
+            historyCount, historyEmpty, historyRefresh,
+            navUpscaleLabel, navHistoryLabel, navRequestsLabel;
     private Button pickButton, startButton, cancelButton, openButton, shareButton,
             formatJpeg, formatPng, stage1, stage2, denoiseToggle, updateButton, sendButton;
     private LinearLayout modelList, progressCard, resultCard, emptyState, qualityRow,
-            loadLevels, updateGate, pageUpscale, pageRequests, kindRow;
+            loadLevels, updateGate, pageUpscale, pageRequests, pageHistory, kindRow,
+            historyList, onboarding, navUpscale, navHistory, navRequests;
+    private ImageView navUpscaleIcon, navHistoryIcon, navRequestsIcon;
+    private Button onboardingStart;
+    /** 0 = buyut, 1 = gecmis, 2 = istekler */
+    private int page;
     private LinearLayout[] tiers;
     private TextView[] tierLabels;
     private SeekBar sharpenSeek, qualitySeek;
@@ -74,7 +81,7 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
     /** 0 = otomatik (64K ve uzeri), 1 = her zaman acik, 2 = kapali */
     private int denoiseMode = 0;
     private int feedbackKind;
-    private boolean requestsPage;
+
 
     private final List<LinearLayout> presetChips = new ArrayList<>();
     private final List<View> modelRows = new ArrayList<>();
@@ -84,7 +91,8 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
     private UpscaleJob lastResult;
 
     @Override protected void attachBaseContext(Context base) {
-        super.attachBaseContext(LocaleHelper.wrap(base));
+        // Once tema, sonra dil: ikisi de yapilandirma uzerinden uygulanir.
+        super.attachBaseContext(LocaleHelper.wrap(ThemeHelper.wrap(base)));
     }
 
     @Override protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +114,10 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         }
         requestNotificationPermission();
         handleShareIntent(getIntent());
-        showPage(false);
+        showPage(0);
+        if (!getSharedPreferences("astraupscale", MODE_PRIVATE).getBoolean("onboarded", false)) {
+            onboarding.setVisibility(View.VISIBLE);
+        }
         refreshTexts();
 
         applyUpdateState(UpdateChecker.pending(this));
@@ -140,8 +151,12 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
             finishAffinity();
             return;
         }
-        if (requestsPage) {
-            showPage(false);
+        if (onboarding.getVisibility() == View.VISIBLE) {
+            finishAffinity();
+            return;
+        }
+        if (page != 0) {
+            showPage(0);
             return;
         }
         super.onBackPressed();
@@ -168,9 +183,24 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         denoiseInfo = findViewById(R.id.denoiseInfo);
         offlineNote = findViewById(R.id.offlineNote);
         updateText = findViewById(R.id.updateText);
-        tabUpscale = findViewById(R.id.tabUpscale);
-        tabRequests = findViewById(R.id.tabRequests);
         languageButton = findViewById(R.id.languageButton);
+        themeButton = findViewById(R.id.themeButton);
+        historyCount = findViewById(R.id.historyCount);
+        historyEmpty = findViewById(R.id.historyEmpty);
+        historyRefresh = findViewById(R.id.historyRefresh);
+        navUpscaleLabel = findViewById(R.id.navUpscaleLabel);
+        navHistoryLabel = findViewById(R.id.navHistoryLabel);
+        navRequestsLabel = findViewById(R.id.navRequestsLabel);
+        navUpscaleIcon = findViewById(R.id.navUpscaleIcon);
+        navHistoryIcon = findViewById(R.id.navHistoryIcon);
+        navRequestsIcon = findViewById(R.id.navRequestsIcon);
+        navUpscale = findViewById(R.id.navUpscale);
+        navHistory = findViewById(R.id.navHistory);
+        navRequests = findViewById(R.id.navRequests);
+        historyList = findViewById(R.id.historyList);
+        onboarding = findViewById(R.id.onboarding);
+        onboardingStart = findViewById(R.id.onboardingStart);
+        pageHistory = findViewById(R.id.pageHistory);
         queueStatus = findViewById(R.id.queueStatus);
         updateRecheck = findViewById(R.id.updateRecheck);
 
@@ -236,14 +266,14 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
             TextView title = new TextView(this);
             title.setText(m.label);
             title.setTextSize(13.5f);
-            title.setTextColor(getColor(R.color.paper));
+            title.setTextColor(getColor(R.color.content));
             text.addView(title);
 
             TextView desc = new TextView(this);
             desc.setText(getString(m.descriptionRes));
             desc.setTextSize(11f);
             desc.setLineSpacing(dp(2), 1f);
-            desc.setTextColor(getColor(R.color.paper_faint));
+            desc.setTextColor(getColor(R.color.content_faint));
             LinearLayout.LayoutParams dlp = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             dlp.topMargin = dp(3);
@@ -255,7 +285,7 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
             badge.setText(m.isNeural() ? m.scale + "×" : "—");
             badge.setTextSize(11f);
             badge.setTypeface(Typeface.MONOSPACE);
-            badge.setTextColor(getColor(R.color.paper_ghost));
+            badge.setTextColor(getColor(R.color.content_ghost));
             LinearLayout.LayoutParams bp = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             bp.leftMargin = dp(10);
@@ -289,11 +319,11 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
             row.setSelected(on);
             LinearLayout text = (LinearLayout) row.getChildAt(0);
             ((TextView) text.getChildAt(0)).setTextColor(
-                    getColor(on ? R.color.paper : R.color.paper_soft));
+                    getColor(on ? R.color.content : R.color.content_soft));
             ((TextView) text.getChildAt(1)).setTextColor(
-                    getColor(on ? R.color.paper_dim : R.color.paper_ghost));
+                    getColor(on ? R.color.content_dim : R.color.content_ghost));
             ((TextView) row.getChildAt(1)).setTextColor(
-                    getColor(on ? R.color.paper_dim : R.color.paper_ghost));
+                    getColor(on ? R.color.content_dim : R.color.content_ghost));
         }
         if (!NativeSr.available()) {
             modelInfo.setText(R.string.engine_unavailable);
@@ -350,7 +380,7 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
             boolean on = values[i] == preset;
             chip.setSelected(on);
             ((TextView) chip.getChildAt(0)).setTextColor(
-                    getColor(on ? R.color.ink : R.color.paper_soft));
+                    getColor(on ? R.color.bg : R.color.content_soft));
         }
     }
 
@@ -384,7 +414,7 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         for (int i = 0; i < loadButtons.size(); i++) {
             boolean on = values[i] == loadLevel;
             loadButtons.get(i).setSelected(on);
-            loadButtons.get(i).setTextColor(getColor(on ? R.color.ink : R.color.paper_soft));
+            loadButtons.get(i).setTextColor(getColor(on ? R.color.bg : R.color.content_soft));
         }
         StringBuilder sb = new StringBuilder(getString(loadLevel.descriptionRes));
         sb.append('\n').append(getString(R.string.load_detail,
@@ -427,7 +457,7 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         for (int i = 0; i < kindButtons.size(); i++) {
             boolean on = i == feedbackKind;
             kindButtons.get(i).setSelected(on);
-            kindButtons.get(i).setTextColor(getColor(on ? R.color.ink : R.color.paper_soft));
+            kindButtons.get(i).setTextColor(getColor(on ? R.color.bg : R.color.content_soft));
         }
     }
 
@@ -483,11 +513,30 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) { openResult(true); }
         });
-        tabUpscale.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) { showPage(false); }
+        navUpscale.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) { showPage(0); }
         });
-        tabRequests.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) { showPage(true); }
+        navHistory.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) { showPage(1); }
+        });
+        navRequests.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) { showPage(2); }
+        });
+        themeButton.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                ThemeHelper.set(MainActivity.this, ThemeHelper.next(ThemeHelper.current(MainActivity.this)));
+                recreate();
+            }
+        });
+        historyRefresh.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) { loadHistory(); }
+        });
+        onboardingStart.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                getSharedPreferences("astraupscale", MODE_PRIVATE)
+                        .edit().putBoolean("onboarded", true).apply();
+                onboarding.setVisibility(View.GONE);
+            }
         });
         languageButton.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
@@ -519,16 +568,34 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         });
     }
 
-    private void showPage(boolean requests) {
-        requestsPage = requests;
-        pageUpscale.setVisibility(requests ? View.GONE : View.VISIBLE);
-        pageRequests.setVisibility(requests ? View.VISIBLE : View.GONE);
-        tabUpscale.setSelected(!requests);
-        tabRequests.setSelected(requests);
-        tabUpscale.setTextColor(getColor(requests ? R.color.paper_dim : R.color.ink));
-        tabRequests.setTextColor(getColor(requests ? R.color.ink : R.color.paper_dim));
+    /** 0 = buyut, 1 = gecmis, 2 = istekler */
+    private void showPage(int which) {
+        page = which;
+        pageUpscale.setVisibility(which == 0 ? View.VISIBLE : View.GONE);
+        pageHistory.setVisibility(which == 1 ? View.VISIBLE : View.GONE);
+        pageRequests.setVisibility(which == 2 ? View.VISIBLE : View.GONE);
+
+        LinearLayout[] items = {navUpscale, navHistory, navRequests};
+        TextView[] labels = {navUpscaleLabel, navHistoryLabel, navRequestsLabel};
+        ImageView[] icons = {navUpscaleIcon, navHistoryIcon, navRequestsIcon};
+        for (int i = 0; i < items.length; i++) {
+            boolean on = i == which;
+            items[i].setSelected(on);
+            labels[i].setTextColor(getColor(on ? R.color.content : R.color.content_faint));
+            icons[i].setAlpha(on ? 1f : 0.45f);
+        }
         languageButton.setText(LocaleHelper.label(this, LocaleHelper.current(this)));
-        if (requests) refreshQueueStatus();
+        themeButton.setText(ThemeHelper.labelRes(ThemeHelper.current(this)));
+        scrollToTop();
+        if (which == 1) loadHistory();
+        if (which == 2) refreshQueueStatus();
+    }
+
+    private void scrollToTop() {
+        final View scroll = findViewById(R.id.scroll);
+        scroll.post(new Runnable() {
+            @Override public void run() { scroll.scrollTo(0, 0); }
+        });
     }
 
     private void requestNotificationPermission() {
@@ -556,6 +623,141 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         toast(getString(UpdateChecker.online(this)
                 ? R.string.requests_sent : R.string.requests_queued));
         refreshQueueStatus();
+    }
+
+    // ------------------------------------------------------------------ gecmis sayfasi
+
+    /**
+     * Daha once uretilmis fotograflari galeriden okur. Yalnizca uygulamanin
+     * kendi klasoru taranir ve kucuk onizlemeler istenir; boylece cok buyuk
+     * dosyalar acilmadan liste hizli kalir.
+     */
+    private void loadHistory() {
+        historyList.removeAllViews();
+        final java.util.List<android.net.Uri> uris = new ArrayList<>();
+        int shown = 0, total = 0;
+
+        String[] cols = {android.provider.MediaStore.Images.Media._ID,
+                android.provider.MediaStore.Images.Media.DISPLAY_NAME,
+                android.provider.MediaStore.Images.Media.WIDTH,
+                android.provider.MediaStore.Images.Media.HEIGHT,
+                android.provider.MediaStore.Images.Media.SIZE,
+                android.provider.MediaStore.Images.Media.MIME_TYPE};
+        android.database.Cursor c = null;
+        try {
+            String selection = Build.VERSION.SDK_INT >= 29
+                    ? android.provider.MediaStore.Images.Media.RELATIVE_PATH + " LIKE ?"
+                    : android.provider.MediaStore.Images.Media.DATA + " LIKE ?";
+            String arg = Build.VERSION.SDK_INT >= 29 ? "%AstraUpscale%" : "%AstraUpscale%";
+            c = getContentResolver().query(
+                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, cols,
+                    selection, new String[]{arg},
+                    android.provider.MediaStore.Images.Media.DATE_ADDED + " DESC");
+            if (c != null) {
+                while (c.moveToNext()) {
+                    total++;
+                    if (shown >= 30) continue;   // liste uzamasin
+                    long id = c.getLong(0);
+                    android.net.Uri uri = android.content.ContentUris.withAppendedId(
+                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
+                    uris.add(uri);
+                    historyList.addView(historyRow(uri, c.getString(1), c.getInt(2), c.getInt(3),
+                            c.getLong(4), c.getString(5)));
+                    shown++;
+                }
+            }
+        } catch (Throwable ignored) {
+            // Izin yoksa ya da sorgu basarisizsa liste bos kalir.
+        } finally {
+            if (c != null) c.close();
+        }
+
+        historyEmpty.setVisibility(total == 0 ? View.VISIBLE : View.GONE);
+        historyCount.setText(getString(R.string.history_count, total));
+    }
+
+    private View historyRow(final android.net.Uri uri, String name, int w, int h,
+                            long size, final String mime) {
+        LinearLayout row = new LinearLayout(this);
+        row.setOrientation(LinearLayout.HORIZONTAL);
+        row.setGravity(Gravity.CENTER_VERTICAL);
+        row.setBackgroundResource(R.drawable.row_model);
+        row.setPadding(dp(8), dp(8), dp(10), dp(8));
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp.topMargin = dp(4);
+        row.setLayoutParams(lp);
+
+        ImageView thumb = new ImageView(this);
+        thumb.setLayoutParams(new LinearLayout.LayoutParams(dp(52), dp(52)));
+        thumb.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        thumb.setBackgroundResource(R.drawable.preview_bg);
+        thumb.setImageBitmap(thumbnail(uri));
+        row.addView(thumb);
+
+        LinearLayout text = new LinearLayout(this);
+        text.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout.LayoutParams tp = new LinearLayout.LayoutParams(
+                0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
+        tp.leftMargin = dp(12);
+        text.setLayoutParams(tp);
+
+        TextView title = new TextView(this);
+        title.setText(name);
+        title.setTextSize(12.5f);
+        title.setSingleLine(true);
+        title.setEllipsize(android.text.TextUtils.TruncateAt.MIDDLE);
+        title.setTextColor(getColor(R.color.content));
+        text.addView(title);
+
+        TextView meta = new TextView(this);
+        meta.setText(getString(R.string.history_item, w, h, formatSize(size)));
+        meta.setTextSize(11f);
+        meta.setTypeface(Typeface.MONOSPACE);
+        meta.setTextColor(getColor(R.color.content_faint));
+        LinearLayout.LayoutParams mp = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        mp.topMargin = dp(3);
+        meta.setLayoutParams(mp);
+        text.addView(meta);
+        row.addView(text);
+
+        row.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW)
+                            .setDataAndType(uri, mime == null ? "image/*" : mime)
+                            .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION));
+                } catch (Exception e) {
+                    toast(getString(R.string.no_app_found));
+                }
+            }
+        });
+        return row;
+    }
+
+    /** Kucuk onizleme; devasa dosyalarda bile bellek kullanmaz. */
+    private Bitmap thumbnail(android.net.Uri uri) {
+        try {
+            if (Build.VERSION.SDK_INT >= 29) {
+                return getContentResolver().loadThumbnail(uri, new android.util.Size(128, 128), null);
+            }
+            BitmapFactory.Options o = new BitmapFactory.Options();
+            o.inJustDecodeBounds = true;
+            InputStream in = getContentResolver().openInputStream(uri);
+            BitmapFactory.decodeStream(in, null, o);
+            if (in != null) in.close();
+            int sample = 1;
+            while (o.outWidth / sample > 256) sample *= 2;
+            BitmapFactory.Options d = new BitmapFactory.Options();
+            d.inSampleSize = sample;
+            InputStream in2 = getContentResolver().openInputStream(uri);
+            Bitmap b = BitmapFactory.decodeStream(in2, null, d);
+            if (in2 != null) in2.close();
+            return b;
+        } catch (Throwable t) {
+            return null;
+        }
     }
 
     private void refreshQueueStatus() {
@@ -786,7 +988,7 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
                 : (denoiseMode == 1 ? R.string.denoise_on : R.string.denoise_off));
         boolean denoiseOn = denoiseActive();
         denoiseToggle.setSelected(denoiseOn);
-        denoiseToggle.setTextColor(getColor(denoiseOn ? R.color.ink : R.color.paper_soft));
+        denoiseToggle.setTextColor(getColor(denoiseOn ? R.color.bg : R.color.content_soft));
         if (denoiseMode == 0) {
             denoiseInfo.setText(denoiseOn ? R.string.denoise_auto_active : R.string.denoise_auto_inactive);
         } else {
@@ -800,11 +1002,11 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         qualitySeek.setEnabled(jpeg);
         formatJpeg.setSelected(jpeg);
         formatPng.setSelected(!jpeg);
-        formatJpeg.setTextColor(getColor(jpeg ? R.color.ink : R.color.paper_soft));
-        formatPng.setTextColor(getColor(jpeg ? R.color.paper_soft : R.color.ink));
-        stage1.setTextColor(getColor(stages == 1 ? R.color.ink : R.color.paper_soft));
-        stage2.setTextColor(getColor(!model.isNeural() ? R.color.paper_ghost
-                : (stages == 2 ? R.color.ink : R.color.paper_soft)));
+        formatJpeg.setTextColor(getColor(jpeg ? R.color.bg : R.color.content_soft));
+        formatPng.setTextColor(getColor(jpeg ? R.color.content_soft : R.color.bg));
+        stage1.setTextColor(getColor(stages == 1 ? R.color.bg : R.color.content_soft));
+        stage2.setTextColor(getColor(!model.isNeural() ? R.color.content_ghost
+                : (stages == 2 ? R.color.bg : R.color.content_soft)));
 
         startButton.setEnabled(hasSource && UpscaleJob.current() == null);
     }
