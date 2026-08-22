@@ -55,8 +55,8 @@ echo "==> kaynaklar baglaniyor (aapt2 link)"
     --java "$OUT/classes" \
     --min-sdk-version 24 \
     --target-sdk-version 34 \
-    --version-code 2 \
-    --version-name 2.0 \
+    --version-code 3 \
+    --version-name 2.1 \
     -0 .param \
     -o "$OUT/base.apk" \
     "$OUT/res/resources.zip"

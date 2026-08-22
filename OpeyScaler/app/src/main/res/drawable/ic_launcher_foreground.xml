@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Uyarlanabilir simge on plani: guvenli alan icinde ✶ -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group android:translateX="30" android:translateY="30" android:scaleX="0.48" android:scaleY="0.48">
+        <path
+            android:fillColor="#FFF5F6F8"
+            android:pathData="M50.00,3.00 L55.90,39.78 L90.70,26.50 L61.80,50.00 L90.70,73.50 L55.90,60.22 L50.00,97.00 L44.10,60.22 L9.30,73.50 L38.20,50.00 L9.30,26.50 L44.10,39.78 Z" />
+    </group>
+</vector>

@@ -4,6 +4,8 @@ Fotograflari cihaz uzerinde **2K'dan 32K'ya** kadar buyuten Android uygulamasi.
 Real-ESRGAN, SwinIR ve Real-CUGAN modelleri APK'nin icinde tasinir; islem
 tamamen telefonda yapilir, internet gerekmez ve hicbir goruntu disari cikmaz.
 
+<img src="docs/arayuz.png" width="330" align="right" alt="Arayuz" />
+
 ![Real-ESRGAN karsilastirmasi](docs/karsilastirma-realesrgan.png)
 
 *Sol: klasik Lanczos buyutme. Sag: Real-ESRGAN. Ayni 256x256 kaynaktan 4x.*
@@ -36,6 +38,31 @@ tamamen telefonda yapilir, internet gerekmez ve hicbir goruntu disari cikmaz.
 
 Goreli hiz kaynak piksel basinadir; uygulama secilen modelle fotograf buyuk
 geldiginde uyarir ve calisirken kalan sureyi tahmin eder.
+
+## Arayuz
+
+Tek renkli, siyah agirlikli bir tasarim. Vurgu rengi yok: secili oge beyaza
+doner, yazisi siyaha gecer. Ayrimlar 1 px sac cizgileriyle, derinlik ise
+birbirinden bir tik acilan siyah katmanlarla kurulur.
+
+| Katman | Deger | Kullanim |
+|---|---|---|
+| `ink` | `#050506` | sayfa zemini |
+| `ink_raised` | `#0B0C0E` | basili durum |
+| `ink_card` | `#0F1013` | kart |
+| `ink_chip` | `#16171B` | cip, ikincil dugme |
+| `hairline` | `#1D1F23` | ayrim cizgisi |
+| `paper` | `#F5F6F8` | birincil yazi, secili zemin |
+| `paper_dim` / `paper_faint` / `paper_ghost` | `#8B9098` / `#5F646C` / `#3A3E45` | azalan onem |
+
+Isaret alti kollu bir yildizdir (✶); hem uygulama simgesinde hem baslikta
+hem de bos onizleme ve sonuc kartinda ayni vektor kullanilir. Bolum
+basliklari seyrek harfli kucuk buyuk harflerle yazilir, sayisal degerler
+(boyut, MP, yuzde, kalite) tek aralikli yazi tipiyle hizalanir. Cozunurluk
+izgarasinda son secenek (32K) satirin tamamini kaplar.
+
+Yandaki gorsel, cihaz ekran goruntusu degildir: duzen dosyasindaki ayni
+renk, olcu ve punto degerlerinden uretilmis bir onizlemedir.
 
 ## Nasil calisiyor
 

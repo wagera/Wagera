@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">OpeyScaler</string>
-    <string name="tagline">Fotograflarini 2K\'dan 16K\'ya buyut</string>
+    <string name="tagline">Fotograflarini 2K\'dan 32K\'ya buyut</string>
     <string name="pick_photo">Fotograf Sec</string>
     <string name="change_photo">Fotografi Degistir</string>
     <string name="no_photo">Henuz fotograf secilmedi</string>

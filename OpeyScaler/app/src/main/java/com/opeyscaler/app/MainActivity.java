@@ -36,13 +36,13 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
     private static final int REQ_PICK = 1;
     private static final int REQ_NOTIFICATIONS = 2;
 
-    private ImageView sourcePreview, resultPreview;
-    private TextView sourceInfo, targetInfo, sharpenLabel, qualityLabel, progressText,
-            resultTitle, resultInfo, modelInfo, stageInfo;
+    private ImageView sourcePreview, resultPreview, resultMark;
+    private TextView sourceInfo, targetInfo, sharpenValue, qualityValue, progressText,
+            progressPercent, resultTitle, resultInfo, modelInfo, stageInfo;
     private Button pickButton, startButton, cancelButton, openButton, shareButton,
             formatJpeg, formatPng, stage1, stage2;
     private GridLayout presetGrid;
-    private LinearLayout modelList, progressCard, resultCard;
+    private LinearLayout modelList, progressCard, resultCard, emptyState, qualityRow;
     private SeekBar sharpenSeek, qualitySeek;
     private ProgressBar progressBar;
 
@@ -52,7 +52,7 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
     private SrModel model = SrModel.ESRGAN_FAST;
     private int stages = 1;
     private boolean jpeg = true;
-    private final List<TextView> presetChips = new ArrayList<>();
+    private final List<LinearLayout> presetChips = new ArrayList<>();
     private final List<View> modelRows = new ArrayList<>();
     private final List<SrModel> availableModels = new ArrayList<>();
     private UpscaleJob lastResult;
@@ -96,11 +96,13 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
     private void bindViews() {
         sourcePreview = findViewById(R.id.sourcePreview);
         resultPreview = findViewById(R.id.resultPreview);
+        resultMark = findViewById(R.id.resultMark);
         sourceInfo = findViewById(R.id.sourceInfo);
         targetInfo = findViewById(R.id.targetInfo);
-        sharpenLabel = findViewById(R.id.sharpenLabel);
-        qualityLabel = findViewById(R.id.qualityLabel);
+        sharpenValue = findViewById(R.id.sharpenValue);
+        qualityValue = findViewById(R.id.qualityValue);
         progressText = findViewById(R.id.progressText);
+        progressPercent = findViewById(R.id.progressPercent);
         resultTitle = findViewById(R.id.resultTitle);
         resultInfo = findViewById(R.id.resultInfo);
         modelInfo = findViewById(R.id.modelInfo);
@@ -118,6 +120,8 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         modelList = findViewById(R.id.modelList);
         progressCard = findViewById(R.id.progressCard);
         resultCard = findViewById(R.id.resultCard);
+        emptyState = findViewById(R.id.emptyState);
+        qualityRow = findViewById(R.id.qualityRow);
         sharpenSeek = findViewById(R.id.sharpenSeek);
         qualitySeek = findViewById(R.id.qualitySeek);
         progressBar = findViewById(R.id.progressBar);
@@ -130,27 +134,51 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         for (final SrModel m : SrModel.values()) {
             if (!m.isBundled(getAssets())) continue;
             availableModels.add(m);
+
             LinearLayout row = new LinearLayout(this);
-            row.setOrientation(LinearLayout.VERTICAL);
-            row.setBackgroundResource(R.drawable.chip);
-            int pad = dp(12);
-            row.setPadding(pad, pad, pad, pad);
+            row.setOrientation(LinearLayout.HORIZONTAL);
+            row.setBackgroundResource(R.drawable.row_model);
+            row.setGravity(Gravity.CENTER_VERTICAL);
+            row.setPadding(dp(14), dp(12), dp(12), dp(12));
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            lp.topMargin = dp(8);
+            lp.topMargin = dp(2);
             row.setLayoutParams(lp);
+
+            LinearLayout text = new LinearLayout(this);
+            text.setOrientation(LinearLayout.VERTICAL);
+            text.setLayoutParams(new LinearLayout.LayoutParams(
+                    0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
 
             TextView title = new TextView(this);
             title.setText(m.label);
-            title.setTextSize(15f);
-            title.setTextColor(getColor(R.color.text));
-            row.addView(title);
+            title.setTextSize(13.5f);
+            title.setTextColor(getColor(R.color.paper));
+            text.addView(title);
 
             TextView desc = new TextView(this);
             desc.setText(m.description);
-            desc.setTextSize(12f);
-            desc.setTextColor(getColor(R.color.text_dim));
-            row.addView(desc);
+            desc.setTextSize(11f);
+            desc.setLineSpacing(dp(2), 1f);
+            desc.setTextColor(getColor(R.color.paper_faint));
+            LinearLayout.LayoutParams dp2 = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            dp2.topMargin = dp(3);
+            desc.setLayoutParams(dp2);
+            text.addView(desc);
+            row.addView(text);
+
+            // Sagda olcek rozeti: modelin sabit buyutme orani
+            TextView badge = new TextView(this);
+            badge.setText(m.isNeural() ? m.scale + "x" : "—");
+            badge.setTextSize(11f);
+            badge.setTypeface(android.graphics.Typeface.MONOSPACE);
+            badge.setTextColor(getColor(R.color.paper_ghost));
+            LinearLayout.LayoutParams bp = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            bp.leftMargin = dp(10);
+            badge.setLayoutParams(bp);
+            row.addView(badge);
 
             row.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
@@ -174,35 +202,74 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
 
     private void updateModelRows() {
         for (int i = 0; i < modelRows.size(); i++) {
-            modelRows.get(i).setSelected(availableModels.get(i) == model);
+            View row = modelRows.get(i);
+            boolean on = availableModels.get(i) == model;
+            row.setSelected(on);
+            LinearLayout text = (LinearLayout) ((LinearLayout) row).getChildAt(0);
+            ((TextView) text.getChildAt(0)).setTextColor(
+                    getColor(on ? R.color.paper : R.color.paper_soft));
+            ((TextView) ((LinearLayout) row).getChildAt(1)).setTextColor(
+                    getColor(on ? R.color.paper_dim : R.color.paper_ghost));
         }
         String gpu;
         if (!NativeSr.available()) {
             gpu = "Yerel model kitapligi bu cihazda yuklenemedi; klasik yontem kullanilabilir.";
         } else if (NativeSr.gpuAvailable()) {
-            gpu = "Vulkan GPU bulundu: modeller GPU uzerinde calisacak.";
+            gpu = "Vulkan GPU bulundu — modeller GPU uzerinde calisacak.";
         } else {
-            gpu = "GPU bulunamadi: modeller " + NativeSr.cpuCount() + " CPU cekirdeginde calisacak (daha yavas).";
+            gpu = "GPU bulunamadi — modeller " + NativeSr.cpuCount()
+                    + " CPU cekirdeginde calisacak, daha yavas olur.";
         }
         modelInfo.setText(gpu);
     }
+
+    /** Cozunurluk izgarasinin sutun sayisi (duzen dosyasiyla ayni olmali). */
+    private static final int COLUMNS = 3;
 
     private void buildPresetGrid() {
         presetGrid.removeAllViews();
         presetChips.clear();
         for (final Preset p : Preset.values()) {
-            TextView chip = new TextView(this);
-            chip.setText(p.label);
+            LinearLayout chip = new LinearLayout(this);
+            chip.setOrientation(LinearLayout.VERTICAL);
             chip.setGravity(Gravity.CENTER);
-            chip.setTextSize(16f);
-            chip.setTextColor(getColor(R.color.text));
             chip.setBackgroundResource(R.drawable.chip);
+            chip.setPadding(dp(4), dp(10), dp(4), dp(10));
+
+            TextView label = new TextView(this);
+            label.setText(p.label);
+            label.setTextSize(17f);
+            label.setGravity(Gravity.CENTER);
+            label.setLetterSpacing(0.02f);
+            label.setTypeface(android.graphics.Typeface.create("sans-serif-medium",
+                    android.graphics.Typeface.NORMAL));
+            chip.addView(label);
+
+            // Ikinci satir: secilen fotografa gore hesaplanan hedef boyut
+            TextView sub = new TextView(this);
+            sub.setTextSize(9.5f);
+            sub.setGravity(Gravity.CENTER);
+            sub.setTypeface(android.graphics.Typeface.MONOSPACE);
+            LinearLayout.LayoutParams sp = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            sp.topMargin = dp(3);
+            sub.setLayoutParams(sp);
+            chip.addView(sub);
+
+            /*
+             * Son satirda tek basina kalan cip (10 on ayar, 3 sutun) satirin
+             * tamamini kaplar; boylece izgara dengeli kalir ve en buyuk
+             * cozunurluk one cikar.
+             */
+            final int index = presetGrid.getChildCount();
+            final int total = Preset.values().length;
+            final int span = (index == total - 1 && total % COLUMNS == 1) ? COLUMNS : 1;
             GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
             lp.width = 0;
-            lp.height = dp(52);
-            lp.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1, 1f);
-            lp.setMargins(dp(4), dp(4), dp(4), dp(4));
+            lp.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, span, span);
+            lp.setMargins(dp(3), dp(3), dp(3), dp(3));
             chip.setLayoutParams(lp);
+
             chip.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
                     preset = p;
@@ -216,10 +283,24 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         updatePresetChips();
     }
 
+    /** Secili cip beyaza doner; alt satirda hedef boyut gosterilir. */
     private void updatePresetChips() {
         Preset[] values = Preset.values();
+        boolean hasSource = sourceUri != null && srcWidth > 0;
         for (int i = 0; i < presetChips.size(); i++) {
-            presetChips.get(i).setSelected(values[i] == preset);
+            LinearLayout chip = presetChips.get(i);
+            boolean on = values[i] == preset;
+            chip.setSelected(on);
+            TextView label = (TextView) chip.getChildAt(0);
+            TextView sub = (TextView) chip.getChildAt(1);
+            label.setTextColor(getColor(on ? R.color.ink : R.color.paper_soft));
+            sub.setTextColor(getColor(on ? R.color.ink : R.color.paper_ghost));
+            if (hasSource) {
+                int[] t = values[i].targetSize(srcWidth, srcHeight);
+                sub.setText(t[0] + "x" + t[1]);
+            } else {
+                sub.setText(values[i].longEdge + "px");
+            }
         }
     }
 
@@ -390,57 +471,68 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
 
     private void refreshTexts() {
         boolean hasSource = sourceUri != null && srcWidth > 0;
+
+        emptyState.setVisibility(hasSource ? View.GONE : View.VISIBLE);
+        sourceInfo.setVisibility(hasSource ? View.VISIBLE : View.GONE);
         if (hasSource) {
-            sourceInfo.setText(String.format(Locale.US, "Kaynak: %d x %d  (%.1f MP)",
+            sourceInfo.setText(String.format(Locale.US, "%d x %d   %.1f MP",
                     srcWidth, srcHeight, srcWidth * (long) srcHeight / 1e6));
+        }
+        pickButton.setText(hasSource ? R.string.change_photo : R.string.pick_photo);
+
+        updatePresetChips();
+        if (hasSource) {
             int[] t = preset.targetSize(srcWidth, srcHeight);
             double factor = t[0] / (double) srcWidth;
             StringBuilder sb = new StringBuilder();
-            sb.append(String.format(Locale.US, "%s hedef: %d x %d  (%.1f MP, %.1f kat)",
-                    preset.label, t[0], t[1], t[0] * (long) t[1] / 1e6, factor));
+            sb.append(String.format(Locale.US, "%d x %d   %.1f MP   %.1f kat",
+                    t[0], t[1], t[0] * (long) t[1] / 1e6, factor));
             if (model.isNeural()) {
                 long cost = (long) (srcWidth * (long) srcHeight * model.costPerPixel * stages);
                 if (cost > 400L * 1000 * 1000) {
-                    sb.append("\nUyari: bu fotograf bu model icin buyuk, islem cok uzun surebilir.");
+                    sb.append("\nBu fotograf bu model icin buyuk, islem cok uzun surebilir.");
                 }
             }
             targetInfo.setText(sb.toString());
         } else {
-            sourceInfo.setText(R.string.no_photo);
             targetInfo.setText("Once bir fotograf sec.");
         }
+
         stage1.setSelected(stages == 1);
         stage2.setSelected(stages == 2);
         stage2.setEnabled(model.isNeural());
         if (!model.isNeural()) {
-            stageInfo.setText("Klasik yontemde asama secimi yoktur.");
+            stageInfo.setText("Klasik yontemde gecis secimi yoktur.");
         } else if (stages == 1) {
             stageInfo.setText(String.format(Locale.US,
-                    "Model bir kez calisir (%dx), kalan fark Lanczos ile tamamlanir.", model.scale));
+                    "Model bir kez calisir (%dx); kalan fark Lanczos ile tamamlanir.", model.scale));
         } else {
-            int total = model.scale * model.scale;
             StringBuilder sb = new StringBuilder();
             sb.append(String.format(Locale.US,
-                    "Model iki kez calisir (%dx -> toplam %dx). Daha fazla detay, cok daha uzun sure.",
-                    model.scale, total));
+                    "Model iki kez calisir (%dx -> %dx). Daha fazla detay, cok daha uzun sure.",
+                    model.scale, model.scale * model.scale));
             if (hasSource) {
                 long midBytes = (long) srcWidth * srcHeight * model.scale * model.scale * 3L;
-                sb.append(String.format(Locale.US,
-                        "\nAra goruntu icin ~%.1f GB gecici disk alani gerekir.",
+                sb.append(String.format(Locale.US, " Ara goruntu icin ~%.1f GB gecici alan gerekir.",
                         midBytes / 1073741824.0));
             }
             stageInfo.setText(sb.toString());
         }
-        pickButton.setText(hasSource ? R.string.change_photo : R.string.pick_photo);
-        startButton.setEnabled(hasSource && UpscaleJob.current() == null);
 
-        sharpenLabel.setText(String.format(Locale.US, "%s: %%%d",
-                getString(R.string.sharpen), sharpenSeek.getProgress()));
-        qualityLabel.setText(String.format(Locale.US, "%s: %d", getString(R.string.quality),
-                jpegQuality()));
+        sharpenValue.setText(String.format(Locale.US, "%%%d", sharpenSeek.getProgress()));
+        qualityValue.setText(String.valueOf(jpegQuality()));
+        qualityRow.setAlpha(jpeg ? 1f : 0.35f);
+        qualitySeek.setAlpha(jpeg ? 1f : 0.35f);
         qualitySeek.setEnabled(jpeg);
         formatJpeg.setSelected(jpeg);
         formatPng.setSelected(!jpeg);
+        formatJpeg.setTextColor(getColor(jpeg ? R.color.ink : R.color.paper_soft));
+        formatPng.setTextColor(getColor(jpeg ? R.color.paper_soft : R.color.ink));
+        stage1.setTextColor(getColor(stages == 1 ? R.color.ink : R.color.paper_soft));
+        stage2.setTextColor(getColor(!model.isNeural() ? R.color.paper_ghost
+                : (stages == 2 ? R.color.ink : R.color.paper_soft)));
+
+        startButton.setEnabled(hasSource && UpscaleJob.current() == null);
     }
 
     private int jpegQuality() {
@@ -471,6 +563,7 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
             progressCard.setVisibility(View.VISIBLE);
             progressBar.setProgress((int) (job.progress * 1000));
             progressText.setText(job.stage);
+            progressPercent.setText(String.format(Locale.US, "%%%d", (int) (job.progress * 100)));
             startButton.setEnabled(false);
             return;
         }
@@ -486,8 +579,8 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         }
         if (job.error != null) {
             resultCard.setVisibility(View.VISIBLE);
-            resultTitle.setText("Islem basarisiz");
-            resultTitle.setTextColor(getColor(R.color.warn));
+            resultTitle.setText("BASARISIZ");
+            resultMark.setAlpha(0.35f);
             resultInfo.setText(job.error);
             resultPreview.setImageDrawable(null);
             openButton.setEnabled(false);
@@ -497,8 +590,8 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
 
         lastResult = job;
         resultCard.setVisibility(View.VISIBLE);
-        resultTitle.setText("Hazir");
-        resultTitle.setTextColor(getColor(R.color.ok));
+        resultTitle.setText("HAZIR");
+        resultMark.setAlpha(1f);
         openButton.setEnabled(true);
         shareButton.setEnabled(true);
         if (job.preview != null && job.previewWidth > 0) {
@@ -510,7 +603,7 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
                         + (job.usedGpu ? " (GPU)" : " (CPU)")
                 : SrModel.LANCZOS.label;
         resultInfo.setText(String.format(Locale.US,
-                "%d x %d  (%.1f MP)\n%s\n%.1f MB - %.1f saniye\n%s\nGaleri > Pictures > OpeyScaler",
+                "%d x %d   %.1f MP\n%s\n%.1f MB   %.1f sn\n%s\nPictures / OpeyScaler",
                 job.outWidth, job.outHeight, job.outWidth * (long) job.outHeight / 1e6,
                 engine, job.outputBytes / 1048576.0, job.elapsedMillis / 1000.0, job.outputName));
     }
