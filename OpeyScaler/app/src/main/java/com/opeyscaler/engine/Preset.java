@@ -11,7 +11,17 @@ public enum Preset {
     R10K("10K", 10240),
     R12K("12K", 12288),
     R16K("16K", 15360),
-    R32K("32K", 30720);
+    R32K("32K", 30720),
+    R64K("64K", 61440),
+    R128K("128K", 122880),
+    R256K("256K", 245760),
+    R512K("512K", 491520);
+
+    /** JPEG basligi boyutlari 16 bit tutar; bunun uzerinde yalnizca PNG yazilabilir. */
+    public static final int JPEG_MAX_EDGE = 65535;
+
+    /** Bu on ayarda gurultu giderme varsayilan olarak acilir. */
+    public static final int DENOISE_FROM_EDGE = 61440;
 
     public final String label;
     public final int longEdge;
@@ -27,6 +37,17 @@ public enum Preset {
         int w = (int) Math.round(srcW * ratio);
         int h = (int) Math.round(srcH * ratio);
         return new int[]{Math.max(1, w), Math.max(1, h)};
+    }
+
+    /** Hedef boyut JPEG'e sigiyor mu? Sigmiyorsa PNG zorunludur. */
+    public boolean fitsJpeg(int srcW, int srcH) {
+        int[] t = targetSize(srcW, srcH);
+        return t[0] <= JPEG_MAX_EDGE && t[1] <= JPEG_MAX_EDGE;
+    }
+
+    /** Bu cozunurlukte kaynaktaki gurultu once temizlenmeli mi? */
+    public boolean needsDenoise() {
+        return longEdge >= DENOISE_FROM_EDGE;
     }
 
     public long megapixels(int srcW, int srcH) {

@@ -38,11 +38,14 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
 
     private ImageView sourcePreview, resultPreview, resultMark;
     private TextView sourceInfo, targetInfo, sharpenValue, qualityValue, progressText,
-            progressPercent, resultTitle, resultInfo, modelInfo, stageInfo;
+            progressPercent, resultTitle, resultInfo, modelInfo, stageInfo,
+            deviceInfo, loadInfo, denoiseInfo, offlineNote, updateText;
     private Button pickButton, startButton, cancelButton, openButton, shareButton,
-            formatJpeg, formatPng, stage1, stage2;
+            formatJpeg, formatPng, stage1, stage2, denoiseToggle, updateButton;
     private GridLayout presetGrid;
-    private LinearLayout modelList, progressCard, resultCard, emptyState, qualityRow;
+    private LinearLayout modelList, progressCard, resultCard, emptyState, qualityRow,
+            loadLevels, updateGate;
+    private TextView updateRecheck;
     private SeekBar sharpenSeek, qualitySeek;
     private ProgressBar progressBar;
 
@@ -51,6 +54,11 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
     private Preset preset = Preset.R4K;
     private SrModel model = SrModel.ESRGAN_FAST;
     private int stages = 1;
+    private DeviceProfile device;
+    private LoadLevel loadLevel = LoadLevel.BALANCED;
+    /** 0 = otomatik (64K ve uzeri), 1 = her zaman acik, 2 = kapali */
+    private int denoiseMode = 0;
+    private final List<Button> loadButtons = new ArrayList<>();
     private boolean jpeg = true;
     private final List<LinearLayout> presetChips = new ArrayList<>();
     private final List<View> modelRows = new ArrayList<>();
@@ -69,9 +77,14 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
             if (!NativeSr.available()) model = SrModel.LANCZOS;
             updateModelRows();
         }
+        device = DeviceProfile.scan(this);
+        loadLevel = device.cores >= 8 ? LoadLevel.BALANCED : LoadLevel.BALANCED;
+        buildLoadLevels();
         requestNotificationPermission();
         handleShareIntent(getIntent());
         refreshTexts();
+        applyUpdateState(UpdateChecker.pending(this), false);
+        checkForUpdate();
     }
 
     @Override protected void onNewIntent(Intent intent) {
@@ -83,6 +96,18 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         super.onStart();
         UpscaleJob job = UpscaleJob.current();
         if (job != null) job.setListener(this);
+        // Kullanici guncellemeyi yukleyip dondugunde kilit kendiliginden kalkar.
+        applyUpdateState(UpdateChecker.pending(this), false);
+        if (device != null) updateLoadLevels();
+    }
+
+    @Override public void onBackPressed() {
+        if (updateGate.getVisibility() == View.VISIBLE) {
+            // Yeni surum yuklenmeden uygulama kullanilamaz.
+            finishAffinity();
+            return;
+        }
+        super.onBackPressed();
     }
 
     @Override protected void onStop() {
@@ -122,6 +147,16 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         resultCard = findViewById(R.id.resultCard);
         emptyState = findViewById(R.id.emptyState);
         qualityRow = findViewById(R.id.qualityRow);
+        deviceInfo = findViewById(R.id.deviceInfo);
+        loadInfo = findViewById(R.id.loadInfo);
+        loadLevels = findViewById(R.id.loadLevels);
+        denoiseInfo = findViewById(R.id.denoiseInfo);
+        denoiseToggle = findViewById(R.id.denoiseToggle);
+        offlineNote = findViewById(R.id.offlineNote);
+        updateGate = findViewById(R.id.updateGate);
+        updateText = findViewById(R.id.updateText);
+        updateButton = findViewById(R.id.updateButton);
+        updateRecheck = findViewById(R.id.updateRecheck);
         sharpenSeek = findViewById(R.id.sharpenSeek);
         qualitySeek = findViewById(R.id.qualitySeek);
         progressBar = findViewById(R.id.progressBar);
@@ -344,12 +379,135 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         };
         sharpenSeek.setOnSeekBarChangeListener(l);
         qualitySeek.setOnSeekBarChangeListener(l);
+        denoiseToggle.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                denoiseMode = (denoiseMode + 1) % 3;
+                refreshTexts();
+            }
+        });
+        updateButton.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                UpdateChecker.Result r = UpdateChecker.pending(MainActivity.this);
+                String url = r.downloadUrl != null && r.downloadUrl.length() > 0
+                        ? r.downloadUrl
+                        : "https://github.com/wagera/Wagera/tree/main/OpeyScaler/release";
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+                } catch (Exception e) {
+                    toast("Tarayici acilamadi");
+                }
+            }
+        });
+        updateRecheck.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                applyUpdateState(UpdateChecker.pending(MainActivity.this), false);
+                checkForUpdate();
+            }
+        });
         openButton.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) { openResult(false); }
         });
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) { openResult(true); }
         });
+    }
+
+    /** Cihaz kartindaki zorlama seviyesi secicileri. */
+    private void buildLoadLevels() {
+        loadLevels.removeAllViews();
+        loadButtons.clear();
+        for (final LoadLevel level : LoadLevel.values()) {
+            Button b = new Button(this);
+            b.setText(level.label);
+            b.setTextSize(12.5f);
+            b.setAllCaps(false);
+            b.setBackgroundResource(R.drawable.chip);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                    0, dp(42), 1f);
+            if (loadButtons.size() > 0) lp.leftMargin = dp(8);
+            b.setLayoutParams(lp);
+            b.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    loadLevel = level;
+                    updateLoadLevels();
+                }
+            });
+            loadLevels.addView(b);
+            loadButtons.add(b);
+        }
+        deviceInfo.setText(device.summary());
+        updateLoadLevels();
+    }
+
+    private void updateLoadLevels() {
+        LoadLevel[] values = LoadLevel.values();
+        for (int i = 0; i < loadButtons.size(); i++) {
+            boolean on = values[i] == loadLevel;
+            loadButtons.get(i).setSelected(on);
+            loadButtons.get(i).setTextColor(getColor(on ? R.color.ink : R.color.paper_soft));
+        }
+        int thermal = DeviceProfile.thermalStatus(this);
+        StringBuilder sb = new StringBuilder(loadLevel.description);
+        sb.append(String.format(Locale.US, "\n%d is parcacigi · %d px doseme",
+                loadLevel.threads(device), loadLevel.tileSize(device)));
+        if (thermal >= 0) {
+            sb.append("  ·  cihaz ").append(DeviceProfile.thermalText(thermal));
+        }
+        loadInfo.setText(sb.toString());
+    }
+
+    // ------------------------------------------------------------------ surum denetimi
+
+    /** Aga baglanip yeni surum var mi diye bakar; sonucu arayuze isler. */
+    private void checkForUpdate() {
+        new Thread(new Runnable() {
+            @Override public void run() {
+                final UpdateChecker.Result r = UpdateChecker.check(MainActivity.this);
+                runOnUiThread(new Runnable() {
+                    @Override public void run() {
+                        applyUpdateState(r, true);
+                    }
+                });
+            }
+        }, "opeyscaler-update").start();
+    }
+
+    /**
+     * Yeni surum goruldugu anda uygulama kilitlenir ve bu bilgi kalici olarak
+     * saklanir; kullanici guncellemeyi yukleyene kadar internet olmasa bile
+     * kilit acilmaz.
+     */
+    private void applyUpdateState(UpdateChecker.Result r, boolean afterCheck) {
+        if (r.blocking()) {
+            updateGate.setVisibility(View.VISIBLE);
+            StringBuilder sb = new StringBuilder();
+            sb.append("Yuklu surum ").append(BuildInfo.versionName(this))
+              .append(", yeni surum ").append(r.versionName).append('.');
+            if (r.notes != null && r.notes.length() > 0) sb.append("\n\n").append(r.notes);
+            sb.append("\n\nDevam etmek icin guncellemeyi yuklemen gerekiyor.");
+            updateText.setText(sb.toString());
+            return;
+        }
+        updateGate.setVisibility(View.GONE);
+
+        boolean online = UpdateChecker.online(this);
+        if (online) {
+            offlineNote.setVisibility(View.GONE);
+            return;
+        }
+        // Cevrimdisi: uygulama calisir, ama son denetimin ne zaman yapildigi soylenir.
+        String when;
+        if (r.lastCheckAgeMillis < 0) {
+            when = "Surum hic denetlenemedi.";
+        } else {
+            long h = r.lastCheckAgeMillis / 3600000L;
+            when = h < 1 ? "Son denetim: az once."
+                    : (h < 48 ? "Son denetim: " + h + " saat once."
+                              : "Son denetim: " + (h / 24) + " gun once.");
+        }
+        offlineNote.setText("Internet yok — surum denetlenemiyor. " + when
+                + " Bilinen en son surum yuklu, uygulama calismaya devam ediyor.");
+        offlineNote.setVisibility(View.VISIBLE);
     }
 
     private void requestNotificationPermission() {
@@ -493,6 +651,16 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
                     sb.append("\nBu fotograf bu model icin buyuk, islem cok uzun surebilir.");
                 }
             }
+            if (!preset.fitsJpeg(srcWidth, srcHeight)) {
+                sb.append("\nBu boyut JPEG'e sigmaz (16 bit sinir); PNG olarak kaydedilir.");
+            }
+            long estimate = estimatedBytes(t[0], t[1]);
+            long free = DeviceProfile.freeSpaceBytes(getFilesDir());
+            sb.append(String.format(Locale.US, "\nTahmini dosya ~%s · bos alan %s",
+                    formatSize(estimate), formatSize(free)));
+            if (estimate > free) {
+                sb.append("  — YETERSIZ");
+            }
             targetInfo.setText(sb.toString());
         } else {
             targetInfo.setText("Once bir fotograf sec.");
@@ -519,6 +687,26 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
             stageInfo.setText(sb.toString());
         }
 
+        // 64K ve uzeri JPEG basligina sigmaz; bu boyutlarda PNG zorunlu
+        boolean jpegPossible = !hasSource || preset.fitsJpeg(srcWidth, srcHeight);
+        if (!jpegPossible) jpeg = false;
+        formatJpeg.setEnabled(jpegPossible);
+        formatJpeg.setAlpha(jpegPossible ? 1f : 0.4f);
+
+        denoiseToggle.setText(denoiseMode == 0 ? "Otomatik" : (denoiseMode == 1 ? "Acik" : "Kapali"));
+        boolean denoiseOn = denoiseActive();
+        denoiseToggle.setSelected(denoiseOn);
+        denoiseToggle.setTextColor(getColor(denoiseOn ? R.color.ink : R.color.paper_soft));
+        if (denoiseMode == 0) {
+            denoiseInfo.setText(denoiseOn
+                    ? "64K ve uzerinde otomatik acik: gurultu buyutulmeden temizlenir."
+                    : "64K ve uzerinde otomatik acilir.");
+        } else {
+            denoiseInfo.setText(denoiseOn
+                    ? "Kaynak, buyutmeden once kenar koruyan filtreyle temizlenir."
+                    : "Kaynak oldugu gibi buyutulur.");
+        }
+
         sharpenValue.setText(String.format(Locale.US, "%%%d", sharpenSeek.getProgress()));
         qualityValue.setText(String.valueOf(jpegQuality()));
         qualityRow.setAlpha(jpeg ? 1f : 0.35f);
@@ -535,6 +723,24 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         startButton.setEnabled(hasSource && UpscaleJob.current() == null);
     }
 
+    /** Gurultu temizleme bu ayarlarla etkin mi? */
+    private boolean denoiseActive() {
+        if (denoiseMode == 1) return true;
+        if (denoiseMode == 2) return false;
+        return preset.needsDenoise();
+    }
+
+    /** Kaba cikis dosyasi tahmini: PNG'de piksel basina ~1.2 bayt, JPEG'de ~0.06. */
+    private long estimatedBytes(int w, int h) {
+        double perPixel = jpeg && preset.fitsJpeg(srcWidth, srcHeight) ? 0.06 : 1.2;
+        return (long) (w * (double) h * perPixel);
+    }
+
+    private static String formatSize(long bytes) {
+        if (bytes >= (1L << 30)) return String.format(Locale.US, "%.1f GB", bytes / 1073741824.0);
+        return String.format(Locale.US, "%.0f MB", bytes / 1048576.0);
+    }
+
     private int jpegQuality() {
         return 70 + qualitySeek.getProgress();  // 70..100
     }
@@ -544,8 +750,20 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
     private void startJob() {
         if (sourceUri == null || UpscaleJob.current() != null) return;
         int[] t = preset.targetSize(srcWidth, srcHeight);
-        UpscaleJob job = new UpscaleJob(sourceUri, preset, t[0], t[1], model, stages, jpeg,
-                jpegQuality(), sharpenSeek.getProgress() / 100f);
+
+        long estimate = estimatedBytes(t[0], t[1]);
+        long free = DeviceProfile.freeSpaceBytes(getFilesDir());
+        if (estimate > free) {
+            toast("Yetersiz alan: ~" + formatSize(estimate) + " gerekiyor, "
+                    + formatSize(free) + " bos");
+            return;
+        }
+
+        boolean useJpeg = jpeg && preset.fitsJpeg(srcWidth, srcHeight);
+        UpscaleJob job = new UpscaleJob(sourceUri, preset, t[0], t[1], model, stages,
+                denoiseActive(), loadLevel.threads(device), loadLevel.tileSize(device),
+                loadLevel.breatherMillis(), useJpeg, jpegQuality(),
+                sharpenSeek.getProgress() / 100f);
         UpscaleJob.setCurrent(job);
         job.setListener(this);
         UpscaleService.start(this);
@@ -598,10 +816,12 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
             resultPreview.setImageBitmap(Bitmap.createBitmap(job.preview, job.previewWidth,
                     job.previewHeight, Bitmap.Config.ARGB_8888));
         }
+        String denoiseNote = job.usedDenoise ? " + gurultu temizleme" : "";
         String engine = job.usedModel != null && job.usedModel.isNeural()
                 ? job.usedModel.label + (job.usedStages > 1 ? " x" + job.usedStages + " gecis" : "")
                         + (job.usedGpu ? " (GPU)" : " (CPU)")
                 : SrModel.LANCZOS.label;
+        engine = engine + denoiseNote;
         resultInfo.setText(String.format(Locale.US,
                 "%d x %d   %.1f MP\n%s\n%.1f MB   %.1f sn\n%s\nPictures / OpeyScaler",
                 job.outWidth, job.outHeight, job.outWidth * (long) job.outHeight / 1e6,

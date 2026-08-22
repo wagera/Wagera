@@ -146,7 +146,14 @@ public final class JpegWriter implements ImageWriter {
 
     // ---------------------------------------------------------------- akis
 
+    /** JPEG basligindaki boyut alanlari 16 bittir. */
+    public static final int MAX_EDGE = 65535;
+
     @Override public void start(int width, int height) throws IOException {
+        if (width > MAX_EDGE || height > MAX_EDGE) {
+            throw new IOException("JPEG en fazla " + MAX_EDGE + " piksel olabilir ("
+                    + width + "x" + height + "); bu boyutta PNG kullanin.");
+        }
         this.width = width;
         this.height = height;
         this.mcuCols = (width + 7) / 8;

@@ -19,11 +19,13 @@ import android.os.Environment;
 import android.os.IBinder;
 import android.provider.MediaStore;
 
+import com.opeyscaler.engine.Denoiser;
 import com.opeyscaler.engine.ImageWriter;
 import com.opeyscaler.engine.JpegWriter;
 import com.opeyscaler.engine.PixelSource;
 import com.opeyscaler.engine.PngWriter;
 import com.opeyscaler.engine.Progress;
+import com.opeyscaler.engine.ThreadPool;
 import com.opeyscaler.engine.Upscaler;
 
 import java.io.BufferedOutputStream;
@@ -57,6 +59,7 @@ public final class UpscaleService extends Service {
     private static final int TILE_SIZE = 128;
 
     private Thread worker;
+    private android.os.PowerManager.WakeLock wakeLock;
 
     @Override public IBinder onBind(Intent intent) { return null; }
 
@@ -71,6 +74,7 @@ public final class UpscaleService extends Service {
 
         createChannel();
         startForeground(NOTIFICATION_ID, buildNotification(0, job.stage));
+        acquireWakeLock();
 
         worker = new Thread(new Runnable() {
             @Override public void run() {
@@ -84,6 +88,7 @@ public final class UpscaleService extends Service {
                 } finally {
                     job.finished = true;
                     job.notifyChanged();
+                    releaseWakeLock();
                     stopForeground(true);
                     stopSelf();
                 }
@@ -102,6 +107,32 @@ public final class UpscaleService extends Service {
         long seconds = left / 1000;
         if (seconds < 90) return "   ~" + seconds + " sn";
         return "   ~" + ((seconds + 30) / 60) + " dk";
+    }
+
+    /**
+     * Ekran kapandiginda islemcinin uyumamasi icin kismi uyanik kilit.
+     * Ekrani acik tutmaz; yalnizca isin arka planda surmesini saglar.
+     */
+    private void acquireWakeLock() {
+        try {
+            android.os.PowerManager pm =
+                    (android.os.PowerManager) getSystemService(Context.POWER_SERVICE);
+            if (pm == null) return;
+            wakeLock = pm.newWakeLock(android.os.PowerManager.PARTIAL_WAKE_LOCK,
+                    "OpeyScaler:upscale");
+            wakeLock.setReferenceCounted(false);
+            wakeLock.acquire(6L * 60 * 60 * 1000);   // en fazla 6 saat
+        } catch (Throwable ignored) {
+        }
+    }
+
+    private void releaseWakeLock() {
+        try {
+            if (wakeLock != null && wakeLock.isHeld()) wakeLock.release();
+        } catch (Throwable ignored) {
+        } finally {
+            wakeLock = null;
+        }
     }
 
     private static String describe(Throwable t) {
@@ -124,13 +155,25 @@ public final class UpscaleService extends Service {
         int orientation = readOrientation(job.sourceUri);
         PixelSource source = new BitmapPixelSource(bitmap, orientation);
 
+        /*
+         * Cok yuksek buyutmelerde kaynaktaki gurultu de buyutulur; once
+         * kenarlari koruyan bir filtreyle temizlenir, sonra buyutulur.
+         */
+        ThreadPool denoisePool = null;
+        if (job.denoise) {
+            job.update(0f, "Gurultu temizleniyor");
+            job.usedDenoise = true;
+            denoisePool = new ThreadPool(job.threads);
+            source = new Denoiser(source, 0.6f, denoisePool);
+        }
+
         NativeSr sr = null;
         NativeSr sr2 = null;
         File intermediate = null;
         final Phase phase = new Phase(job);
         if (neural) {
             job.update(0f, "Model yukleniyor");
-            sr = NativeSr.open(getAssets(), job.model, true, TILE_SIZE);
+            sr = NativeSr.open(getAssets(), job.model, true, job.tileSize);
             if (sr != null) {
                 job.usedGpu = sr.usingGpu();
                 job.usedModel = job.model;
@@ -160,7 +203,7 @@ public final class UpscaleService extends Service {
                     sr.close();
                     sr = null;
 
-                    sr2 = NativeSr.open(getAssets(), job.model, true, TILE_SIZE);
+                    sr2 = NativeSr.open(getAssets(), job.model, true, job.tileSize);
                     if (sr2 == null || !sr2.setSourceFile(intermediate.getAbsolutePath(), midW, midH)) {
                         throw new IOException("Ikinci asama baslatilamadi");
                     }
@@ -191,6 +234,7 @@ public final class UpscaleService extends Service {
             opt.targetHeight = job.targetHeight;
             opt.sharpen = job.sharpen;
             opt.buildPreview = true;
+            opt.threads = job.threads;
 
             OutputStream os = new BufferedOutputStream(output.stream, 1 << 20);
             ImageWriter writer = job.jpeg ? new JpegWriter(os, job.quality) : new PngWriter(os, 4);
@@ -228,6 +272,7 @@ public final class UpscaleService extends Service {
             job.outputBytes = output.size(this);
             job.update(1f, "Tamamlandi");
         } finally {
+            if (denoisePool != null) denoisePool.shutdown();
             if (bitmap != null) bitmap.recycle();
             if (sr != null) sr.close();
             if (sr2 != null) sr2.close();
@@ -276,6 +321,14 @@ public final class UpscaleService extends Service {
         return new NeuralPixelSource(sr, w, h, sr.tileSize(), new NeuralPixelSource.BandListener() {
             @Override public void onBandDone(int done, int total) {
                 job.stage = prefix + done + "/" + total;
+                // Sakin seviyede cihazin soguyabilmesi icin kisa mola
+                if (job.breatherMillis > 0) {
+                    try {
+                        Thread.sleep(job.breatherMillis);
+                    } catch (InterruptedException ignored) {
+                        Thread.currentThread().interrupt();
+                    }
+                }
             }
 
             @Override public boolean isCancelled() {
