@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AstraUpscale</string>
+    <string name="brand_first">ASTRA</string>
+    <string name="brand_second">UPSCALE</string>
+    <string name="tagline">On-device photo upscaling, 2K to 512K</string>
+
+    <!-- Tabs -->
+    <string name="tab_upscale">Upscale</string>
+    <string name="tab_requests">Requests</string>
+
+    <!-- Photo -->
+    <string name="section_photo">PHOTO</string>
+    <string name="pick_photo">Choose a photo</string>
+    <string name="change_photo">Change photo</string>
+    <string name="no_photo">No photo selected yet</string>
+    <string name="photo_read_failed">Could not read the photo</string>
+    <string name="source_format">%1$d × %2$d   %3$.1f MP</string>
+
+    <!-- Engine -->
+    <string name="section_engine">ENGINE</string>
+    <string name="passes">PASSES</string>
+    <string name="pass_single">Single</string>
+    <string name="pass_double">Double</string>
+    <string name="pass_single_note">The model runs once (%1$d×); Lanczos covers the rest.</string>
+    <string name="pass_double_note">The model runs twice (%1$d× → %2$d×). More detail, far longer.</string>
+    <string name="pass_double_space">Needs about %1$.1f GB of temporary space for the intermediate image.</string>
+    <string name="pass_classic_note">Pass selection does not apply to the classic method.</string>
+    <string name="pass_neural_only">Double pass is only available for AI models</string>
+    <string name="engine_gpu">Vulkan GPU found — models will run on the GPU.</string>
+    <string name="engine_cpu">No Vulkan GPU — models will run on %1$d CPU cores, which is slower.</string>
+    <string name="engine_unavailable">The native library could not load on this device; the classic method is still available.</string>
+    <string name="engine_no_ai">AI models cannot run on this device</string>
+
+    <!-- Resolution -->
+    <string name="section_resolution">RESOLUTION</string>
+    <string name="tier_standard">Standard</string>
+    <string name="tier_high">High</string>
+    <string name="tier_extreme">Extreme</string>
+    <string name="pick_photo_first">Choose a photo first.</string>
+    <string name="target_format">%1$d × %2$d   %3$.1f MP   %4$.1f×</string>
+    <string name="target_jpeg_limit">Too large for JPEG (16-bit limit); it will be saved as PNG.</string>
+    <string name="target_estimate">Estimated file ~%1$s · %2$s free</string>
+    <string name="target_not_enough">insufficient</string>
+    <string name="target_slow_warning">This photo is large for the selected model; it may take a very long time.</string>
+    <string name="target_time">Estimated time ~%1$s</string>
+
+    <!-- Settings -->
+    <string name="section_settings">SETTINGS</string>
+    <string name="sharpen">Detail sharpening</string>
+    <string name="format">Output format</string>
+    <string name="quality">JPEG quality</string>
+    <string name="denoise">Noise cleanup</string>
+    <string name="denoise_auto">Auto</string>
+    <string name="denoise_on">On</string>
+    <string name="denoise_off">Off</string>
+    <string name="denoise_auto_active">Auto: at 64K and above, noise is removed before upscaling.</string>
+    <string name="denoise_auto_inactive">Turns on automatically at 64K and above.</string>
+    <string name="denoise_active">The source is cleaned with an edge-preserving filter before upscaling.</string>
+    <string name="denoise_inactive">The source is upscaled as it is.</string>
+    <string name="language">Language</string>
+    <string name="language_system">System</string>
+
+    <!-- Action / progress / result -->
+    <string name="start">Upscale and save</string>
+    <string name="cancel">Cancel</string>
+    <string name="preparing">Preparing</string>
+    <string name="cancelled">Job cancelled</string>
+    <string name="result_ready">READY</string>
+    <string name="result_failed">FAILED</string>
+    <string name="open">Open in gallery</string>
+    <string name="share">Share</string>
+    <string name="no_app_found">No app available for this</string>
+    <string name="not_enough_space">Not enough space: ~%1$s needed, %2$s free</string>
+    <string name="result_format">%1$d × %2$d   %3$.1f MP\n%4$s\n%5$.1f MB   %6$.1f s\n%7$s\nPictures / AstraUpscale</string>
+    <string name="denoise_suffix"> + noise cleanup</string>
+    <string name="passes_suffix"> ×%1$d passes</string>
+
+    <!-- Device -->
+    <string name="section_device">DEVICE</string>
+    <string name="load_level">LOAD LEVEL</string>
+    <string name="load_gentle">Gentle</string>
+    <string name="load_balanced">Balanced</string>
+    <string name="load_full">Full power</string>
+    <string name="load_gentle_desc">Half power. The phone stays cool and uses little battery; the job takes longer.</string>
+    <string name="load_balanced_desc">Big cores. The recommended balance for everyday use.</string>
+    <string name="load_full_desc">All cores. The fastest option; the phone heats up and drains battery.</string>
+    <string name="load_detail">%1$d threads · %2$d px tiles</string>
+    <string name="load_thermal">device %1$s</string>
+    <string name="thermal_none">cool</string>
+    <string name="thermal_light">slightly warm</string>
+    <string name="thermal_moderate">warm</string>
+    <string name="thermal_severe">very warm</string>
+    <string name="thermal_critical">overheating</string>
+    <string name="thermal_unknown">unknown</string>
+    <string name="device_cores">%1$d cores (%2$d big)</string>
+    <string name="device_memory">%1$.1f GB memory · app limit %2$d MB</string>
+    <string name="device_vulkan">Vulkan GPU available</string>
+    <string name="device_no_vulkan">No Vulkan GPU — CPU will be used</string>
+
+    <!-- Update gate -->
+    <string name="update_required">UPDATE REQUIRED</string>
+    <string name="update_body">Installed version %1$s, new version %2$s.</string>
+    <string name="update_must">You need to install the update to continue.</string>
+    <string name="update_download">Download update</string>
+    <string name="update_recheck">I installed it — check again</string>
+    <string name="offline_note">No internet — cannot check for updates. %1$s The latest known version is installed and the app keeps working.</string>
+    <string name="offline_never">Version has never been checked.</string>
+    <string name="offline_recent">Last check: just now.</string>
+    <string name="offline_hours">Last check: %1$d hours ago.</string>
+    <string name="offline_days">Last check: %1$d days ago.</string>
+
+    <!-- Requests page -->
+    <string name="requests_title">User requests</string>
+    <string name="requests_intro">Report a bug, ask for a feature, or tell us what you think. Messages reach the developer directly.</string>
+    <string name="requests_kind">TYPE</string>
+    <string name="kind_bug">Bug</string>
+    <string name="kind_idea">Idea</string>
+    <string name="kind_other">Other</string>
+    <string name="requests_message">YOUR MESSAGE</string>
+    <string name="requests_message_hint">What happened, or what would you like to see?</string>
+    <string name="requests_contact">CONTACT (OPTIONAL)</string>
+    <string name="requests_contact_hint">E-mail or username, if you want a reply</string>
+    <string name="requests_send">Send</string>
+    <string name="requests_empty">Please write a message first</string>
+    <string name="requests_queued">Queued. It will be sent as soon as there is a connection.</string>
+    <string name="requests_sent">Sent. Thank you.</string>
+    <string name="requests_privacy">Sent with your message: app version, language, Android version, device model, CPU and memory. Your photos are never sent.</string>
+    <string name="queue_status_empty">Nothing waiting to be sent.</string>
+    <string name="queue_status_pending">%1$d message(s) waiting · retrying every 10 seconds</string>
+    <string name="queue_status_offline">%1$d message(s) waiting · will be sent when there is internet</string>
+
+    <!-- Notification -->
+    <string name="channel_name">Upscaling</string>
+    <string name="notification_title">Upscaling photo</string>
+    <string name="footer">Processing happens entirely on your device</string>
+    <!-- Model descriptions -->
+    <string name="model_lanczos_desc">No AI; instant result. Works at any size.</string>
+    <string name="model_fast_desc">animevideov3 — small and fast, balanced result.</string>
+    <string name="model_x4plus_desc">General purpose, best detail on photos. Slow.</string>
+    <string name="model_anime_desc">x4plus-anime-6B — for anime, drawings and illustration.</string>
+    <string name="model_bsrgan_desc">Strong on degraded, noisy and compressed photos. Slow.</string>
+    <string name="model_swinir_s_desc">Light transformer; clean, natural detail at medium speed.</string>
+    <string name="model_swinir_m_desc">Large transformer; the most realistic result, the slowest.</string>
+    <string name="model_cugan2_desc">Clean lines on anime and drawings, measured enhancement.</string>
+    <string name="model_cugan2d_desc">For noisy or heavily compressed drawings.</string>
+    <string name="model_cugan3_desc">Three times in a single pass; drawings and illustration.</string>
+    <string name="model_cugan4_desc">Four times in a single pass; drawings and illustration.</string>
+</resources>

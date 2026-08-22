@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tagline">Cihaz üzerinde fotoğraf büyütme, 2K\'dan 512K\'ya</string>
+
+    <!-- Sekmeler -->
+    <string name="tab_upscale">Büyüt</string>
+    <string name="tab_requests">İstekler</string>
+
+    <!-- Fotoğraf -->
+    <string name="section_photo">FOTOĞRAF</string>
+    <string name="pick_photo">Fotoğraf seç</string>
+    <string name="change_photo">Fotoğrafı değiştir</string>
+    <string name="no_photo">Henüz fotoğraf seçilmedi</string>
+    <string name="photo_read_failed">Fotoğraf okunamadı</string>
+    <string name="source_format">%1$d × %2$d   %3$.1f MP</string>
+
+    <!-- Motor -->
+    <string name="section_engine">MOTOR</string>
+    <string name="passes">GEÇİŞ</string>
+    <string name="pass_single">Tek</string>
+    <string name="pass_double">Çift</string>
+    <string name="pass_single_note">Model bir kez çalışır (%1$d×); kalan farkı Lanczos tamamlar.</string>
+    <string name="pass_double_note">Model iki kez çalışır (%1$d× → %2$d×). Daha fazla detay, çok daha uzun süre.</string>
+    <string name="pass_double_space">Ara görüntü için yaklaşık %1$.1f GB geçici alan gerekir.</string>
+    <string name="pass_classic_note">Klasik yöntemde geçiş seçimi yoktur.</string>
+    <string name="pass_neural_only">Çift geçiş yalnızca yapay zekâ modellerinde kullanılır</string>
+    <string name="engine_gpu">Vulkan GPU bulundu — modeller GPU üzerinde çalışacak.</string>
+    <string name="engine_cpu">Vulkan GPU yok — modeller %1$d CPU çekirdeğinde çalışacak, daha yavaş olur.</string>
+    <string name="engine_unavailable">Yerel kitaplık bu cihazda yüklenemedi; klasik yöntem yine de kullanılabilir.</string>
+    <string name="engine_no_ai">Bu cihazda yapay zekâ modelleri çalıştırılamıyor</string>
+
+    <!-- Çözünürlük -->
+    <string name="section_resolution">ÇÖZÜNÜRLÜK</string>
+    <string name="tier_standard">Standart</string>
+    <string name="tier_high">Yüksek</string>
+    <string name="tier_extreme">Uç</string>
+    <string name="pick_photo_first">Önce bir fotoğraf seç.</string>
+    <string name="target_format">%1$d × %2$d   %3$.1f MP   %4$.1f kat</string>
+    <string name="target_jpeg_limit">Bu boyut JPEG\'e sığmaz (16 bit sınır); PNG olarak kaydedilir.</string>
+    <string name="target_estimate">Tahmini dosya ~%1$s · %2$s boş alan</string>
+    <string name="target_not_enough">yetersiz</string>
+    <string name="target_slow_warning">Bu fotoğraf seçilen model için büyük; işlem çok uzun sürebilir.</string>
+    <string name="target_time">Tahmini süre ~%1$s</string>
+
+    <!-- Ayarlar -->
+    <string name="section_settings">AYARLAR</string>
+    <string name="sharpen">Detay keskinliği</string>
+    <string name="format">Kayıt biçimi</string>
+    <string name="quality">JPEG kalitesi</string>
+    <string name="denoise">Gürültü temizleme</string>
+    <string name="denoise_auto">Otomatik</string>
+    <string name="denoise_on">Açık</string>
+    <string name="denoise_off">Kapalı</string>
+    <string name="denoise_auto_active">Otomatik: 64K ve üzerinde gürültü, büyütmeden önce temizlenir.</string>
+    <string name="denoise_auto_inactive">64K ve üzerinde kendiliğinden açılır.</string>
+    <string name="denoise_active">Kaynak, büyütmeden önce kenar koruyan bir filtreyle temizlenir.</string>
+    <string name="denoise_inactive">Kaynak olduğu gibi büyütülür.</string>
+    <string name="language">Dil</string>
+    <string name="language_system">Sistem</string>
+
+    <!-- Eylem / ilerleme / sonuç -->
+    <string name="start">Büyüt ve kaydet</string>
+    <string name="cancel">İptal</string>
+    <string name="preparing">Hazırlanıyor</string>
+    <string name="cancelled">İşlem iptal edildi</string>
+    <string name="result_ready">HAZIR</string>
+    <string name="result_failed">BAŞARISIZ</string>
+    <string name="open">Galeride aç</string>
+    <string name="share">Paylaş</string>
+    <string name="no_app_found">Bunu açabilecek bir uygulama yok</string>
+    <string name="not_enough_space">Yetersiz alan: ~%1$s gerekiyor, %2$s boş</string>
+    <string name="result_format">%1$d × %2$d   %3$.1f MP\n%4$s\n%5$.1f MB   %6$.1f sn\n%7$s\nPictures / AstraUpscale</string>
+    <string name="denoise_suffix"> + gürültü temizleme</string>
+    <string name="passes_suffix"> ×%1$d geçiş</string>
+
+    <!-- Cihaz -->
+    <string name="section_device">CİHAZ</string>
+    <string name="load_level">ZORLAMA SEVİYESİ</string>
+    <string name="load_gentle">Sakin</string>
+    <string name="load_balanced">Dengeli</string>
+    <string name="load_full">Tam güç</string>
+    <string name="load_gentle_desc">Yarım güç. Telefon serin kalır, pil az harcanır; işlem uzar.</string>
+    <string name="load_balanced_desc">Büyük çekirdekler. Günlük kullanım için önerilen denge.</string>
+    <string name="load_full_desc">Tüm çekirdekler. En hızlısı; telefon ısınır ve pil hızlı biter.</string>
+    <string name="load_detail">%1$d iş parçacığı · %2$d px döşeme</string>
+    <string name="load_thermal">cihaz %1$s</string>
+    <string name="thermal_none">serin</string>
+    <string name="thermal_light">hafif ısınmış</string>
+    <string name="thermal_moderate">ısınmış</string>
+    <string name="thermal_severe">çok ısınmış</string>
+    <string name="thermal_critical">aşırı ısınmış</string>
+    <string name="thermal_unknown">bilinmiyor</string>
+    <string name="device_cores">%1$d çekirdek (%2$d büyük)</string>
+    <string name="device_memory">%1$.1f GB bellek · uygulama sınırı %2$d MB</string>
+    <string name="device_vulkan">Vulkan GPU var</string>
+    <string name="device_no_vulkan">Vulkan GPU yok — CPU kullanılacak</string>
+
+    <!-- Güncelleme kilidi -->
+    <string name="update_required">YENİ SÜRÜM GEREKLİ</string>
+    <string name="update_body">Yüklü sürüm %1$s, yeni sürüm %2$s.</string>
+    <string name="update_must">Devam etmek için güncellemeyi yüklemen gerekiyor.</string>
+    <string name="update_download">Güncellemeyi indir</string>
+    <string name="update_recheck">Yükledim, yeniden denetle</string>
+    <string name="offline_note">İnternet yok — sürüm denetlenemiyor. %1$s Bilinen en son sürüm yüklü, uygulama çalışmaya devam ediyor.</string>
+    <string name="offline_never">Sürüm hiç denetlenemedi.</string>
+    <string name="offline_recent">Son denetim: az önce.</string>
+    <string name="offline_hours">Son denetim: %1$d saat önce.</string>
+    <string name="offline_days">Son denetim: %1$d gün önce.</string>
+
+    <!-- İstekler sayfası -->
+    <string name="requests_title">Kullanıcı istekleri</string>
+    <string name="requests_intro">Bir hatayı bildir, yeni bir özellik iste ya da ne düşündüğünü yaz. Mesajlar doğrudan geliştiriciye ulaşır.</string>
+    <string name="requests_kind">TÜR</string>
+    <string name="kind_bug">Hata</string>
+    <string name="kind_idea">Öneri</string>
+    <string name="kind_other">Diğer</string>
+    <string name="requests_message">MESAJIN</string>
+    <string name="requests_message_hint">Ne oldu ya da ne görmek istersin?</string>
+    <string name="requests_contact">İLETİŞİM (İSTEĞE BAĞLI)</string>
+    <string name="requests_contact_hint">Yanıt istersen e-posta ya da kullanıcı adı</string>
+    <string name="requests_send">Gönder</string>
+    <string name="requests_empty">Önce bir mesaj yaz</string>
+    <string name="requests_queued">Kuyruğa alındı. Bağlantı gelir gelmez gönderilecek.</string>
+    <string name="requests_sent">Gönderildi. Teşekkürler.</string>
+    <string name="requests_privacy">Mesajınla birlikte gönderilenler: uygulama sürümü, dil, Android sürümü, cihaz modeli, işlemci ve bellek. Fotoğrafların asla gönderilmez.</string>
+    <string name="queue_status_empty">Gönderilmeyi bekleyen bir şey yok.</string>
+    <string name="queue_status_pending">%1$d mesaj bekliyor · 10 saniyede bir yeniden deneniyor</string>
+    <string name="queue_status_offline">%1$d mesaj bekliyor · internet gelince gönderilecek</string>
+
+    <!-- Bildirim -->
+    <string name="channel_name">Büyütme işlemi</string>
+    <string name="notification_title">Fotoğraf büyütülüyor</string>
+    <string name="footer">İşlem tamamen cihazında yapılır</string>
+    <!-- Model açıklamaları -->
+    <string name="model_lanczos_desc">Yapay zekâ yok; anında sonuç. Her boyutta çalışır.</string>
+    <string name="model_fast_desc">animevideov3 — küçük ve hızlı model, dengeli sonuç.</string>
+    <string name="model_x4plus_desc">Genel amaçlı, fotoğraflarda en iyi detay. Yavaş.</string>
+    <string name="model_anime_desc">x4plus-anime-6B — anime, çizim ve illüstrasyon için.</string>
+    <string name="model_bsrgan_desc">Bozulmuş, gürültülü ve sıkıştırılmış fotoğraflarda güçlü. Yavaş.</string>
+    <string name="model_swinir_s_desc">Hafif transformer; temiz ve doğal detay, orta hız.</string>
+    <string name="model_swinir_m_desc">Büyük transformer; en gerçekçi sonuç, en yavaş seçenek.</string>
+    <string name="model_cugan2_desc">Anime ve çizimde temiz çizgiler, ölçüsünde iyileştirme.</string>
+    <string name="model_cugan2d_desc">Gürültülü veya aşırı sıkıştırılmış çizimler için.</string>
+    <string name="model_cugan3_desc">Tek geçişte üç kat; çizim ve illüstrasyon.</string>
+    <string name="model_cugan4_desc">Tek geçişte dört kat; çizim ve illüstrasyon.</string>
+</resources>
