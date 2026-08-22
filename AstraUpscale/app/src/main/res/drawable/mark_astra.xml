@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    AstraUpscale isareti: dort kollu, kollari icbukey kesilen bir yildiz.
+    Kollar merkeze dogru inceldigi icin isaret kucuk boyutlarda bile keskin
+    kalir.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+    <path
+        android:fillColor="@color/paper"
+        android:pathData="M50,2 C50,38.0 38.0,50 2,50 C38.0,50 50,62.0 50,98 C50,62.0 62.0,50 98,50 C62.0,50 50,38.0 50,2 Z" />
+</vector>
