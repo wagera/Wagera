@@ -14,7 +14,7 @@
                 android:angle="270"
                 android:startColor="@color/sheen"
                 android:centerColor="@color/sheen_soft"
-                android:endColor="#00000000"
+                android:endColor="@android:color/transparent"
                 android:type="linear" />
             <corners android:radius="21dp" />
         </shape>
