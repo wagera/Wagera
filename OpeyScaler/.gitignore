@@ -1,5 +1,0 @@
-build/
-*.keystore
-.gradle/
-local.properties
-__pycache__/
