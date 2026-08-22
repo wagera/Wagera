@@ -1,36 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg"
-    android:fillViewport="true"
+    android:background="@color/ink"
     android:fitsSystemWindows="true">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:scrollbars="none">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="18dp">
+        android:paddingStart="22dp"
+        android:paddingEnd="22dp"
+        android:paddingTop="14dp"
+        android:paddingBottom="28dp">
+
+        <!-- ── Baslik ─────────────────────────────────────────────── -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/mark_star" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="11dp"
+                android:fontFamily="sans-serif-medium"
+                android:letterSpacing="0.30"
+                android:text="OPEYSCALER"
+                android:textColor="@color/paper"
+                android:textSize="14sp" />
+        </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/app_name"
-            android:textColor="@color/text"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            android:letterSpacing="-0.02" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="18dp"
+            android:layout_marginTop="10dp"
+            android:fontFamily="sans-serif-light"
+            android:lineSpacingExtra="4dp"
             android:text="@string/tagline"
-            android:textColor="@color/text_dim"
-            android:textSize="14sp" />
+            android:textColor="@color/paper_dim"
+            android:textSize="13sp" />
 
-        <!-- Kaynak fotograf -->
+        <TextView
+            android:id="@+id/offlineNote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/preview_bg"
+            android:lineSpacingExtra="3dp"
+            android:padding="13dp"
+            android:textColor="@color/paper_faint"
+            android:textSize="11.5sp"
+            android:visibility="gone" />
+
+        <!-- ── Fotograf ───────────────────────────────────────────── -->
+        <TextView
+            style="@style/SectionLabel"
+            android:text="FOTOGRAF" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -38,255 +79,397 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <ImageView
-                android:id="@+id/sourcePreview"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="190dp"
-                android:background="@drawable/preview_bg"
-                android:contentDescription="@string/pick_photo"
-                android:padding="1dp"
-                android:scaleType="centerInside" />
+                android:layout_height="212dp"
+                android:background="@drawable/preview_bg">
+
+                <LinearLayout
+                    android:id="@+id/emptyState"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:alpha="0.55"
+                        android:contentDescription="@string/no_photo"
+                        android:src="@drawable/mark_star_ghost" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:letterSpacing="0.10"
+                        android:text="@string/no_photo"
+                        android:textColor="@color/paper_faint"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/sourcePreview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/pick_photo"
+                    android:padding="1dp"
+                    android:scaleType="centerInside" />
+            </FrameLayout>
 
             <TextView
                 android:id="@+id/sourceInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:gravity="center"
+                android:layout_marginTop="14dp"
+                android:fontFamily="monospace"
                 android:text="@string/no_photo"
-                android:textColor="@color/text_dim"
-                android:textSize="13sp" />
+                android:textColor="@color/paper_dim"
+                android:textSize="12sp"
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/pickButton"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="14dp"
                 android:background="@drawable/btn_secondary"
+                android:letterSpacing="0.04"
                 android:text="@string/pick_photo"
                 android:textAllCaps="false"
-                android:textColor="@color/text"
-                android:textSize="15sp" />
+                android:textColor="@color/paper"
+                android:textSize="14sp" />
         </LinearLayout>
 
-        <!-- Model secimi -->
+        <!-- ── Motor ──────────────────────────────────────────────── -->
+        <TextView
+            style="@style/SectionLabel"
+            android:text="MOTOR" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
             android:background="@drawable/card"
             android:orientation="vertical"
-            android:padding="16dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Buyutme motoru"
-                android:textColor="@color/text"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="14dp">
 
             <LinearLayout
                 android:id="@+id/modelList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
                 android:orientation="vertical" />
 
             <TextView
                 android:id="@+id/modelInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:textColor="@color/text_dim"
-                android:textSize="12sp" />
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginTop="14dp"
+                android:lineSpacingExtra="3dp"
+                android:textColor="@color/paper_faint"
+                android:textSize="11.5sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/hairline" />
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:text="Model asamasi"
-                android:textColor="@color/text_dim"
-                android:textSize="13sp" />
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="16dp"
+                android:fontFamily="sans-serif-medium"
+                android:letterSpacing="0.18"
+                android:text="GECIS"
+                android:textColor="@color/paper_faint"
+                android:textSize="10sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/stage1"
                     android:layout_width="0dp"
-                    android:layout_height="46dp"
+                    android:layout_height="44dp"
                     android:layout_weight="1"
                     android:background="@drawable/chip"
-                    android:text="Tek gecis"
+                    android:text="Tek"
                     android:textAllCaps="false"
-                    android:textColor="@color/text"
-                    android:textSize="14sp" />
+                    android:textColor="@color/chip_text"
+                    android:textSize="13sp" />
 
                 <Space
-                    android:layout_width="10dp"
+                    android:layout_width="8dp"
                     android:layout_height="1dp" />
 
                 <Button
                     android:id="@+id/stage2"
                     android:layout_width="0dp"
-                    android:layout_height="46dp"
+                    android:layout_height="44dp"
                     android:layout_weight="1"
                     android:background="@drawable/chip"
-                    android:text="Iki gecis"
+                    android:text="Cift"
                     android:textAllCaps="false"
-                    android:textColor="@color/text"
-                    android:textSize="14sp" />
+                    android:textColor="@color/chip_text"
+                    android:textSize="13sp" />
             </LinearLayout>
 
             <TextView
                 android:id="@+id/stageInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:textColor="@color/text_dim"
-                android:textSize="12sp" />
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginTop="10dp"
+                android:lineSpacingExtra="3dp"
+                android:textColor="@color/paper_faint"
+                android:textSize="11.5sp" />
         </LinearLayout>
 
-        <!-- Cozunurluk -->
+        <!-- ── Cozunurluk ─────────────────────────────────────────── -->
+        <TextView
+            style="@style/SectionLabel"
+            android:text="COZUNURLUK" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
             android:background="@drawable/card"
             android:orientation="vertical"
-            android:padding="16dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/target_resolution"
-                android:textColor="@color/text"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+            android:padding="12dp">
 
             <GridLayout
                 android:id="@+id/presetGrid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
                 android:columnCount="3" />
 
             <TextView
                 android:id="@+id/targetInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_marginEnd="6dp"
                 android:layout_marginTop="12dp"
-                android:textColor="@color/text_dim"
-                android:textSize="13sp" />
+                android:fontFamily="monospace"
+                android:lineSpacingExtra="3dp"
+                android:textColor="@color/paper_dim"
+                android:textSize="11.5sp" />
         </LinearLayout>
 
-        <!-- Ayarlar -->
+        <!-- ── Ayarlar ────────────────────────────────────────────── -->
+        <TextView
+            style="@style/SectionLabel"
+            android:text="AYARLAR" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
             android:background="@drawable/card"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="18dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/settings"
-                android:textColor="@color/text"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/sharpenLabel"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:textColor="@color/text_dim"
-                android:textSize="13sp" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/sharpen"
+                    android:textColor="@color/paper_soft"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/sharpenValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="monospace"
+                    android:textColor="@color/paper"
+                    android:textSize="13sp" />
+            </LinearLayout>
 
             <SeekBar
                 android:id="@+id/sharpenSeek"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
                 android:max="100"
-                android:progress="45" />
+                android:maxHeight="2dp"
+                android:minHeight="2dp"
+                android:progress="45"
+                android:progressDrawable="@drawable/seek_track"
+                android:splitTrack="false"
+                android:thumb="@drawable/seek_thumb"
+                android:thumbOffset="7dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="18dp"
+                android:background="@color/hairline" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="18dp"
                 android:text="@string/format"
-                android:textColor="@color/text_dim"
+                android:textColor="@color/paper_soft"
                 android:textSize="13sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/formatJpeg"
                     android:layout_width="0dp"
-                    android:layout_height="46dp"
+                    android:layout_height="44dp"
                     android:layout_weight="1"
                     android:background="@drawable/chip"
+                    android:letterSpacing="0.06"
                     android:text="JPEG"
                     android:textAllCaps="false"
-                    android:textColor="@color/text"
-                    android:textSize="14sp" />
+                    android:textColor="@color/chip_text"
+                    android:textSize="13sp" />
 
                 <Space
-                    android:layout_width="10dp"
+                    android:layout_width="8dp"
                     android:layout_height="1dp" />
 
                 <Button
                     android:id="@+id/formatPng"
                     android:layout_width="0dp"
-                    android:layout_height="46dp"
+                    android:layout_height="44dp"
                     android:layout_weight="1"
                     android:background="@drawable/chip"
+                    android:letterSpacing="0.06"
                     android:text="PNG"
                     android:textAllCaps="false"
-                    android:textColor="@color/text"
-                    android:textSize="14sp" />
+                    android:textColor="@color/chip_text"
+                    android:textSize="13sp" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/qualityLabel"
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="18dp"
+                android:background="@color/hairline" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:textColor="@color/text_dim"
-                android:textSize="13sp" />
+                android:layout_marginTop="18dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Gurultu temizleme"
+                        android:textColor="@color/paper_soft"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/denoiseInfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:lineSpacingExtra="2dp"
+                        android:textColor="@color/paper_faint"
+                        android:textSize="11sp" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/denoiseToggle"
+                    android:layout_width="94dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="12dp"
+                    android:background="@drawable/chip"
+                    android:text="Otomatik"
+                    android:textAllCaps="false"
+                    android:textColor="@color/chip_text"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/qualityRow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/quality"
+                    android:textColor="@color/paper_soft"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/qualityValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="monospace"
+                    android:textColor="@color/paper"
+                    android:textSize="13sp" />
+            </LinearLayout>
 
             <SeekBar
                 android:id="@+id/qualitySeek"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
                 android:max="30"
-                android:progress="22" />
+                android:maxHeight="2dp"
+                android:minHeight="2dp"
+                android:progress="22"
+                android:progressDrawable="@drawable/seek_track"
+                android:splitTrack="false"
+                android:thumb="@drawable/seek_thumb"
+                android:thumbOffset="7dp" />
         </LinearLayout>
 
+        <!-- ── Eylem ──────────────────────────────────────────────── -->
         <Button
             android:id="@+id/startButton"
             android:layout_width="match_parent"
             android:layout_height="58dp"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="28dp"
             android:background="@drawable/btn_primary"
             android:enabled="false"
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="0.08"
             android:text="@string/start"
             android:textAllCaps="false"
-            android:textColor="@color/text"
-            android:textSize="17sp"
-            android:textStyle="bold" />
+            android:textColor="@color/btn_primary_text"
+            android:textSize="15sp" />
 
-        <!-- Ilerleme -->
+        <!-- ── Ilerleme ───────────────────────────────────────────── -->
         <LinearLayout
             android:id="@+id/progressCard"
             android:layout_width="match_parent"
@@ -294,22 +477,40 @@
             android:layout_marginTop="14dp"
             android:background="@drawable/card"
             android:orientation="vertical"
-            android:padding="16dp"
+            android:padding="18dp"
             android:visibility="gone">
 
-            <TextView
-                android:id="@+id/progressText"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text"
-                android:textSize="15sp" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/progressText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/paper_soft"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/progressPercent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="monospace"
+                    android:textColor="@color/paper"
+                    android:textSize="13sp" />
+            </LinearLayout>
 
             <ProgressBar
                 android:id="@+id/progressBar"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
-                android:layout_height="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_height="4dp"
+                android:layout_marginTop="14dp"
                 android:max="1000"
                 android:progressDrawable="@drawable/progress_bar" />
 
@@ -317,15 +518,15 @@
                 android:id="@+id/cancelButton"
                 android:layout_width="match_parent"
                 android:layout_height="46dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="16dp"
                 android:background="@drawable/btn_secondary"
                 android:text="@string/cancel"
                 android:textAllCaps="false"
-                android:textColor="@color/text"
-                android:textSize="14sp" />
+                android:textColor="@color/paper_soft"
+                android:textSize="13sp" />
         </LinearLayout>
 
-        <!-- Sonuc -->
+        <!-- ── Sonuc ──────────────────────────────────────────────── -->
         <LinearLayout
             android:id="@+id/resultCard"
             android:layout_width="match_parent"
@@ -336,19 +537,35 @@
             android:padding="16dp"
             android:visibility="gone">
 
-            <TextView
-                android:id="@+id/resultTitle"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/ok"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/resultMark"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/mark_star" />
+
+                <TextView
+                    android:id="@+id/resultTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="9dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:letterSpacing="0.18"
+                    android:textColor="@color/paper"
+                    android:textSize="11sp" />
+            </LinearLayout>
 
             <ImageView
                 android:id="@+id/resultPreview"
                 android:layout_width="match_parent"
-                android:layout_height="190dp"
-                android:layout_marginTop="12dp"
+                android:layout_height="212dp"
+                android:layout_marginTop="14dp"
                 android:background="@drawable/preview_bg"
                 android:contentDescription="@string/app_name"
                 android:padding="1dp"
@@ -358,14 +575,16 @@
                 android:id="@+id/resultInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:textColor="@color/text_dim"
-                android:textSize="13sp" />
+                android:layout_marginTop="14dp"
+                android:fontFamily="monospace"
+                android:lineSpacingExtra="4dp"
+                android:textColor="@color/paper_dim"
+                android:textSize="11.5sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="16dp"
                 android:orientation="horizontal">
 
                 <Button
@@ -376,11 +595,11 @@
                     android:background="@drawable/btn_secondary"
                     android:text="@string/open"
                     android:textAllCaps="false"
-                    android:textColor="@color/text"
-                    android:textSize="14sp" />
+                    android:textColor="@color/paper"
+                    android:textSize="13sp" />
 
                 <Space
-                    android:layout_width="10dp"
+                    android:layout_width="8dp"
                     android:layout_height="1dp" />
 
                 <Button
@@ -391,19 +610,143 @@
                     android:background="@drawable/btn_secondary"
                     android:text="@string/share"
                     android:textAllCaps="false"
-                    android:textColor="@color/text"
-                    android:textSize="14sp" />
+                    android:textColor="@color/paper"
+                    android:textSize="13sp" />
             </LinearLayout>
         </LinearLayout>
+
+        <TextView
+            style="@style/SectionLabel"
+            android:text="CIHAZ" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/card"
+            android:orientation="vertical"
+            android:padding="18dp">
+
+            <TextView
+                android:id="@+id/deviceInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="monospace"
+                android:lineSpacingExtra="4dp"
+                android:textColor="@color/paper_dim"
+                android:textSize="11.5sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/hairline" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="sans-serif-medium"
+                android:letterSpacing="0.18"
+                android:text="ZORLAMA SEVIYESI"
+                android:textColor="@color/paper_faint"
+                android:textSize="10sp" />
+
+            <LinearLayout
+                android:id="@+id/loadLevels"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal" />
+
+            <TextView
+                android:id="@+id/loadInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:lineSpacingExtra="3dp"
+                android:textColor="@color/paper_faint"
+                android:textSize="11.5sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="30dp"
+            android:background="@color/hairline" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp"
             android:gravity="center"
-            android:text="Islem tamamen cihazinda yapilir, internet gerekmez."
-            android:textColor="@color/text_dim"
+            android:letterSpacing="0.08"
+            android:text="Islem tamamen cihazinda yapilir"
+            android:textColor="@color/paper_ghost"
+            android:textSize="10.5sp" />
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- ── Guncelleme kilidi ──────────────────────────────────────── -->
+    <LinearLayout
+        android:id="@+id/updateGate"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/ink"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingStart="34dp"
+        android:paddingEnd="34dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/mark_star" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="26dp"
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="0.22"
+            android:text="YENI SURUM GEREKLI"
+            android:textColor="@color/paper"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/updateText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:lineSpacingExtra="5dp"
+            android:textColor="@color/paper_dim"
+            android:textSize="13sp" />
+
+        <Button
+            android:id="@+id/updateButton"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/btn_primary"
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="0.06"
+            android:text="Guncellemeyi Indir"
+            android:textAllCaps="false"
+            android:textColor="@color/btn_primary_text"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/updateRecheck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:padding="10dp"
+            android:text="Yukledim, yeniden denetle"
+            android:textColor="@color/paper_faint"
             android:textSize="12sp" />
     </LinearLayout>
-</ScrollView>
+</FrameLayout>

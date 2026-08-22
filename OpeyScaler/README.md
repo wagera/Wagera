@@ -4,6 +4,8 @@ Fotograflari cihaz uzerinde **2K'dan 32K'ya** kadar buyuten Android uygulamasi.
 Real-ESRGAN, SwinIR ve Real-CUGAN modelleri APK'nin icinde tasinir; islem
 tamamen telefonda yapilir, internet gerekmez ve hicbir goruntu disari cikmaz.
 
+<img src="docs/arayuz.png" width="330" align="right" alt="Arayuz" />
+
 ![Real-ESRGAN karsilastirmasi](docs/karsilastirma-realesrgan.png)
 
 *Sol: klasik Lanczos buyutme. Sag: Real-ESRGAN. Ayni 256x256 kaynaktan 4x.*
@@ -12,9 +14,12 @@ tamamen telefonda yapilir, internet gerekmez ve hicbir goruntu disari cikmaz.
 
 | | |
 |---|---|
-| Cozunurluk | 2K, 3K, 4K, 5K, 6K, 8K, 10K, 12K, 16K, **32K** (uzun kenara gore, oran korunur) |
+| Cozunurluk | 2K'dan **512K**'ya kadar 14 on ayar (uzun kenara gore, oran korunur) |
 | Modeller | Real-ESRGAN (Hizli / x4plus / Anime 6B), SwinIR-S, SwinIR-M, Real-CUGAN 2x/3x/4x, klasik Lanczos |
 | Asama secimi | Model tek gecis ya da iki gecis (orn. 4x -> 16x) calistirilabilir |
+| Gurultu temizleme | 64K ve uzerinde otomatik: kaynak, buyutmeden once temizlenir |
+| Zorlama seviyesi | Sakin / Dengeli / Tam guc — cihazin isinmasi ve pil harcamasi kullanicinin elinde |
+| Surum denetimi | Internet varken GitHub'daki surum dosyasina bakar |
 | Hizlandirma | Vulkan GPU varsa GPU, yoksa cok cekirdekli CPU |
 | Cikis | JPEG (kalite ayarlanabilir) veya kayipsiz PNG |
 | Kayit yeri | Galeri > Pictures > OpeyScaler |
@@ -36,6 +41,113 @@ tamamen telefonda yapilir, internet gerekmez ve hicbir goruntu disari cikmaz.
 
 Goreli hiz kaynak piksel basinadir; uygulama secilen modelle fotograf buyuk
 geldiginde uyarir ve calisirken kalan sureyi tahmin eder.
+
+## Arayuz
+
+Tek renkli, siyah agirlikli bir tasarim. Vurgu rengi yok: secili oge beyaza
+doner, yazisi siyaha gecer. Ayrimlar 1 px sac cizgileriyle, derinlik ise
+birbirinden bir tik acilan siyah katmanlarla kurulur.
+
+| Katman | Deger | Kullanim |
+|---|---|---|
+| `ink` | `#050506` | sayfa zemini |
+| `ink_raised` | `#0B0C0E` | basili durum |
+| `ink_card` | `#0F1013` | kart |
+| `ink_chip` | `#16171B` | cip, ikincil dugme |
+| `hairline` | `#1D1F23` | ayrim cizgisi |
+| `paper` | `#F5F6F8` | birincil yazi, secili zemin |
+| `paper_dim` / `paper_faint` / `paper_ghost` | `#8B9098` / `#5F646C` / `#3A3E45` | azalan onem |
+
+Isaret alti kollu bir yildizdir (✶); hem uygulama simgesinde hem baslikta
+hem de bos onizleme ve sonuc kartinda ayni vektor kullanilir. Bolum
+basliklari seyrek harfli kucuk buyuk harflerle yazilir, sayisal degerler
+(boyut, MP, yuzde, kalite) tek aralikli yazi tipiyle hizalanir. Cozunurluk
+izgarasinda son secenek (32K) satirin tamamini kaplar.
+
+Yandaki gorsel, cihaz ekran goruntusu degildir: duzen dosyasindaki ayni
+renk, olcu ve punto degerlerinden uretilmis bir onizlemedir.
+
+## Cok yuksek cozunurlukler
+
+Hat satir satir aktigi icin bellek kullanimi cikis boyutundan neredeyse
+bagimsizdir; sinirlar bellek degil **dosya bicimi, depolama ve sure**
+tarafindan konur.
+
+| On ayar | Boyut | Piksel | JPEG | Tahmini PNG | Masaustunde sure* |
+|---|---|---|---|---|---|
+| 16K | 15360x11520 | 0.18 GP | evet | 0.2 GB | 13 sn |
+| 32K | 30720x23040 | 0.71 GP | evet | 0.8 GB | 44 sn |
+| **64K** | 61440x46080 | 2.83 GP | evet | 3.4 GB | **138 sn** (olculdu) |
+| 128K | 122880x92160 | 11.3 GP | **hayir** | 13.6 GB | ~10 dk |
+| 256K | 245760x184320 | 45.3 GP | **hayir** | 54 GB | ~40 dk |
+| 512K | 491520x368640 | 181 GP | **hayir** | 217 GB | ~2.5 saat |
+
+*4 cekirdek x86_64, klasik hat. Telefonda 2-4 kat daha uzun surer.
+
+JPEG basligindaki boyut alanlari 16 bittir, yani en fazla 65535 piksel:
+**64K'ya kadar JPEG yazilabilir, 128K ve uzeri yalnizca PNG**. Uygulama bu
+durumda bicimi kendisi PNG'ye cevirir ve nedenini yazar.
+
+256K ve 512K'yi uygulama gercekten uretebilir; asil engel depolamadir. Baslamadan
+once tahmini dosya boyutu ile bos alan karsilastirilir, yetmiyorsa islem
+baslamaz. 512K icin gereken ~217 GB bos alan bugunun telefonlarinda pratikte
+bulunmaz; secenek yine de duruyor cunku sinir uygulamada degil cihazda.
+
+Bellek tarafinda tek risk cok genis satirlardi: keskinlestirme halkasi cikis
+genisligiyle buyuyor. Yatay kutu toplamlari kisa tamsayiya alindi (bir kutu
+en fazla 49x255 = 12495) ve halka boyutu bir bellek butcesine gore kisiliyor;
+bu sayede 512K genislikte bile PNG yazimi 256 MB yiginla calisiyor.
+
+## Gurultu temizleme
+
+60 kat buyutmede kaynaktaki tek bir gurultu pikseli ciktida avuc ici
+buyuklugunde bir lekeye donusur. Bu yuzden 64K ve uzerinde kaynak, buyutmeden
+**once** kenar koruyan bir filtreden gecer (`engine/Denoiser.java`): agirlik
+hem uzakliga hem renk farkina bagli oldugundan duz alanlardaki gurultu
+silinirken kenarlar yerinde kalir. Filtre satir satir calisir, bellekte
+yalnizca birkac kaynak satiri tutar.
+
+Olculen etki (12 seviyelik yapay gurultu eklenmis fotograf):
+
+| | PSNR (temiz referansa gore) | Ortalama kenar dikligi |
+|---|---|---|
+| Temiz referans | — | 4.53 |
+| Gurultulu | 26.8 dB | 10.68 (gurultu sisiriyor) |
+| Temizlenmis | **32.8 dB** | 4.14 |
+
+Ayar ucludur: Otomatik (64K+), Acik, Kapali.
+
+## Cihaz ve zorlama seviyesi
+
+Uygulama acilista islemci cekirdeklerini ve azami frekanslarini
+(`/sys/devices/system/cpu/*/cpufreq`), bellek miktarini, uygulama yigin
+sinirini, ABI'yi, yonga adini ve Vulkan destegini okur; en altta gosterir.
+
+Kullanici uc seviyeden birini secer:
+
+| Seviye | Is parcacigi | Doseme | Etki |
+|---|---|---|---|
+| Sakin | cekirdegin 1/3'u | 96 px | telefon serin kalir, her dosemeden sonra kisa mola |
+| Dengeli | buyuk cekirdekler | 128 px | gunluk kullanim |
+| Tam guc | tum cekirdekler | 128-160 px | en hizli, cihaz isinir |
+
+**Kalite hicbir seviyede degismez** — degisen yalnizca isin ne kadar hizli
+yapildigi. Cihazin o anki isinma durumu da (API 29+) gosterilir.
+
+## Surum denetimi ve arka plan
+
+Acilista internet varsa depodaki `surum.json` okunur. Daha yeni bir surum
+goruldugu **an** bu bilgi kalici olarak kaydedilir ve uygulama, guncelleme
+yuklenene kadar acilmaz — internet sonradan kesilse bile kilit kalkmaz, geri
+tusu uygulamadan cikarir. Kullanici guncellemeyi yukleyince kilit kendiliginden
+kalkar.
+
+Internet yoksa ve daha once yeni bir surum gorulmemisse uygulama, son denetimin
+ne zaman yapildigini yazan bir uyariyla normal calisir.
+
+Buyutme islemi on plan servisinde surer ve kismi uyanik kilit alinir: ekran
+kapansa da, baska uygulamaya gecilse de is devam eder. Goruntu isleme internet
+kullanmaz; ag izni yalnizca surum denetimi icindir.
 
 ## Nasil calisiyor
 
@@ -153,6 +265,9 @@ Masaustunde (4 cekirdek x86_64, GPU yok) gercek goruntulerle:
 | 512x384 -> 4K (11 MP), klasik hat | 2.1 sn, 15 MB yigin |
 | 1024x768 -> 16K (177 MP), klasik hat | 13 sn, 34 MB yigin |
 | 1024x768 -> **32K** (708 MP), klasik hat | 44 sn, **62 MB yigin**, 55 MB JPEG |
+| 1024x768 -> **64K** (2.83 GP), klasik hat | 138 sn, **111 MB yigin**, 162 MB JPEG |
+| PNG yazimi 512K genislikte (491520 px) | 256 MB yiginla sorunsuz |
+| Gurultu temizleme (12 seviyelik gurultu) | 26.8 -> 32.8 dB, kenarlar korundu |
 | 256x256 -> 4x, Real-ESRGAN Hizli | 0.21 sn |
 | 256x256 -> 4x, Real-ESRGAN x4plus | 13 sn |
 | 96x96 -> 4x, SwinIR-S (bir doseme) | 1.3 sn |

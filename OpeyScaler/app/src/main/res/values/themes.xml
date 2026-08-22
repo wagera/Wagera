@@ -1,12 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="AppTheme" parent="@android:style/Theme.Material.NoActionBar">
-        <item name="android:colorPrimary">@color/accent</item>
-        <item name="android:colorAccent">@color/accent</item>
-        <item name="android:windowBackground">@color/bg</item>
-        <item name="android:statusBarColor">@color/bg</item>
-        <item name="android:navigationBarColor">@color/bg</item>
-        <item name="android:textColorPrimary">@color/text</item>
-        <item name="android:textColorSecondary">@color/text_dim</item>
+        <item name="android:colorPrimary">@color/paper</item>
+        <item name="android:colorAccent">@color/paper</item>
+        <item name="android:colorControlNormal">@color/paper_faint</item>
+        <item name="android:colorControlActivated">@color/paper</item>
+        <item name="android:colorControlHighlight">@color/glow_12</item>
+        <item name="android:windowBackground">@color/ink</item>
+        <item name="android:statusBarColor">@color/ink</item>
+        <item name="android:navigationBarColor">@color/ink</item>
+        <item name="android:textColorPrimary">@color/paper</item>
+        <item name="android:textColorSecondary">@color/paper_dim</item>
+        <item name="android:textColorHint">@color/paper_faint</item>
+    </style>
+
+    <!-- Bolum basliklari: kucuk, seyrek harfli, sessiz -->
+    <style name="SectionLabel">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/paper_faint</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:letterSpacing">0.22</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:layout_marginTop">28dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
     </style>
 </resources>

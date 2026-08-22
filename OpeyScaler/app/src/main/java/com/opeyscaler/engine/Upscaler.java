@@ -25,6 +25,13 @@ public final class Upscaler {
         public float sharpen = 0.45f;
         /** true ise kucuk bir onizleme goruntusu de uretilir. */
         public boolean buildPreview = true;
+        /** Kullanilacak is parcacigi sayisi; 0 ise cekirdek sayisi kadar. */
+        public int threads = 0;
+        /**
+         * Keskinlestirme halkasi icin ayrilabilecek azami bellek. Cok genis
+         * ciktilarda (128K ve uzeri) yaricap bu butceye gore kisilir.
+         */
+        public long sharpenBudgetBytes = 96L << 20;
     }
 
     public static final class Result {
@@ -54,7 +61,7 @@ public final class Upscaler {
         final int srcH = src.height();
         final int w3 = dstW * 3;
 
-        ThreadPool pool = ThreadPool.auto();
+        ThreadPool pool = opt.threads > 0 ? new ThreadPool(opt.threads) : ThreadPool.auto();
         try {
             Resampler resampler = new Resampler(src, dstW, dstH, pool);
             writer.start(dstW, dstH);
@@ -67,15 +74,28 @@ public final class Upscaler {
              * yayilir. Bu yuzden keskinlestirme yaricapi olcekle birlikte buyumelidir;
              * sabit 1 piksellik bir unsharp 15 kat buyutmede hicbir sey yapmaz.
              */
-            final int radius = sharpening ? Math.max(1, Math.min(24, Math.round(scale * 0.6f))) : 0;
+            int wanted = sharpening ? Math.max(1, Math.min(24, Math.round(scale * 0.6f))) : 0;
+            /*
+             * Halka basina maliyet: ham satir (w3 bayt) + yatay kutu toplami
+             * (w3 kisa tamsayi = 2*w3 bayt). Satir sayisi 2r+3 oldugundan
+             * yaricap, cikis genisligi buyudukce butceye gore kisilir.
+             */
+            if (sharpening) {
+                long perRow = (long) w3 * 3;
+                long maxRows = Math.max(5, opt.sharpenBudgetBytes / Math.max(1, perRow));
+                int maxRadius = (int) Math.max(1, (maxRows - 3) / 2);
+                wanted = Math.min(wanted, maxRadius);
+            }
+            final int radius = wanted;
             final float amountLarge = opt.sharpen;
             final float amountFine = opt.sharpen * 0.5f;
             final int ringSize = 2 * radius + 3;
             final float boxNorm = 1f / ((2 * radius + 1) * (float) (2 * radius + 1));
 
             byte[][] ring = new byte[sharpening ? ringSize : 1][w3];
-            float[][] hbox = sharpening ? new float[ringSize][w3] : null;  // yatay kutu bulanikligi
-            float[] acc = sharpening ? new float[w3] : null;               // dikey kosan toplam
+            // Kutu toplami en fazla (2*24+1)*255 = 12495; kisa tamsayi yeter.
+            short[][] hbox = sharpening ? new short[ringSize][w3] : null;
+            int[] acc = sharpening ? new int[w3] : null;   // dikey kosan toplam
             float[] linear = new float[w3];
             byte[] outRow = sharpening ? new byte[w3] : null;
             int produced = 0;   // uretilmis ham satir sayisi
@@ -156,19 +176,19 @@ public final class Upscaler {
     }
 
     /** Satir icinde kosan toplamla yatay kutu bulanikligi: yaricaptan bagimsiz O(genislik). */
-    private static void horizontalBox(final byte[] row, final float[] out, final int dstW,
+    private static void horizontalBox(final byte[] row, final short[] out, final int dstW,
                                       final int radius, ThreadPool pool) {
         pool.forRange(3, new ThreadPool.RangeTask() {
             @Override public void run(int from, int to) {
                 for (int c = from; c < to; c++) {
                     int last = (dstW - 1) * 3 + c;
-                    float sum = (row[c] & 0xFF) * (radius + 1);
+                    int sum = (row[c] & 0xFF) * (radius + 1);
                     for (int x = 1; x <= radius; x++) {
                         int idx = Math.min(x, dstW - 1) * 3 + c;
                         sum += row[idx] & 0xFF;
                     }
                     for (int x = 0; x < dstW; x++) {
-                        out[x * 3 + c] = sum;
+                        out[x * 3 + c] = (short) sum;
                         int addX = x + radius + 1;
                         int subX = x - radius;
                         int addIdx = addX <= dstW - 1 ? addX * 3 + c : last;
@@ -181,13 +201,13 @@ public final class Upscaler {
     }
 
     /** Ilk satir icin dikey toplami kurar (kenarda ilk satir tekrarlanir). */
-    private static void initAccumulator(final float[] acc, final float[][] hbox, final int ringSize,
+    private static void initAccumulator(final int[] acc, final short[][] hbox, final int ringSize,
                                         final int dstH, final int radius, int w3, ThreadPool pool) {
         pool.forRange(w3, new ThreadPool.RangeTask() {
             @Override public void run(int from, int to) {
                 for (int i = from; i < to; i++) acc[i] = 0;
                 for (int dy = -radius; dy <= radius; dy++) {
-                    float[] r = hbox[clamp(dy, dstH) % ringSize];
+                    short[] r = hbox[clamp(dy, dstH) % ringSize];
                     for (int i = from; i < to; i++) acc[i] += r[i];
                 }
             }
@@ -195,11 +215,11 @@ public final class Upscaler {
     }
 
     /** Bir sonraki satira gecerken toplama giren satiri ekler, cikani cikarir. */
-    private static void slideAccumulator(final float[] acc, final float[][] hbox, final int ringSize,
+    private static void slideAccumulator(final int[] acc, final short[][] hbox, final int ringSize,
                                          final int dstH, final int radius, final int y, int w3,
                                          ThreadPool pool) {
-        final float[] in = hbox[clamp(y + radius, dstH) % ringSize];
-        final float[] out = hbox[clamp(y - radius - 1, dstH) % ringSize];
+        final short[] in = hbox[clamp(y + radius, dstH) % ringSize];
+        final short[] out = hbox[clamp(y - radius - 1, dstH) % ringSize];
         pool.forRange(w3, new ThreadPool.RangeTask() {
             @Override public void run(int from, int to) {
                 for (int i = from; i < to; i++) acc[i] += in[i] - out[i];
@@ -213,7 +233,7 @@ public final class Upscaler {
      *  - 1 piksellik ince yaricap: mikro kontrasti geri getirir
      * Hale olusmamasi icin degisim {@link #MAX_OVERSHOOT} ile sinirlanir.
      */
-    private static void sharpenRow(final byte[][] ring, final float[][] hbox, final float[] acc,
+    private static void sharpenRow(final byte[][] ring, final short[][] hbox, final int[] acc,
                                    final int ringSize, final int y, final int dstH, final int dstW,
                                    final float boxNorm, final float amountLarge, final float amountFine,
                                    final byte[] out, ThreadPool pool) {
