@@ -1,6 +1,6 @@
 {
-  "versionCode": 6,
-  "versionName": "5.0",
+  "versionCode": 7,
+  "versionName": "6.0",
   "apkUrl": "https://github.com/wagera/Wagera/raw/main/AstraUpscale/release/AstraUpscale.apk",
-  "notes": "Light and dark themes, bottom navigation, onboarding screen and a history page."
+  "notes": "Rebuilt layout: one state-driven stage, a docked target and start bar, collapsible settings, and an in-app gallery picker."
 }

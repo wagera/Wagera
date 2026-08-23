@@ -33,4 +33,7 @@
     <!-- Dokunma parlamasi -->
     <color name="glow_12">#14000000</color>
     <color name="glow_08">#0D000000</color>
+
+    <!-- Sahneyi orten katman: opak degil, alttaki fotograf sezilir -->
+    <color name="scrim_fill">#F2F6F7F9</color>
 </resources>

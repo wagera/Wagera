@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    AstraUpscale olcu olcegi.
+
+    Tek bir 4dp izgarasindan turer; hicbir olcu "gozume iyi geldi" diye
+    secilmemistir. Sayfa kenari 20dp, kartlar arasi 10dp, bolumler arasi 24dp.
+    Metin olcegi 10 / 11.5 / 13 / 15 / 20 / 34 sp — alti basamak, arasi yok.
+-->
+<resources>
+    <!-- Sayfa cercevesi -->
+    <dimen name="gutter">20dp</dimen>
+    <dimen name="header_height">56dp</dimen>
+    <dimen name="navbar_height">62dp</dimen>
+
+    <!-- Dikey ritim -->
+    <dimen name="gap_row">10dp</dimen>
+    <dimen name="gap_block">16dp</dimen>
+    <dimen name="gap_section">24dp</dimen>
+
+    <!-- Bilesenler -->
+    <dimen name="radius_card">14dp</dimen>
+    <dimen name="radius_stage">18dp</dimen>
+    <dimen name="row_height">54dp</dimen>
+    <dimen name="cta_height">54dp</dimen>
+    <dimen name="stage_min">240dp</dimen>
+
+    <!-- Metin olcegi -->
+    <dimen name="text_label">10sp</dimen>
+    <dimen name="text_fine">11.5sp</dimen>
+    <dimen name="text_body">13sp</dimen>
+    <dimen name="text_row">15sp</dimen>
+    <dimen name="text_read">20sp</dimen>
+    <dimen name="text_display">34sp</dimen>
+</resources>

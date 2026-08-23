@@ -145,6 +145,49 @@ Colours are semantic tokens; `values` carries the light theme and
 Three pages are reached from the bottom navigation: **Upscale**, **History**
 (saved photos) and **Requests**. A short onboarding screen appears on first run.
 
+### Layout of the Upscale page
+
+The page has **one focal point**: the stage. The empty state, the chosen
+photo, the running progress and the result preview all share the **same
+rectangle** — none of them stacks below another. Tapping the stage opens the
+gallery.
+
+Directly under the stage, the target readout and **Start** sit side by side,
+so the primary action is always above the fold rather than something you
+scroll to find.
+
+Every setting collapses into an accordion row — Resolution, Engine, Settings,
+Device. Each row **carries its current value on the right even when closed**,
+so the state reads without opening anything. Only one stays open at a time.
+
+Measured result: the Upscale page lays out **33 views on first paint instead
+of 60** (a 45% drop). On top of that, the 9 model rows, 3 tiers of preset
+chips and 3 load-level buttons that used to be permanently open now live
+inside collapsed panels and are not laid out at all on first paint.
+
+Dimensions derive from a single 4dp grid (`values/dimens.xml`): 20dp page
+gutter, 10dp between rows, 24dp between sections; type scale 10 / 11.5 / 13 /
+15 / 20 / 34sp — six steps, nothing in between.
+
+When the page opens, elements rise into place in sequence — header → stage →
+action bar → setting rows, the order the eye needs to read them. If the user
+has turned animations off in system settings, nothing is played.
+
+### Picking a photo, and the permission
+
+Photo selection happens inside the app: with the `READ_MEDIA_IMAGES`
+permission the device's recent photos appear in a grid and the user picks one
+without leaving the app.
+
+The permission is **not required**. If it is declined the app keeps working;
+selection falls back to the system document picker ("Files"), which needs no
+permission at all.
+
+**Photos are only ever read on the device.** No image, no thumbnail and no
+file path leaves it — not to a server, not to the Discord webhook, not to
+another app. The only thing that goes out is the feedback the user types, and
+alongside it only the device details listed above.
+
 ## How it works
 
 ```
