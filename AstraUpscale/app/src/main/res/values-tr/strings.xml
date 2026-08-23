@@ -160,4 +160,20 @@
     <string name="history_count">%1$d fotoğraf · Pictures / AstraUpscale</string>
     <string name="history_item">%1$d × %2$d · %3$s</string>
     <string name="history_refresh">Yenile</string>
+
+    <!-- Yeni yerlesim -->
+    <string name="stage_tap_hint">Galeriden seçmek için dokunun</string>
+    <string name="gallery_title">Fotoğraflarınız</string>
+    <string name="gallery_files">Dosyalar</string>
+    <string name="gallery_empty">Bu cihazda fotoğraf bulunamadı.</string>
+    <string name="gallery_permission_body">Uygulamadan çıkmadan fotoğraf seçebilmeniz için AstraUpscale\'in fotoğraflarınıza erişmesi gerekiyor. Fotoğraflar yalnızca cihazınızda okunur; hiçbir yere yüklenmez, gönderilmez.</string>
+    <string name="gallery_permission_grant">Fotoğraf erişimine izin ver</string>
+    <string name="gallery_permission_denied">Fotoğraf erişimi verilmedi. Dosyalar üzerinden yine de fotoğraf seçebilirsiniz.</string>
+    <!-- Akordeon satir basliklari -->
+    <string name="row_resolution">Çözünürlük</string>
+    <string name="row_engine">Motor</string>
+    <string name="row_settings">Ayarlar</string>
+    <string name="row_device">Cihaz</string>
+    <string name="summary_jpeg">JPEG · %1$d</string>
+    <string name="value_none">—</string>
 </resources>

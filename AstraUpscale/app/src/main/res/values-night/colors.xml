@@ -22,4 +22,7 @@
 
     <color name="glow_12">#1FFFFFFF</color>
     <color name="glow_08">#14FFFFFF</color>
+
+    <!-- Sahneyi orten katman: opak degil, alttaki fotograf sezilir -->
+    <color name="scrim_fill">#F00B0C0E</color>
 </resources>

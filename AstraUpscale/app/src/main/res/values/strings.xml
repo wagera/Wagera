@@ -163,4 +163,21 @@
     <string name="history_count">%1$d photo(s) · Pictures / AstraUpscale</string>
     <string name="history_item">%1$d × %2$d · %3$s</string>
     <string name="history_refresh">Refresh</string>
+
+    <!-- Yeni yerlesim -->
+    <string name="stage_tap_hint">Tap to choose from your gallery</string>
+    <string name="gallery_title">Your photos</string>
+    <string name="gallery_files">Files</string>
+    <string name="gallery_empty">No photos found on this device.</string>
+    <string name="gallery_permission_body">AstraUpscale needs access to your photos so you can pick one without leaving the app. Photos are read on your device only — they are never uploaded or sent anywhere.</string>
+    <string name="gallery_permission_grant">Allow photo access</string>
+    <string name="gallery_permission_denied">Photo access was not granted. You can still pick a photo with Files.</string>
+    <!-- Akordeon satir basliklari: bolum etiketleri 10sp harf aralikli
+         olduklari icin BUYUK harfti; 15sp'lik satirda ayni metin bagirir. -->
+    <string name="row_resolution">Resolution</string>
+    <string name="row_engine">Engine</string>
+    <string name="row_settings">Settings</string>
+    <string name="row_device">Device</string>
+    <string name="summary_jpeg">JPEG · %1$d</string>
+    <string name="value_none">—</string>
 </resources>

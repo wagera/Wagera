@@ -96,11 +96,55 @@ temayı taşır. Uygulamada tek bir renk sabiti yoktur.
 Üç sayfa alt gezinme çubuğuyla dolaşılır: **Büyüt**, **Geçmiş** (kaydedilen
 fotoğraflar) ve **İstekler**. İlk açılışta kısa bir tanıtım ekranı çıkar.
 
+### Büyüt sayfasının yerleşimi
+
+Sayfanın **tek bir odak noktası** vardır: sahne. Boş durum, seçilen fotoğraf,
+işlem sırasındaki ilerleme ve sonuç önizlemesi hep **aynı dikdörtgeni**
+paylaşır; hiçbiri diğerinin altına yığılmaz. Sahneye dokunmak galeriyi açar.
+
+Sahnenin hemen altında hedef okuması ve **Başlat** yan yana durur; birincil
+eylem her zaman katlamanın üstündedir, aranmaz.
+
+Bütün ayarlar kapalı akordeon satırlarına iner — Çözünürlük, Motor, Ayarlar,
+Cihaz. Her satır **kapalıyken bile geçerli değerini sağında taşır**, böylece
+durum panel açılmadan okunur. Aynı anda yalnızca biri açık kalır.
+
+Ölçülen sonuç: Büyüt sayfası ilk çizimde **60 yerine 33 görünüm** yerleştiriyor
+(%45 azalma). Üstelik eskiden hep açık duran 9 model satırı, 3 kademelik çip
+serisi ve 3 zorlama düğmesi artık kapalı panellerin içinde — ilk çizimde hiç
+yok.
+
+Ölçüler tek bir 4dp ızgarasından türer (`values/dimens.xml`): sayfa kenarı
+20dp, satır arası 10dp, bölüm arası 24dp; punto ölçeği 10 / 11.5 / 13 / 15 /
+20 / 34sp — altı basamak, arası yok.
+
+Sayfa açıldığında öğeler sırayla yükselerek belirir. Sıra, gözün okuması
+gereken sırayla aynıdır: başlık → sahne → eylem çubuğu → ayar satırları.
+Kullanıcı sistem ayarlarından animasyonları kapattıysa hiçbir şey oynatılmaz.
+
+### Fotoğraf seçme ve izin
+
+Fotoğraf seçimi uygulamanın içinde olur: `READ_MEDIA_IMAGES` izniyle cihazdaki
+son fotoğraflar bir ızgarada gösterilir, kullanıcı uygulamadan çıkmadan seçer.
+
+İzin **zorunlu değildir**. Verilmezse uygulama çalışmaya devam eder; seçim
+sistemin belge seçicisine düşer ("Dosyalar"), o da hiçbir izin gerektirmez.
+
+**Fotoğraflar yalnızca cihazda okunur.** Ne görüntü, ne küçük resim, ne de
+dosya yolu cihazdan dışarı çıkar — sunucuya da, Discord webhook'una da,
+başka bir uygulamaya da. Dışarı giden tek şey kullanıcının kendi yazdığı
+geri bildirimdir; onun yanında da yalnızca yukarıda sayılan cihaz bilgileri
+gider.
+
 İşaret dört kollu, kolları içbükey kesilen bir yıldızdır; uygulama simgesinde,
 başlıkta, boş önizlemede ve sonuç kartında aynı vektör kullanılır.
 
-`docs/arayuz-tr.png` cihaz ekran görüntüsü **değildir**: düzen dosyasındaki
-aynı renk, ölçü ve punto değerlerinden üretilmiş bir çizimdir.
+Yukarıdaki `docs/tema-koyu.png` ve `docs/tema-acik.png` cihaz ekran görüntüsü
+**değildir**: `tools/docs/render-ui.py` bunları `colors.xml`, `dimens.xml` ve
+`strings.xml` dosyalarından okuyarak üretir. Yani çizim ile gerçek yerleşim
+arasındaki bağ elle güncellenen bir varsayım değil, dosyadan türetilmiş bir
+sonuçtur; yerleşim değişince `python3 tools/docs/render-ui.py` çalıştırmak
+yeter.
 
 ## Nasıl çalışıyor
 

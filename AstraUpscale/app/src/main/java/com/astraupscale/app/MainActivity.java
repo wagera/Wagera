@@ -43,6 +43,7 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
 
     private static final int REQ_PICK = 1;
     private static final int REQ_NOTIFICATIONS = 2;
+    private static final int REQ_PHOTOS = 3;
 
     /** Cozunurluk on ayarlarinin kademeleri. */
     private static final int TIER_STANDARD_END = 5;    // 2K..6K
@@ -62,6 +63,19 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
             historyList, onboarding, navUpscale, navHistory, navRequests;
     private ImageView navUpscaleIcon, navHistoryIcon, navRequestsIcon;
     private Button onboardingStart;
+
+    /** Yeni yerlesim: sahne, eylem cubugu ve acilir ayar bolumleri. */
+    private View stage, appBar, actionBar, stageCaption;
+    private TextView targetBadge, targetDims;
+    private final List<Accordion> sections = Accordion.newGroup();
+    private Accordion secResolution, secEngine, secSettings, secDevice;
+
+    /** Uygulama ici galeri. */
+    private GalleryPicker gallery;
+    private LinearLayout galleryOverlay, galleryGrid, galleryPermission;
+    private View galleryScroll;
+    private TextView galleryEmpty, galleryClose, galleryFiles;
+    private Button galleryGrant;
     /** 0 = buyut, 1 = gecmis, 2 = istekler */
     private int page;
     private LinearLayout[] tiers;
@@ -100,6 +114,14 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         setContentView(R.layout.activity_main);
         bindViews();
 
+        Motion.read(this);
+        gallery = new GalleryPicker(this, new GalleryPicker.OnPicked() {
+            @Override public void onPicked(Uri uri) {
+                closeGallery();
+                setSource(uri, 0);
+            }
+        });
+
         device = DeviceProfile.scan(this);
         buildModelList();
         buildPresetTiers();
@@ -119,6 +141,11 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
             onboarding.setVisibility(View.VISIBLE);
         }
         refreshTexts();
+
+        // Giris koreografisi: goz hangi sirayla okuyacaksa o sirayla belirir.
+        Motion.enter(appBar, stage, stageCaption, actionBar,
+                findViewById(R.id.rowResolution), findViewById(R.id.rowEngine),
+                findViewById(R.id.rowSettings), findViewById(R.id.rowDevice));
 
         applyUpdateState(UpdateChecker.pending(this));
         checkForUpdate();
@@ -145,10 +172,19 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         if (job != null) job.setListener(null);
     }
 
+    @Override protected void onDestroy() {
+        super.onDestroy();
+        if (gallery != null) gallery.shutdown();
+    }
+
     @Override public void onBackPressed() {
         if (updateGate.getVisibility() == View.VISIBLE) {
             // Yeni surum yuklenmeden uygulama kullanilamaz.
             finishAffinity();
+            return;
+        }
+        if (galleryOverlay.getVisibility() == View.VISIBLE) {
+            closeGallery();
             return;
         }
         if (onboarding.getVisibility() == View.VISIBLE) {
@@ -227,6 +263,40 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         pageUpscale = findViewById(R.id.pageUpscale);
         pageRequests = findViewById(R.id.pageRequests);
         kindRow = findViewById(R.id.kindRow);
+
+        stage = findViewById(R.id.stage);
+        appBar = findViewById(R.id.appBar);
+        actionBar = findViewById(R.id.actionBar);
+        stageCaption = findViewById(R.id.stageCaption);
+        targetBadge = findViewById(R.id.targetBadge);
+        targetDims = findViewById(R.id.targetDims);
+
+        galleryOverlay = findViewById(R.id.galleryOverlay);
+        galleryGrid = findViewById(R.id.galleryGrid);
+        galleryPermission = findViewById(R.id.galleryPermission);
+        galleryScroll = findViewById(R.id.galleryScroll);
+        galleryEmpty = findViewById(R.id.galleryEmpty);
+        galleryClose = findViewById(R.id.galleryClose);
+        galleryFiles = findViewById(R.id.galleryFiles);
+        galleryGrant = findViewById(R.id.galleryGrant);
+
+        // Acilir bolumler: ayni anda yalnizca biri acik kalir.
+        secResolution = Accordion.attach(findViewById(R.id.rowResolution),
+                (ViewGroup) findViewById(R.id.panelResolution),
+                (TextView) findViewById(R.id.valueResolution),
+                (ImageView) findViewById(R.id.chevronResolution), sections);
+        secEngine = Accordion.attach(findViewById(R.id.rowEngine),
+                (ViewGroup) findViewById(R.id.panelEngine),
+                (TextView) findViewById(R.id.valueEngine),
+                (ImageView) findViewById(R.id.chevronEngine), sections);
+        secSettings = Accordion.attach(findViewById(R.id.rowSettings),
+                (ViewGroup) findViewById(R.id.panelSettings),
+                (TextView) findViewById(R.id.valueSettings),
+                (ImageView) findViewById(R.id.chevronSettings), sections);
+        secDevice = Accordion.attach(findViewById(R.id.rowDevice),
+                (ViewGroup) findViewById(R.id.panelDevice),
+                (TextView) findViewById(R.id.valueDevice),
+                (ImageView) findViewById(R.id.chevronDevice), sections);
 
         tiers = new LinearLayout[]{findViewById(R.id.tier1), findViewById(R.id.tier2),
                 findViewById(R.id.tier3)};
@@ -464,6 +534,26 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
     private void setupListeners() {
         pickButton.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) { pickPhoto(); }
+        });
+        // Sahnenin kendisi de bir dugmedir: bos alana dokunmak galeriyi acar.
+        stage.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                if (UpscaleJob.current() == null) pickPhoto();
+            }
+        });
+        galleryClose.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) { closeGallery(); }
+        });
+        galleryFiles.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                closeGallery();
+                pickFromFiles();
+            }
+        });
+        galleryGrant.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                requestPermissions(new String[]{GalleryPicker.permission()}, REQ_PHOTOS);
+            }
         });
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) { startJob(); }
@@ -820,7 +910,41 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
 
     // ------------------------------------------------------------------ fotograf secimi
 
+    /**
+     * Fotograf secimini baslatir.
+     *
+     * <p>Izin varsa uygulama ici galeri acilir; kullanici uygulamadan
+     * cikmadan secer. Izin yoksa once neden gerektigi anlatilir, sonra
+     * istenir. Izin verilmezse sistem belge secicisi devreye girer —
+     * yani izin vermemek uygulamayi kullanilmaz yapmaz.
+     */
     private void pickPhoto() {
+        openGallery();
+    }
+
+    private void openGallery() {
+        boolean granted = gallery.hasPermission();
+        galleryOverlay.setVisibility(View.VISIBLE);
+        galleryPermission.setVisibility(granted ? View.GONE : View.VISIBLE);
+        galleryScroll.setVisibility(granted ? View.VISIBLE : View.GONE);
+        galleryEmpty.setVisibility(View.GONE);
+        if (granted) fillGallery();
+    }
+
+    private void fillGallery() {
+        int count = gallery.load(galleryGrid);
+        galleryScroll.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
+        galleryEmpty.setVisibility(count > 0 ? View.GONE : View.VISIBLE);
+    }
+
+    private void closeGallery() {
+        galleryOverlay.setVisibility(View.GONE);
+        // Kucuk resimler bellekte tutulmasin: izgara her acilista yeniden kurulur.
+        galleryGrid.removeAllViews();
+    }
+
+    /** Sistem belge secicisi: izin verilmediginde ya da kullanici isterse. */
+    private void pickFromFiles() {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("image/*");
@@ -829,6 +953,22 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
             startActivityForResult(intent, REQ_PICK);
         } catch (Exception e) {
             startActivityForResult(new Intent(Intent.ACTION_GET_CONTENT).setType("image/*"), REQ_PICK);
+        }
+    }
+
+    @Override public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                                     int[] results) {
+        super.onRequestPermissionsResult(requestCode, permissions, results);
+        if (requestCode != REQ_PHOTOS) return;
+        boolean granted = results.length > 0 && results[0] == PackageManager.PERMISSION_GRANTED;
+        if (granted) {
+            galleryPermission.setVisibility(View.GONE);
+            fillGallery();
+        } else {
+            // Izin verilmedi: uygulama calismaya devam eder, secim Dosyalar'a duser.
+            Toast.makeText(this, R.string.gallery_permission_denied, Toast.LENGTH_LONG).show();
+            closeGallery();
+            pickFromFiles();
         }
     }
 
@@ -859,6 +999,8 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         sourceUri = uri;
         loadThumbnail(uri);
         resultCard.setVisibility(View.GONE);
+        resultPreview.setVisibility(View.GONE);
+        resultPreview.setImageDrawable(null);
         refreshTexts();
     }
 
@@ -929,7 +1071,12 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         boolean hasSource = sourceUri != null && srcWidth > 0;
 
         emptyState.setVisibility(hasSource ? View.GONE : View.VISIBLE);
+        sourcePreview.setVisibility(hasSource ? View.VISIBLE : View.GONE);
         sourceInfo.setVisibility(hasSource ? View.VISIBLE : View.GONE);
+        // Bos durumda altyazi satiri hic gorunmez: sahnenin kendisi zaten
+        // dokunulabilir ve ne yapilacagini soyluyor. Tek basina saga yapisik
+        // bir dugme birakmak yerine satiri tumden kaldiriyoruz.
+        stageCaption.setVisibility(hasSource ? View.VISIBLE : View.GONE);
         if (hasSource) {
             sourceInfo.setText(getString(R.string.source_format,
                     srcWidth, srcHeight, srcWidth * (long) srcHeight / 1e6));
@@ -1009,6 +1156,32 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
                 : (stages == 2 ? R.color.bg : R.color.content_soft)));
 
         startButton.setEnabled(hasSource && UpscaleJob.current() == null);
+
+        refreshSummaries(hasSource);
+    }
+
+    /**
+     * Kapali bolum satirlarindaki ozet degerleri ve eylem cubugundaki hedef
+     * okumasini tazeler.
+     *
+     * <p>Amac, kullanicinin bir bolumu acmadan durumunu gorebilmesi:
+     * "Motor — Real-ESRGAN 4x" satiri, panelin acilmasina gerek birakmaz.
+     */
+    private void refreshSummaries(boolean hasSource) {
+        secResolution.setValue(preset.label);
+        secEngine.setValue(model.label);
+        secSettings.setValue(jpeg
+                ? getString(R.string.summary_jpeg, jpegQuality())
+                : "PNG");
+        secDevice.setValue(getString(loadLevel.labelRes));
+
+        targetBadge.setText(preset.label);
+        if (hasSource) {
+            int[] t = preset.targetSize(srcWidth, srcHeight);
+            targetDims.setText(String.format(Locale.getDefault(), "%d × %d", t[0], t[1]));
+        } else {
+            targetDims.setText(R.string.pick_photo_first);
+        }
     }
 
     private boolean denoiseActive() {
@@ -1065,7 +1238,9 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         }
 
         resultCard.setVisibility(View.GONE);
-        progressCard.setVisibility(View.VISIBLE);
+        resultPreview.setVisibility(View.GONE);
+        resultPreview.setImageDrawable(null);
+        Motion.crossFade(null, progressCard);
         cancelButton.setEnabled(true);
         startButton.setEnabled(false);
         progressBar.setProgress(0);
@@ -1086,7 +1261,7 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
 
         UpscaleJob.setCurrent(null);
         job.setListener(null);
-        progressCard.setVisibility(View.GONE);
+        Motion.crossFade(progressCard, null);
         startButton.setEnabled(sourceUri != null);
 
         if (job.cancelled) {
@@ -1099,6 +1274,7 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
             resultMark.setAlpha(0.35f);
             resultInfo.setText(job.error);
             resultPreview.setImageDrawable(null);
+            resultPreview.setVisibility(View.GONE);
             openButton.setEnabled(false);
             shareButton.setEnabled(false);
             return;
@@ -1113,6 +1289,10 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         if (job.preview != null && job.previewWidth > 0) {
             resultPreview.setImageBitmap(Bitmap.createBitmap(job.preview, job.previewWidth,
                     job.previewHeight, Bitmap.Config.ARGB_8888));
+            // Sonuc, kaynak fotografin uzerine sahnede yumusakca biner.
+            Motion.crossFade(null, resultPreview);
+        } else {
+            resultPreview.setVisibility(View.GONE);
         }
         String engine = job.usedModel != null && job.usedModel.isNeural()
                 ? job.usedModel.label

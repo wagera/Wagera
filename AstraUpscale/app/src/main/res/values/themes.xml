@@ -36,4 +36,38 @@
         <item name="android:letterSpacing">0.18</item>
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
+
+    <!-- ══ Yeni yerlesim stilleri ═══════════════════════════════════════
+         Her stil tek bir isi yapar; olculer dimens.xml olceginden gelir. -->
+
+    <!-- Akordeon satirinin solundaki ad -->
+    <style name="RowTitle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/content</item>
+        <item name="android:textSize">@dimen/text_row</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:letterSpacing">-0.01</item>
+    </style>
+
+    <!-- Akordeon satirinin sagindaki gecerli deger -->
+    <style name="RowValue">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/content_dim</item>
+        <item name="android:textSize">@dimen/text_body</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <!-- Acik panelin icindeki alt baslik -->
+    <style name="PanelLabel">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/content_faint</item>
+        <item name="android:textSize">@dimen/text_label</item>
+        <item name="android:letterSpacing">0.20</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
 </resources>
