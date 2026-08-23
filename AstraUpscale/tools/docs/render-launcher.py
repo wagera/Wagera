@@ -64,8 +64,14 @@ def make_icon(size, round_icon):
         r = radius * t * 2
         d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=col)
 
-    # Isaret: guvenli alanin %62'si, uyarlanabilir simgeyle ayni oran
-    mark_px = int(size * 0.62)
+    # Isaret orani.
+    #
+    # Uyarlanabilir simgede isaret 62 birim, gorunen alan 72 birim: yani
+    # gorunenin %86'si. Eski PNG'de kirpma yok, tuvalin tamami gorunur ve
+    # baslatici kendiliginden bosluk eklemez; bu yuzden %86 fazla siki
+    # durur. %80, uyarlanabilir surumle yan yana konunca ayni buyuklukte
+    # okunur ve kenarda nefes payi birakir.
+    mark_px = int(size * 0.80)
     svg = rm.to_svg(MARK, fill="#F5F6F8", bg="none")
     svg = svg.replace('fill="none"', 'fill-opacity="0"')
     tmp = "/tmp/_mark_launcher.png"

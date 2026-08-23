@@ -24,6 +24,11 @@
     <dimen name="cta_height">54dp</dimen>
     <dimen name="stage_min">240dp</dimen>
 
+    <!-- Isaretin kullanildigi uc olcek -->
+    <dimen name="mark_header">22dp</dimen>
+    <dimen name="mark_inline">14dp</dimen>
+    <dimen name="mark_hero">44dp</dimen>
+
     <!-- Metin olcegi -->
     <dimen name="text_label">10sp</dimen>
     <dimen name="text_fine">11.5sp</dimen>

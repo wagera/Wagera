@@ -112,15 +112,25 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
     }
 
     @Override protected void onCreate(Bundle savedInstanceState) {
+        // Acilis temasindan asil temaya gecis. setContentView'dan ONCE
+        // olmali: sonra cagrilirsa gorunumler acilis temasiyla sisirilir
+        // ve renkler yanlis cozulur.
+        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         bindViews();
 
         Motion.read(this);
-        // Sinematik zemin: dosya degil, calisma aninda cizilir. Nedeni
-        // Backdrop sinifinin basindaki aciklamada.
-        findViewById(R.id.root).setBackground(
-                ThemeHelper.isDark(this) ? Backdrop.dark() : Backdrop.light());
+        // Sinematik zemin. Tam ekran katmanlar da ayni zemini alir; yoksa
+        // galeri ya da tanitim ekrani acilinca zemin duz renge duser ve
+        // uygulama bir anligina baska bir uygulama gibi gorunur.
+        //
+        // Her gorunume ayri bir ornek verilir: tek bir Drawable ornegini
+        // paylastirmak, hepsinin ayni sinirlara zorlanmasi demektir.
+        for (int id : new int[]{R.id.root, R.id.galleryOverlay,
+                                R.id.onboarding, R.id.updateGate}) {
+            findViewById(id).setBackground(newBackdrop());
+        }
 
         gallery = new GalleryPicker(this, new GalleryPicker.OnPicked() {
             @Override public void onPicked(Uri uri) {
@@ -183,6 +193,11 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
                 Motion.step(findViewById(R.id.rowEngine), 380L, 675L),
                 Motion.step(findViewById(R.id.rowSettings), 380L, 710L),
                 Motion.step(findViewById(R.id.rowDevice), 380L, 745L));
+    }
+
+    /** Gecerli temaya gore yeni bir zemin ornegi. */
+    private Backdrop newBackdrop() {
+        return ThemeHelper.isDark(this) ? Backdrop.dark() : Backdrop.light();
     }
 
     @Override protected void onNewIntent(Intent intent) {

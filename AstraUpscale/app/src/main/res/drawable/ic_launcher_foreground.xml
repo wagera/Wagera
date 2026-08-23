@@ -3,9 +3,17 @@
     Baslatici simgesinin on plani.
 
     Uyarlanabilir simgede 108x108'lik tuvalin yalnizca ortadaki 72x72'si
-    her cihazda gorunur; kalani kirpilir. Isaret bu guvenli alana yerlesir:
-    48'lik cizim 0.62 olcekle 29.8 birim kenar bosluguyla ortalanir, yani
-    en dar kirpmada bile kol uclari kesilmez.
+    her cihazda gorunur; kalani baslaticinin sectigi maskeye gore kirpilir.
+
+    Geometri bir surum boyunca yanlisti: olcek 0.62 ve translate 29.8 idi.
+    48 birimlik cizim 0.62 ile 29.76 birime iner — tuvalin yalnizca %28'i —
+    ve 29.8'e konunca merkezi 44.68'e duser, oysa tuvalin merkezi 54.
+    Yani isaret hem asiri kucuktu hem 9.32 birim (%8.6) sola yukari kaymisti.
+
+    Dogru hesap: isaret 62 birim kaplasin (72'lik guvenli alanin icinde,
+    kenarda nefes payi kalir), yani olcek 62/48 = 1.29167; ortalamak icin
+    translate = (108 - 62) / 2 = 23. Bu iki sayi birbirine baglidir —
+    biri degisirse digeri de degismeli.
 -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
@@ -14,10 +22,10 @@
     android:viewportHeight="108">
 
     <group
-        android:translateX="29.8"
-        android:translateY="29.8"
-        android:scaleX="0.62"
-        android:scaleY="0.62">
+        android:translateX="23"
+        android:translateY="23"
+        android:scaleX="1.29167"
+        android:scaleY="1.29167">
 
         <group android:pivotX="24" android:pivotY="24" android:rotation="45">
             <path

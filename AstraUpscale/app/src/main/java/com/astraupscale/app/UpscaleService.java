@@ -14,6 +14,7 @@ import android.graphics.BitmapFactory;
 import android.media.ExifInterface;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.os.Environment;
 import android.os.IBinder;
@@ -46,8 +47,23 @@ public final class UpscaleService extends Service {
 
     public static final String ACTION_START = "com.astraupscale.app.START";
     public static final String ACTION_CANCEL = "com.astraupscale.app.CANCEL";
-    private static final String CHANNEL_ID = "upscale";
+    /**
+     * Iki ayri kanal.
+     *
+     * <p>Devam eden is sessiz olmali: uzun suren bir islemin her yuzde
+     * degisiminde ses cikarmasi rahatsiz edicidir, o yuzden IMPORTANCE_LOW.
+     * Sonuc ise kullanicinin bekledigi haberdir ve uygulama arkaplandayken
+     * gelir; onun kendi kanali var ve varsayilan onemde. Ikisi ayni kanalda
+     * olsaydi kullanici birini susturmak icin digerini de susturmak
+     * zorunda kalirdi.
+     */
+    private static final String CHANNEL_PROGRESS = "upscale";
+    private static final String CHANNEL_RESULT = "upscale_result";
+
+    /** Devam eden is bildirimi; sabit kimlik, yerinde guncellenir. */
     private static final int NOTIFICATION_ID = 41;
+    /** Sonuc bildirimi; ilerleme bildiriminin yerini almaz, yanina gelir. */
+    private static final int NOTIFICATION_RESULT_ID = 42;
 
     /** Kaynak fotografta izin verilen azami piksel sayisi (uzerinde alt orneklenir). */
     private static final long MAX_SOURCE_PIXELS = 60L * 1000 * 1000;
@@ -73,7 +89,7 @@ public final class UpscaleService extends Service {
         if (job == null || worker != null) return START_NOT_STICKY;
 
         createChannel();
-        startForeground(NOTIFICATION_ID, buildNotification(0, job.stage));
+        startForeground(NOTIFICATION_ID, buildProgress(job, 0));
         acquireWakeLock();
 
         worker = new Thread(new Runnable() {
@@ -92,6 +108,9 @@ public final class UpscaleService extends Service {
                     job.notifyChanged();
                     releaseWakeLock();
                     stopForeground(true);
+                    // Sonucu stopForeground'dan SONRA bildir: once bildirsek
+                    // stopForeground(true) onu da kaldirirdi.
+                    postOutcome(job);
                     stopSelf();
                 }
             }
@@ -250,8 +269,9 @@ public final class UpscaleService extends Service {
                     long now = System.currentTimeMillis();
                     if (now - lastNotify > 700) {
                         lastNotify = now;
+                        job.stage = stage;
                         notifyManager().notify(NOTIFICATION_ID,
-                                buildNotification((int) (fraction * 100), stage));
+                                buildProgress(job, (int) (fraction * 100)));
                     }
                 }
 
@@ -544,31 +564,153 @@ public final class UpscaleService extends Service {
     }
 
     private void createChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel ch = new NotificationChannel(CHANNEL_ID,
-                    getString(R.string.channel_name), NotificationManager.IMPORTANCE_LOW);
-            ch.setShowBadge(false);
-            notifyManager().createNotificationChannel(ch);
-        }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return;
+
+        NotificationChannel progress = new NotificationChannel(CHANNEL_PROGRESS,
+                getString(R.string.channel_progress), NotificationManager.IMPORTANCE_LOW);
+        progress.setDescription(getString(R.string.channel_progress_desc));
+        progress.setShowBadge(false);
+        progress.setSound(null, null);
+        progress.enableVibration(false);
+
+        NotificationChannel result = new NotificationChannel(CHANNEL_RESULT,
+                getString(R.string.channel_result), NotificationManager.IMPORTANCE_DEFAULT);
+        result.setDescription(getString(R.string.channel_result_desc));
+        result.setShowBadge(true);
+
+        notifyManager().createNotificationChannel(progress);
+        notifyManager().createNotificationChannel(result);
     }
 
-    private Notification buildNotification(int percent, String stage) {
-        Intent open = new Intent(this, MainActivity.class);
-        open.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        int flags = PendingIntent.FLAG_UPDATE_CURRENT;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) flags |= PendingIntent.FLAG_IMMUTABLE;
-        PendingIntent pi = PendingIntent.getActivity(this, 0, open, flags);
+    /** Uygulamayi acan niyet. */
+    private PendingIntent openApp() {
+        Intent open = new Intent(this, MainActivity.class)
+                .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        return PendingIntent.getActivity(this, 0, open, pendingFlags(false));
+    }
 
+    /**
+     * PendingIntent bayraklari.
+     *
+     * <p>Android 12'den itibaren her PendingIntent acikca degismez ya da
+     * degisebilir isaretlenmek zorunda; isaretlenmezse uygulama coker.
+     * Paylasim niyeti disari veri tasidigi icin MUTABLE olmali, digerleri
+     * IMMUTABLE.
+     */
+    private int pendingFlags(boolean mutable) {
+        int flags = PendingIntent.FLAG_UPDATE_CURRENT;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            flags |= mutable ? PendingIntent.FLAG_MUTABLE : PendingIntent.FLAG_IMMUTABLE;
+        }
+        return flags;
+    }
+
+    private Notification.Builder builder(String channel) {
         Notification.Builder b = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
-                ? new Notification.Builder(this, CHANNEL_ID)
+                ? new Notification.Builder(this, channel)
                 : new Notification.Builder(this);
-        b.setContentTitle(getString(R.string.notification_title))
-                .setContentText(stage)
-                .setSmallIcon(android.R.drawable.ic_menu_gallery)
+        b.setSmallIcon(R.drawable.ic_stat_astra);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            b.setColor(getColor(R.color.notification_accent));
+        }
+        return b;
+    }
+
+    /**
+     * Isin bittigini bildirir: basari, hata ya da iptal.
+     *
+     * <p>Iptalde hicbir sey bildirilmez — kullanici zaten kendisi iptal
+     * etti, ona bunu haber vermek gurultudur.
+     */
+    private void postOutcome(UpscaleJob job) {
+        if (job.cancelled) return;
+
+        if (job.error != null) {
+            Notification n = builder(CHANNEL_RESULT)
+                    .setContentTitle(getString(R.string.notif_failed_title))
+                    .setContentText(job.error)
+                    .setStyle(new Notification.BigTextStyle().bigText(job.error))
+                    .setContentIntent(openApp())
+                    .setAutoCancel(true)
+                    .build();
+            notifyManager().notify(NOTIFICATION_RESULT_ID, n);
+            return;
+        }
+
+        String detail = getString(R.string.notif_done_text,
+                job.outWidth, job.outHeight,
+                job.outWidth * (long) job.outHeight / 1e6,
+                formatBytes(job.outputBytes),
+                job.elapsedMillis / 1000.0);
+
+        Notification.Builder b = builder(CHANNEL_RESULT)
+                .setContentTitle(getString(R.string.notif_done_title))
+                .setContentText(detail)
+                .setStyle(new Notification.BigTextStyle().bigText(detail))
+                .setAutoCancel(true);
+
+        if (job.outputUri != null) {
+            String mime = job.jpeg ? "image/jpeg" : "image/png";
+            // Dokununca sonucu goster
+            Intent view = new Intent(Intent.ACTION_VIEW)
+                    .setDataAndType(job.outputUri, mime)
+                    .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            b.setContentIntent(PendingIntent.getActivity(this, 1, view, pendingFlags(false)));
+
+            // Paylas eylemi: disari veri tasidigi icin degisebilir olmali
+            Intent share = new Intent(Intent.ACTION_SEND)
+                    .setType(mime)
+                    .putExtra(Intent.EXTRA_STREAM, job.outputUri)
+                    .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            PendingIntent sharePending = PendingIntent.getActivity(this, 2,
+                    Intent.createChooser(share, getString(R.string.share)),
+                    pendingFlags(true));
+            b.addAction(new Notification.Action.Builder(
+                    Icon.createWithResource(this, R.drawable.ic_action_share),
+                    getString(R.string.share), sharePending).build());
+        } else {
+            b.setContentIntent(openApp());
+        }
+        notifyManager().notify(NOTIFICATION_RESULT_ID, b.build());
+    }
+
+    private String formatBytes(long bytes) {
+        if (bytes >= 1073741824L) {
+            return String.format(java.util.Locale.getDefault(), "%.1f GB", bytes / 1073741824.0);
+        }
+        return String.format(java.util.Locale.getDefault(), "%.0f MB", bytes / 1048576.0);
+    }
+
+    /**
+     * Devam eden isin bildirimi.
+     *
+     * <p>Basligi hedef cozunurlugu soyler ("8K'ya buyutuluyor"), yani
+     * kullanici bildirim golgesine bakinca hangi isin surdugunu bilir.
+     * Yuzde ayri bir alt metinde durur; setOnlyAlertOnce sayesinde her
+     * guncellemede yeniden ses cikarmaz.
+     */
+    private Notification buildProgress(UpscaleJob job, int percent) {
+        Intent cancel = new Intent(this, UpscaleService.class).setAction(ACTION_CANCEL);
+        PendingIntent cancelPending = PendingIntent.getService(this, 3, cancel,
+                pendingFlags(false));
+
+        String title = job.preset != null
+                ? getString(R.string.notif_running_title, job.preset.label)
+                : getString(R.string.notification_title);
+
+        return builder(CHANNEL_PROGRESS)
+                .setContentTitle(title)
+                .setContentText(percent > 0
+                        ? getString(R.string.notif_running_text, percent, job.stage)
+                        : job.stage)
                 .setOngoing(true)
-                .setContentIntent(pi)
-                .setProgress(100, percent, false);
-        return b.build();
+                .setOnlyAlertOnce(true)
+                .setContentIntent(openApp())
+                .setProgress(100, percent, percent <= 0)
+                .addAction(new Notification.Action.Builder(
+                        Icon.createWithResource(this, R.drawable.ic_action_cancel),
+                        getString(R.string.cancel), cancelPending).build())
+                .build();
     }
 
     public static void start(Context ctx) {

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Acilis ekranindaki isaret.
+
+    mark_astra.xml ile ayni geometri, ama tint yok: acilis ekrani cizilirken
+    tema henuz cozulmemistir, dolayisiyla @color/content'e bagli bir tint
+    burada guvenilir degil. Renk sabit.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="96dp"
+    android:height="96dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+
+    <group android:pivotX="24" android:pivotY="24" android:rotation="45">
+        <path
+            android:fillColor="#FFF5F6F8"
+            android:fillAlpha="0.38"
+            android:fillType="evenOdd"
+            android:pathData="M24,11
+                             C24,21 26.9,24 37,24
+                             C26.9,24 24,26.9 24,37
+                             C24,26.9 21.1,24 11,24
+                             C21.1,24 24,21 24,11 Z
+                             M24,19.9 a4.1,4.1 0 1,1 0,8.2
+                             a4.1,4.1 0 1,1 0,-8.2 Z" />
+    </group>
+
+    <path
+        android:fillColor="#FFF5F6F8"
+        android:fillType="evenOdd"
+        android:pathData="M24,2
+                         C24,19 29,24 46,24
+                         C29,24 24,29 24,46
+                         C24,29 19,24 2,24
+                         C19,24 24,19 24,2 Z
+                         M24,19.9 a4.1,4.1 0 1,1 0,8.2
+                         a4.1,4.1 0 1,1 0,-8.2 Z" />
+</vector>

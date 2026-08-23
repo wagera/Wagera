@@ -38,4 +38,7 @@
     <color name="glass_press">#D2232730</color>
     <!-- Sahne uzerindeki katman: altindaki fotograf sezilir kalir -->
     <color name="scrim_glass">#D904060A</color>
+
+    <color name="launch_bg">#FF0B0C0E</color>
+    <color name="notification_accent">#FFF5F6F8</color>
 </resources>

@@ -83,6 +83,30 @@ _mark = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(_mark)
 
 
+def fmt(template, *args):
+    """
+    Android bicim dizesini Python'da uygular.
+
+    Android konumlu bicim kullanir (%1$s, %2$.1f); Python bunu anlamaz.
+    Burada %N$X -> {N-1:X} cevrimi yapilir, %% ise gercek yuzde isaretine
+    doner. Boylece cizim, uygulamanin gordugu metnin aynisini gosterir —
+    elle yazilmis bir kopyasini degil.
+    """
+    def convert(m):
+        index = int(m.group(1)) - 1
+        spec = m.group(2)
+        if spec == "s":
+            return "{%d}" % index
+        if spec == "d":
+            return "{%d:d}" % index
+        return "{%d:%s}" % (index, spec)
+
+    out = re.sub(r"%(\d+)\$([.\d]*[sdf])", convert, template)
+    out = out.replace("%%", "\x00")
+    out = out.format(*args)
+    return out.replace("\x00", "%")
+
+
 def wrap(text_value, font_obj, max_px, drawer):
     """Metni verilen piksel genisligine gore satirlara boler."""
     words = text_value.split()
@@ -331,11 +355,108 @@ def render(theme):
     return img.convert("RGB")
 
 
+
+def render_launch(theme):
+    """
+    Acilis ekrani.
+
+    Gercekte bu bir Activity degil, temanin windowBackground'u: pencere
+    olusur olusmaz cizilir. Zemin her iki temada da ayni koyu tondur,
+    cunku acilis ani temanin cozulmesinden oncedir.
+    """
+    C = load_colors(os.path.join(RES, "values", "colors.xml"))
+    W, H = px(DP_W), px(DP_H)
+    img = Image.new("RGBA", (W, H), C["launch_bg"][:3] + (255,))
+    mark_px = px(96)
+    img.alpha_composite(mark_image(mark_px, "#F5F6F8"),
+                        ((W - mark_px) // 2, (H - mark_px) // 2))
+    return img.convert("RGB")
+
+
+def render_notification(theme):
+    """
+    Bildirim golgesi: devam eden is ve sonuc, yan yana.
+
+    Cizim Android'in kendi bildirim duzenini taklit eder — sistem simgesi
+    solda, baslik, metin, ilerleme cubugu ve eylemler. Amac bildirimlerin
+    gercekten nasil okundugunu gormek.
+    """
+    folder = "values" if theme == "light" else "values-night"
+    C = load_colors(os.path.join(RES, folder, "colors.xml"))
+    W = px(DP_W)
+    H = px(248)   # iki bildirim + kenar boslugu kadar
+    img = backdrop((W, H), theme).convert("RGBA")
+    d = ImageDraw.Draw(img, "RGBA")
+
+    def shade(x, y, w, h, radius):
+        box = [px(x), px(y), px(x + w), px(y + h)]
+        d.rounded_rectangle(box, radius=px(radius),
+                            fill=C["glass_top"], outline=C["glass_stroke"],
+                            width=max(1, SCALE // 3))
+
+    gutter = 12
+    inner = DP_W - 2 * gutter
+    y = 16
+
+    f_title = font(F_BOLD, DIM["text_body"])
+    f_body = font(F_REG, DIM["text_fine"])
+    f_action = font(F_BOLD, DIM["text_fine"])
+
+    # ── Devam eden is ────────────────────────────────────────────────
+    card_h = 104
+    shade(gutter, y, inner, card_h, 14)
+    mark_px = px(16)
+    img.alpha_composite(mark_image(mark_px, "#%02X%02X%02X" % C["content"][:3]),
+                        (px(gutter + 12), px(y + 14)))
+    d.text((px(gutter + 34), px(y + 14)), "AstraUpscale",
+           font=font(F_REG, 9), fill=C["content_faint"], anchor="la")
+    d.text((px(gutter + 12), px(y + 32)), fmt(STR["notif_running_title"], "8K"),
+           font=f_title, fill=C["content"][:3] + (255,), anchor="la")
+    d.text((px(gutter + 12), px(y + 50)), fmt(STR["notif_running_text"], 45, "Buyutuluyor"),
+           font=f_body, fill=C["content_dim"], anchor="la")
+    # Belirli ilerleme cubugu
+    bar_y = y + 70
+    d.rounded_rectangle([px(gutter + 12), px(bar_y), px(DP_W - gutter - 12), px(bar_y + 2)],
+                        radius=px(1), fill=C["content_ghost"])
+    d.rounded_rectangle([px(gutter + 12), px(bar_y),
+                         px(gutter + 12 + (inner - 24) * 0.45), px(bar_y + 2)],
+                        radius=px(1), fill=C["content"][:3] + (255,))
+    d.text((px(gutter + 12), px(y + 82)), STR["cancel"].upper(),
+           font=f_action, fill=C["content"][:3] + (255,), anchor="la")
+    y += card_h + 10
+
+    # ── Sonuc ────────────────────────────────────────────────────────
+    card_h = 108
+    shade(gutter, y, inner, card_h, 14)
+    img.alpha_composite(mark_image(mark_px, "#%02X%02X%02X" % C["content"][:3]),
+                        (px(gutter + 12), px(y + 14)))
+    d.text((px(gutter + 34), px(y + 14)), "AstraUpscale",
+           font=font(F_REG, 9), fill=C["content_faint"], anchor="la")
+    d.text((px(gutter + 12), px(y + 32)), STR["notif_done_title"],
+           font=f_title, fill=C["content"][:3] + (255,), anchor="la")
+    detail = fmt(STR["notif_done_text"], 7680, 5760, 44.2, "162 MB", 138.0)
+    yy = y + 50
+    for line in wrap(detail, f_body, px(inner - 24), d):
+        d.text((px(gutter + 12), px(yy)), line, font=f_body, fill=C["content_dim"], anchor="la")
+        yy += DIM["text_fine"] * 1.5
+    d.text((px(gutter + 12), px(y + 86)), STR["share"].upper(),
+           font=f_action, fill=C["content"][:3] + (255,), anchor="la")
+
+    return img.convert("RGB")
+
+
 def main():
     os.makedirs(DOCS, exist_ok=True)
     for theme, name in (("light", "tema-acik.png"), ("dark", "tema-koyu.png")):
         out = os.path.join(DOCS, name)
         render(theme).save(out)
+        print("yazildi: docs/%s" % name)
+
+    render_launch("dark").save(os.path.join(DOCS, "acilis.png"))
+    print("yazildi: docs/acilis.png")
+
+    for theme, name in (("dark", "bildirim-koyu.png"), ("light", "bildirim-acik.png")):
+        render_notification(theme).save(os.path.join(DOCS, name))
         print("yazildi: docs/%s" % name)
 
 

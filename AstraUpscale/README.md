@@ -166,10 +166,67 @@ daha kısa bir ışın dizisi çıkar. Ortadaki açıklık gerçek negatif boşl
 her iki yolda da `evenOdd` ile aynı daire delinir, üstüne çizilen bir halka
 değil. İşaret dolu bir kütle değil, ışığın geçtiği bir açıklıktır.
 
+**Başlatıcı simgesi bir sürüm boyunca yanlıştı.** Uyarlanabilir simgede
+ölçek 0.62 ve translate 29.8 idi: 48 birimlik çizim 29.76 birime iniyordu —
+108 birimlik tuvalin yalnızca **%28**'i — ve merkezi 44.68'e düşüyordu, oysa
+tuvalin merkezi 54. Yani işaret hem aşırı küçüktü hem **9.32 birim (%8.6)
+sola yukarı kaymıştı**. Bu hiçbir yerde görülmedi çünkü ön plan tek başına
+hiç göze bakılmamıştı.
+
+Doğrusu: işaret 62 birim kaplar (72'lik güvenli alanın içinde), yani ölçek
+62/48 = 1.29167 ve translate (108−62)/2 = 23. `tools/docs/render-adaptive.py`
+simgeyi başlatıcının uyguladığı dört maskeyle (daire, yuvarlak kare, kare,
+sıkıştırılmış daire) çizer; kayma artık ölçülebilir ve sıfırdır.
+
 `tools/docs/render-mark.py` işareti PNG'ye çevirir; gerçek kullanım
 ölçülerinde (14/18/24/48dp) bakılarak açıklık çapı ayarlanmıştır.
 Başlatıcı simgesinin PNG sürümleri de `tools/docs/render-launcher.py` ile
 aynı vektörden üretilir — elle çizilmez, ikisi ayrışmaz.
+
+### Açılış ekranı
+
+Ayrı bir Activity değil, temanın `windowBackground`'u. Android pencereyi
+oluşturur oluşturmaz onu çizer; yani uygulama daha ilk karesini hazırlarken
+ekranda zaten işaret durur. Ayrı bir açılış Activity'si kurmak bunun aksine
+bir kare daha ekler ve açılışı yavaşlatır.
+
+Android 12 ve üstünde sistem kendi açılış ekranını zorlar ve bu yöntemi yok
+sayar. Karşı koymak yerine `values-v31/themes.xml` içinde sistemin kendi
+`windowSplashScreen*` nitelikleriyle aynı işaret ve aynı zemin verilir;
+böylece 8.0'dan 15'e kadar açılış aynı görünür.
+
+Açılış işareti (`mark_launch.xml`) `mark_astra.xml` ile aynı geometridedir
+ama tint taşımaz: açılış ekranı çizilirken tema henüz çözülmemiştir,
+dolayısıyla `@color/content`'e bağlı bir tint orada güvenilir değildir.
+
+### Bildirimler
+
+**İki ayrı kanal.** Devam eden iş sessizdir (`IMPORTANCE_LOW`, ses ve
+titreşim kapalı): uzun süren bir işlemin her yüzde değişiminde ses çıkarması
+rahatsız edicidir. Sonuç ise kullanıcının beklediği haberdir, kendi kanalı ve
+varsayılan önemi vardır. Tek kanal olsaydı kullanıcı birini susturmak için
+diğerini de susturmak zorunda kalırdı.
+
+**Devam eden iş** başlığında hedefi söyler ("8K'ya büyütülüyor"), yüzdeyi alt
+metinde taşır, belirli bir ilerleme çubuğu ve bir **İptal** eylemi gösterir.
+`setOnlyAlertOnce` sayesinde her güncellemede yeniden uyarmaz.
+
+**Sonuç** bildirimi çözünürlük, megapiksel, dosya boyutu ve süreyi verir;
+dokununca fotoğrafı açar, **Paylaş** eylemi taşır. Hata durumunda sebep
+`BigTextStyle` ile tam olarak görünür. İptalde hiçbir şey bildirilmez —
+kullanıcı zaten kendisi iptal etmiştir, ona bunu haber vermek gürültüdür.
+
+Durum çubuğu simgesi artık `android.R.drawable.ic_menu_gallery` değil —
+o sistemin genel galeri simgesiydi, markayla ilgisi yoktu. Yerine
+`ic_stat_astra` geldi. Android durum çubuğu simgelerini tek renge indirger,
+o yüzden bu çizimde işaretin ikinci (soluk) ışın dizisi yoktur: %38
+örtücülükteki o katman düz beyaza çevrildiğinde siluete yapışır. Merkez
+açıklığı da biraz geniştir, çünkü dar bir delik küçültmede kapanır.
+
+`tools/desktop/FormatStringsTest.java` bütün biçim dizelerini kodun verdiği
+gerçek argümanlarla formatlar. Bir biçim uyuşmazlığı derlemede yakalanmaz;
+kod ancak o dize kullanıldığında çöker — bildirimlerde bu, iş bittiği anda,
+yani en kötü anda olur.
 
 ### Sürüm denetimi
 

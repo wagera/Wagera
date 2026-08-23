@@ -128,7 +128,6 @@
     <string name="queue_status_offline">%1$d mesaj bekliyor · internet gelince gönderilecek</string>
 
     <!-- Bildirim -->
-    <string name="channel_name">Büyütme işlemi</string>
     <string name="notification_title">Fotoğraf büyütülüyor</string>
     <string name="footer">İşlem tamamen cihazında yapılır</string>
     <!-- Model açıklamaları -->
@@ -179,6 +178,16 @@
     <string name="hero_line_1">Her piksel,</string>
     <string name="hero_line_2">yerli yerinde.</string>
     <string name="hero_copy">Dokuz sinir ağı modeli tümüyle telefonunuzda çalışır. Hiçbir şey yüklenmez, sunucuda sıraya girmez — fotoğrafınız cihazdan hiç çıkmaz.</string>
+    <!-- Bildirimler -->
+    <string name="channel_progress">Büyütme</string>
+    <string name="channel_progress_desc">Bir fotoğraf büyütülürken sessizce ilerlemeyi gösterir.</string>
+    <string name="channel_result">Sonuçlar</string>
+    <string name="channel_result_desc">Bir fotoğraf bittiğinde ya da başarısız olduğunda haber verir.</string>
+    <string name="notif_running_title">%1$s\'ya büyütülüyor</string>
+    <string name="notif_running_text">%%%1$d · %2$s</string>
+    <string name="notif_done_title">Fotoğraf hazır</string>
+    <string name="notif_done_text">%1$d × %2$d · %3$.1f MP · %4$s · %5$.0f sn</string>
+    <string name="notif_failed_title">Büyütme başarısız</string>
     <string name="summary_jpeg">JPEG · %1$d</string>
     <string name="value_none">—</string>
 </resources>

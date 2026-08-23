@@ -217,10 +217,69 @@ space: the same circle is punched through both paths with `evenOdd`, rather
 than a ring drawn on top. The mark is not a solid mass but an aperture that
 light passes through.
 
+**The launcher icon was wrong for a release.** The adaptive icon used a scale
+of 0.62 and a translate of 29.8: the 48-unit drawing came down to 29.76 units
+— only **28%** of the 108-unit canvas — and its centre landed at 44.68 when
+the canvas centre is 54. The mark was both far too small and **9.32 units
+(8.6%) off toward the top left**. Nothing caught it because the foreground was
+never once looked at on its own.
+
+Correct: the mark spans 62 units (inside the 72-unit safe zone), so the scale
+is 62/48 = 1.29167 and the translate is (108−62)/2 = 23.
+`tools/docs/render-adaptive.py` renders the icon under the four masks a
+launcher may apply (circle, rounded square, square, squircle); the offset is
+now measurable and zero.
+
 `tools/docs/render-mark.py` renders it to PNG; the aperture diameter was tuned
 by looking at it at real usage sizes (14/18/24/48dp). The launcher icon's PNG
 variants come from the same vector via `tools/docs/render-launcher.py` — never
 drawn by hand, so the two cannot drift apart.
+
+### The launch screen
+
+Not a separate Activity — the theme's `windowBackground`. Android paints it
+the moment the window is created, so the mark is on screen while the app is
+still preparing its first frame. A dedicated splash Activity would do the
+opposite: add one more frame and slow the launch down.
+
+Android 12 and above force their own splash screen and ignore this approach.
+Rather than fight it, `values-v31/themes.xml` gives the system the same mark
+and the same background through its own `windowSplashScreen*` attributes, so
+the launch looks identical from 8.0 to 15.
+
+The launch mark (`mark_launch.xml`) shares its geometry with `mark_astra.xml`
+but carries no tint: the theme is not resolved yet when the launch screen is
+drawn, so a tint bound to `@color/content` is not dependable there.
+
+### Notifications
+
+**Two separate channels.** The running job is silent (`IMPORTANCE_LOW`, sound
+and vibration off): a long operation making a noise on every percent change is
+an irritation. The result is the news the user is waiting for, so it gets its
+own channel at default importance. On one channel, silencing either would mean
+silencing both.
+
+**The running job** names its target in the title ("Upscaling to 8K"), carries
+the percentage in the secondary line, shows a determinate progress bar and a
+**Cancel** action. `setOnlyAlertOnce` keeps it from re-alerting on every update.
+
+**The result** notification gives resolution, megapixels, file size and
+elapsed time; tapping opens the photo, and it carries a **Share** action. On
+failure the reason is shown in full through `BigTextStyle`. A cancellation
+posts nothing at all — the user cancelled it themselves, and telling them so
+is noise.
+
+The status-bar icon is no longer `android.R.drawable.ic_menu_gallery` — the
+system's generic gallery glyph, unrelated to the brand. `ic_stat_astra`
+replaces it. Android reduces status-bar icons to a single colour, so this
+drawing omits the mark's second, faint ray set: at 38% opacity that layer
+collapses onto the silhouette once flattened to white. The centre aperture is
+slightly wider too, because a narrow hole closes up when scaled down.
+
+`tools/desktop/FormatStringsTest.java` formats every format string with the
+real arguments the code passes. A format mismatch is not caught at compile
+time; the code only crashes when that string is used — and for a notification
+that is the moment the job finishes, the worst possible moment.
 
 ### The update check
 
