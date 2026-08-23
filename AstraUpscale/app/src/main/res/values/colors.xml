@@ -36,4 +36,12 @@
 
     <!-- Sahneyi orten katman: opak degil, alttaki fotograf sezilir -->
     <color name="scrim_fill">#F2F6F7F9</color>
+
+    <!-- ══ Cam dili — acik temada kagit uzerinde ince bir tabaka ═══════ -->
+    <color name="glass_top">#E6FFFFFF</color>
+    <color name="glass_bottom">#F2F7F8FB</color>
+    <color name="glass_stroke">#1F000000</color>
+    <color name="glass_sheen">#00FFFFFF</color>
+    <color name="glass_press">#FFE8EAF0</color>
+    <color name="scrim_glass">#E6F4F5F8</color>
 </resources>

@@ -47,16 +47,19 @@ fi
 echo "==> kaynaklar derleniyor (aapt2 compile)"
 "$BT/aapt2" compile --dir "$APP/res" -o "$OUT/res/resources.zip"
 
+# minSdk 26 (Android 8.0): res/font kaynak aileleri ve uyarlanabilir simge
+# bu surumde geldi. 24'te birakilirsa aapt2 sorun cikarmaz ama Android 7
+# cihazda @font/* cozulmez ve tipografi sessizce varsayilana duser.
 echo "==> kaynaklar baglaniyor (aapt2 link)"
 "$BT/aapt2" link \
     -I "$ANDROID_JAR" \
     --manifest "$APP/AndroidManifest.xml" \
     -A "$ASSET_DIR" \
     --java "$OUT/classes" \
-    --min-sdk-version 24 \
+    --min-sdk-version 26 \
     --target-sdk-version 34 \
-    --version-code 7 \
-    --version-name 6.0 \
+    --version-code 8 \
+    --version-name 7.0 \
     -0 .param \
     -o "$OUT/base.apk" \
     "$OUT/res/resources.zip"
@@ -72,7 +75,7 @@ javac -nowarn -encoding UTF-8 --release 11 \
 
 echo "==> dex uretiliyor (d8)"
 find "$OUT/classes" -name '*.class' > "$OUT/classes.txt"
-"$BT/d8" --release --min-api 24 --lib "$ANDROID_JAR" --output "$OUT/dex" @"$OUT/classes.txt"
+"$BT/d8" --release --min-api 26 --lib "$ANDROID_JAR" --output "$OUT/dex" @"$OUT/classes.txt"
 
 echo "==> APK paketleniyor"
 cp "$OUT/base.apk" "$OUT/unsigned.apk"

@@ -11,9 +11,9 @@
     okunur.
 -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/bg">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,15 +29,15 @@
             android:id="@+id/appBar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/header_height"
-            android:background="@color/bg"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingStart="@dimen/gutter"
             android:paddingEnd="@dimen/gutter">
 
             <ImageView
-                android:layout_width="18dp"
-                android:layout_height="18dp"
+                android:id="@+id/brandMark"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
                 android:contentDescription="@string/app_name"
                 android:src="@drawable/mark_astra" />
 
@@ -45,7 +45,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:fontFamily="sans-serif-medium"
+                android:fontFamily="@font/sans"
+                        android:textFontWeight="600"
                 android:letterSpacing="0.20"
                 android:text="@string/brand_first"
                 android:textColor="@color/content"
@@ -55,7 +56,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:fontFamily="sans-serif-light"
+                android:fontFamily="@font/sans"
                 android:letterSpacing="0.20"
                 android:text="@string/brand_second"
                 android:textColor="@color/content_dim"
@@ -67,7 +68,7 @@
                 android:layout_height="30dp"
                 android:layout_marginEnd="6dp"
                 android:background="@drawable/btn_secondary"
-                android:fontFamily="monospace"
+                android:fontFamily="@font/display"
                 android:gravity="center"
                 android:letterSpacing="0.08"
                 android:minWidth="38dp"
@@ -81,7 +82,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:background="@drawable/btn_secondary"
-                android:fontFamily="monospace"
+                android:fontFamily="@font/display"
                 android:gravity="center"
                 android:letterSpacing="0.08"
                 android:minWidth="38dp"
@@ -137,13 +138,49 @@
                     android:paddingTop="@dimen/gap_block"
                     android:paddingBottom="@dimen/gap_section">
 
+                    <!-- ── Kahraman baslik ──────────────────────────────
+                         Iki satir, her biri kendi kirpma penceresinden
+                         asagidan yukari belirir. Gosterim yuzu yalnizca
+                         burada ve sayisal okumalarda kullanilir. -->
+                    <FrameLayout
+                        android:id="@+id/heroClip1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clipChildren="true">
+
+                        <TextView
+                            android:id="@+id/heroLine1"
+                            style="@style/Display"
+                            android:text="@string/hero_line_1" />
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/heroClip2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clipChildren="true">
+
+                        <TextView
+                            android:id="@+id/heroLine2"
+                            style="@style/Display"
+                            android:alpha="0.62"
+                            android:text="@string/hero_line_2" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:id="@+id/heroCopy"
+                        style="@style/HeroCopy"
+                        android:layout_marginTop="12dp"
+                        android:text="@string/hero_copy" />
+
                     <!-- ── Sahne ─────────────────────────────────────────
                          Dort durum ayni dikdortgeni paylasir. -->
                     <FrameLayout
                         android:id="@+id/stage"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/stage"
+                        android:layout_marginTop="@dimen/gap_section"
+                        android:background="@drawable/glass_stage"
                         android:minHeight="@dimen/stage_min">
 
                         <!-- 1. Bos durum: dokununca galeri acilir -->
@@ -214,7 +251,7 @@
                                 android:id="@+id/progressPercent"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:fontFamily="sans-serif-light"
+                                android:fontFamily="@font/sans"
                                 android:letterSpacing="-0.02"
                                 android:textColor="@color/content"
                                 android:textSize="@dimen/text_display" />
@@ -266,7 +303,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:fontFamily="monospace"
+                            android:fontFamily="@font/display"
                             android:maxLines="1"
                             android:ellipsize="end"
                             android:textColor="@color/content_faint"
@@ -301,7 +338,7 @@
                             android:layout_height="@dimen/cta_height"
                             android:layout_weight="1"
                             android:layout_marginEnd="@dimen/gap_row"
-                            android:background="@drawable/card"
+                            android:background="@drawable/glass_card"
                             android:gravity="center_vertical"
                             android:orientation="vertical"
                             android:paddingStart="14dp"
@@ -311,7 +348,8 @@
                                 android:id="@+id/targetBadge"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:fontFamily="sans-serif-medium"
+                                android:fontFamily="@font/sans"
+                        android:textFontWeight="600"
                                 android:letterSpacing="0.02"
                                 android:text="—"
                                 android:textColor="@color/content"
@@ -321,7 +359,7 @@
                                 android:id="@+id/targetDims"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:fontFamily="monospace"
+                                android:fontFamily="@font/display"
                                 android:maxLines="1"
                                 android:ellipsize="end"
                                 android:textColor="@color/content_faint"
@@ -334,7 +372,8 @@
                             android:layout_height="@dimen/cta_height"
                             android:layout_weight="1"
                             android:background="@drawable/btn_primary"
-                            android:fontFamily="sans-serif-medium"
+                            android:fontFamily="@font/sans"
+                        android:textFontWeight="600"
                             android:letterSpacing="0.04"
                             android:text="@string/start"
                             android:textAllCaps="false"
@@ -348,7 +387,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/gap_row"
-                        android:background="@drawable/card"
+                        android:background="@drawable/glass_card"
                         android:orientation="vertical"
                         android:padding="14dp"
                         android:visibility="gone">
@@ -372,7 +411,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:layout_marginStart="9dp"
-                                android:fontFamily="sans-serif-medium"
+                                android:fontFamily="@font/sans"
+                        android:textFontWeight="600"
                                 android:textColor="@color/content"
                                 android:textSize="@dimen/text_body" />
                         </LinearLayout>
@@ -382,7 +422,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
-                            android:fontFamily="monospace"
+                            android:fontFamily="@font/display"
                             android:lineSpacingExtra="3dp"
                             android:textColor="@color/content_faint"
                             android:textSize="@dimen/text_fine" />
@@ -430,7 +470,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/row_height"
                         android:layout_marginTop="@dimen/gap_section"
-                        android:background="@drawable/row_accordion"
+                        android:background="@drawable/glass_row"
                         android:clickable="true"
                         android:focusable="true"
                         android:gravity="center_vertical"
@@ -457,7 +497,7 @@
                         android:id="@+id/panelResolution"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/panel_open"
+                        android:background="@drawable/glass_panel"
                         android:orientation="vertical"
                         android:padding="14dp"
                         android:visibility="gone">
@@ -511,7 +551,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="14dp"
-                            android:fontFamily="monospace"
+                            android:fontFamily="@font/display"
                             android:lineSpacingExtra="4dp"
                             android:textColor="@color/content_dim"
                             android:textSize="@dimen/text_fine" />
@@ -523,7 +563,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/row_height"
                         android:layout_marginTop="@dimen/gap_row"
-                        android:background="@drawable/row_accordion"
+                        android:background="@drawable/glass_row"
                         android:clickable="true"
                         android:focusable="true"
                         android:gravity="center_vertical"
@@ -550,7 +590,7 @@
                         android:id="@+id/panelEngine"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/panel_open"
+                        android:background="@drawable/glass_panel"
                         android:orientation="vertical"
                         android:paddingTop="8dp"
                         android:paddingBottom="14dp"
@@ -639,7 +679,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/row_height"
                         android:layout_marginTop="@dimen/gap_row"
-                        android:background="@drawable/row_accordion"
+                        android:background="@drawable/glass_row"
                         android:clickable="true"
                         android:focusable="true"
                         android:gravity="center_vertical"
@@ -666,7 +706,7 @@
                         android:id="@+id/panelSettings"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/panel_open"
+                        android:background="@drawable/glass_panel"
                         android:orientation="vertical"
                         android:padding="14dp"
                         android:visibility="gone">
@@ -688,7 +728,7 @@
                                 android:id="@+id/sharpenValue"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:fontFamily="monospace"
+                                android:fontFamily="@font/display"
                                 android:textColor="@color/content"
                                 android:textSize="@dimen/text_body" />
                         </LinearLayout>
@@ -819,7 +859,7 @@
                                 android:id="@+id/qualityValue"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:fontFamily="monospace"
+                                android:fontFamily="@font/display"
                                 android:textColor="@color/content"
                                 android:textSize="@dimen/text_body" />
                         </LinearLayout>
@@ -845,7 +885,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/row_height"
                         android:layout_marginTop="@dimen/gap_row"
-                        android:background="@drawable/row_accordion"
+                        android:background="@drawable/glass_row"
                         android:clickable="true"
                         android:focusable="true"
                         android:gravity="center_vertical"
@@ -872,7 +912,7 @@
                         android:id="@+id/panelDevice"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/panel_open"
+                        android:background="@drawable/glass_panel"
                         android:orientation="vertical"
                         android:padding="14dp"
                         android:visibility="gone">
@@ -881,7 +921,7 @@
                             android:id="@+id/deviceInfo"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="monospace"
+                            android:fontFamily="@font/display"
                             android:lineSpacingExtra="4dp"
                             android:textColor="@color/content_dim"
                             android:textSize="@dimen/text_fine" />
@@ -929,7 +969,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/card"
+                        android:background="@drawable/glass_card"
                         android:orientation="vertical"
                         android:padding="14dp">
 
@@ -947,7 +987,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:fontFamily="monospace"
+                                android:fontFamily="@font/display"
                                 android:textColor="@color/content_dim"
                                 android:textSize="11.5sp" />
 
@@ -1000,7 +1040,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/card"
+                        android:background="@drawable/glass_card"
                         android:orientation="vertical"
                         android:padding="18dp">
 
@@ -1072,7 +1112,8 @@
                             android:layout_height="54dp"
                             android:layout_marginTop="20dp"
                             android:background="@drawable/btn_primary"
-                            android:fontFamily="sans-serif-medium"
+                            android:fontFamily="@font/sans"
+                        android:textFontWeight="600"
                             android:letterSpacing="0.06"
                             android:text="@string/requests_send"
                             android:textAllCaps="false"
@@ -1240,7 +1281,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:fontFamily="sans-serif-medium"
+                android:fontFamily="@font/sans"
+                        android:textFontWeight="600"
                 android:text="@string/gallery_title"
                 android:textColor="@color/content"
                 android:textSize="@dimen/text_row" />
@@ -1258,15 +1300,14 @@
                 android:textColor="@color/content_soft"
                 android:textSize="@dimen/text_fine" />
 
-            <TextView
+            <ImageView
                 android:id="@+id/galleryClose"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:background="@drawable/btn_secondary"
-                android:gravity="center"
-                android:text="✕"
-                android:textColor="@color/content_soft"
-                android:textSize="13sp" />
+                android:contentDescription="@string/cancel"
+                android:padding="9dp"
+                android:src="@drawable/ic_close" />
         </LinearLayout>
 
         <View
@@ -1359,7 +1400,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-medium"
+                android:fontFamily="@font/sans"
+                        android:textFontWeight="600"
                 android:letterSpacing="0.26"
                 android:text="@string/brand_first"
                 android:textColor="@color/content"
@@ -1368,7 +1410,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-light"
+                android:fontFamily="@font/sans"
                 android:letterSpacing="0.26"
                 android:text="@string/brand_second"
                 android:textColor="@color/content_dim"
@@ -1418,7 +1460,8 @@
             android:layout_height="56dp"
             android:layout_marginTop="34dp"
             android:background="@drawable/btn_primary"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="@font/sans"
+                        android:textFontWeight="600"
             android:letterSpacing="0.08"
             android:text="@string/onboarding_start"
             android:textAllCaps="false"
@@ -1450,7 +1493,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="26dp"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="@font/sans"
+                        android:textFontWeight="600"
             android:letterSpacing="0.22"
             android:text="@string/update_required"
             android:textColor="@color/content"
@@ -1472,7 +1516,8 @@
             android:layout_height="56dp"
             android:layout_marginTop="30dp"
             android:background="@drawable/btn_primary"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="@font/sans"
+                        android:textFontWeight="600"
             android:letterSpacing="0.06"
             android:text="@string/update_download"
             android:textAllCaps="false"

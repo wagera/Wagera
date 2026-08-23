@@ -1,15 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    AstraUpscale isareti: dort kollu, kollari icbukey kesilen bir yildiz.
-    Kollar merkeze dogru inceldigi icin isaret kucuk boyutlarda bile keskin
-    kalir.
+    AstraUpscale isareti.
+
+    Dort ic bukey bicak merkeze dogru keskin bir bel verir; aralarindan
+    ikinci ve daha kisa bir isin dizisi cikar. Ortadaki aciklik gercek
+    negatif bosluktur: her iki yolda da evenOdd ile ayni daire delinir,
+    boylece delik alttaki katmani degil zemini gosterir. Isaret dolu bir
+    kutle degil, isigin gectigi bir acikliktir.
+
+    Bel genisligi kontrol noktalarinin merkeze ne kadar cekildigiyle
+    belirlenir; (24,19) ve (29,24) ciftinde bel merkeze 6.5 birim kalir.
+    Daha disari alinirsa siluet sismanlar ve dort kol okunmaz olur.
 -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"
     android:height="24dp"
-    android:viewportWidth="100"
-    android:viewportHeight="100">
+    android:viewportWidth="48"
+    android:viewportHeight="48"
+    android:tint="@color/content">
+
+    <!-- Kisa capraz isinlar: uzun eksenin %59'u kadar, alttan yogunluk verir -->
+    <group android:pivotX="24" android:pivotY="24" android:rotation="45">
+        <path
+            android:fillColor="#FFFFFFFF"
+            android:fillAlpha="0.38"
+            android:fillType="evenOdd"
+            android:pathData="M24,11
+                             C24,21 26.9,24 37,24
+                             C26.9,24 24,26.9 24,37
+                             C24,26.9 21.1,24 11,24
+                             C21.1,24 24,21 24,11 Z
+                             M24,19.9 a4.1,4.1 0 1,1 0,8.2
+                             a4.1,4.1 0 1,1 0,-8.2 Z" />
+    </group>
+
+    <!-- Uzun eksen: siluetin tamami bundan okunur -->
     <path
-        android:fillColor="@color/content"
-        android:pathData="M50,2 C50,38.0 38.0,50 2,50 C38.0,50 50,62.0 50,98 C50,62.0 62.0,50 98,50 C62.0,50 50,38.0 50,2 Z" />
+        android:fillColor="#FFFFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="M24,2
+                         C24,19 29,24 46,24
+                         C29,24 24,29 24,46
+                         C24,29 19,24 2,24
+                         C19,24 24,19 24,2 Z
+                         M24,19.9 a4.1,4.1 0 1,1 0,8.2
+                         a4.1,4.1 0 1,1 0,-8.2 Z" />
 </vector>

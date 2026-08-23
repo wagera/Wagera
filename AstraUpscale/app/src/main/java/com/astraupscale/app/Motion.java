@@ -8,25 +8,30 @@ import android.view.animation.PathInterpolator;
 /**
  * Giris koreografisi.
  *
- * <p>Sayfa acildiginda ogeler sirayla yukselerek belirir. Sira, gozun
- * okumasi gereken sirayla ayni: once baslik, sonra sahne, sonra eylem
- * cubugu, en sonda ayar satirlari. Boylece hareket sussuz bir yonlendirme
- * gorevi gorur — dikkat dagitmaz, dikkati tasir.
+ * <p>Sayfa acildiginda ogeler tek seferlik bir zaman cizgisinde belirir.
+ * Sira, gozun okumasi gereken sirayla ayni: once marka, sonra baslik
+ * satirlari, sonra aciklama, sonra birincil eylem, en sonda ayar satirlari.
+ * Boylece hareket sussuz bir yonlendirme gorevi gorur.
+ *
+ * <p>Gecikmeler referans tasarimin merdiveninden alinmistir; iki egri
+ * kullanilir: govde ogeleri icin {@link #EASE}, baslik satirlarinin
+ * acilmasi icin biraz daha uzun sonlanan {@link #EASE_LINE}.
  *
  * <p>Kullanici sistem ayarlarindan animasyonlari kapattiysa hicbir sey
- * oynatilmaz; ogeler dogrudan yerinde gorunur.
+ * oynatilmaz; ogeler dogrudan yerinde gorunur. Bu bir sus degil, erisim
+ * gereksinimi: hareket duyarliligi olan kullanicilar icin kapali kalmali.
  */
 final class Motion {
 
     private Motion() {}
 
-    /** Ana yumusatma egrisi: hizli baslar, yumusak durur. */
+    /** Govde ogeleri: hizli baslar, yumusak durur. */
     private static final PathInterpolator EASE = new PathInterpolator(0.16f, 1f, 0.3f, 1f);
+    /** Baslik satirlari: daha uzun kuyruk, harfler yerine otururken sakin. */
+    private static final PathInterpolator EASE_LINE = new PathInterpolator(0.22f, 1f, 0.36f, 1f);
 
-    private static final long RISE_MILLIS = 460L;
-    /** Ogeler arasi gecikme; sirali ama beklemeye donusmeyecek kadar kisa. */
-    private static final long STEP_MILLIS = 55L;
-    private static final float RISE_DP = 10f;
+    /** Yukselme mesafesi (dp). */
+    private static final float RISE_DP = 8f;
 
     /** Sistemin animasyon olcegi; 0 ise kullanici animasyonlari kapatmistir. */
     private static float scale = 1f;
@@ -36,7 +41,6 @@ final class Motion {
                 Settings.Global.ANIMATOR_DURATION_SCALE, 1f);
     }
 
-    /** Sistem olcegine gore ayarlanmis sure; animasyon kapaliysa 0. */
     static long scaled(long millis) {
         return scale <= 0f ? 0L : (long) (millis * Math.min(scale, 1.5f));
     }
@@ -45,34 +49,84 @@ final class Motion {
         return scale > 0f;
     }
 
-    /**
-     * Verilen ogeleri sirayla yukselterek gosterir.
-     *
-     * <p>Null ogeler atlanir, ancak sirayi bozmaz: gorunmeyen bir kart
-     * yuzunden sonraki ogelerin gecikmesi kaymaz.
-     */
-    static void enter(View... views) {
-        if (!enabled()) {
-            for (View v : views) {
-                if (v != null) { v.setAlpha(1f); v.setTranslationY(0f); }
-            }
-            return;
+    /** Bir ogenin zaman cizgisindeki yeri: sure ve gecikme (ms). */
+    static final class Step {
+        final View view;
+        final long duration;
+        final long delay;
+
+        Step(View view, long duration, long delay) {
+            this.view = view;
+            this.duration = duration;
+            this.delay = delay;
         }
-        float rise = RISE_DP;
-        for (int i = 0; i < views.length; i++) {
-            View v = views[i];
-            if (v == null) continue;
-            rise = RISE_DP * v.getResources().getDisplayMetrics().density;
-            v.setAlpha(0f);
-            v.setTranslationY(rise);
-            v.animate()
+    }
+
+    static Step step(View view, long duration, long delay) {
+        return new Step(view, duration, delay);
+    }
+
+    /**
+     * Verilen ogeleri kendi sure ve gecikmeleriyle yukselterek gosterir.
+     *
+     * <p>Her ogenin gecikmesi acikca verilir; bir onceki ogeye gore
+     * hesaplanmaz. Boylece aradaki bir oge gizlenirse sonrakilerin
+     * zamanlamasi kaymaz.
+     */
+    static void enter(Step... steps) {
+        for (Step s : steps) {
+            if (s == null || s.view == null) continue;
+            if (!enabled()) {
+                s.view.setAlpha(1f);
+                s.view.setTranslationY(0f);
+                continue;
+            }
+            float rise = RISE_DP * s.view.getResources().getDisplayMetrics().density;
+            s.view.setAlpha(0f);
+            s.view.setTranslationY(rise);
+            s.view.animate()
                     .alpha(1f)
                     .translationY(0f)
-                    .setStartDelay(scaled(STEP_MILLIS * i))
-                    .setDuration(scaled(RISE_MILLIS))
+                    .setStartDelay(scaled(s.delay))
+                    .setDuration(scaled(s.duration))
                     .setInterpolator(EASE)
                     .start();
         }
+    }
+
+    /**
+     * Baslik satirini kendi kirpma penceresinden asagidan yukari acar.
+     *
+     * <p>Satir once kendi yuksekligi kadar asagi itilir, sonra yerine
+     * kayar. Ust ogenin {@code clipChildren} degeri true oldugu icin
+     * satir pencerenin disinda gorunmez — harfler alttan "yukselerek"
+     * ortaya cikar, sadece solup belirmez.
+     *
+     * <p>Yukseklik olculene kadar beklenir: olcum oncesi getHeight() sifir
+     * doner ve satir hic gizlenmeden animasyon bosa gider.
+     */
+    static void revealLine(final View line, final long duration, final long delay,
+                           final float endAlpha) {
+        if (!enabled()) {
+            line.setTranslationY(0f);
+            line.setAlpha(endAlpha);
+            return;
+        }
+        line.setAlpha(0f);
+        line.post(new Runnable() {
+            @Override public void run() {
+                int h = line.getHeight();
+                if (h <= 0) h = (int) (48 * line.getResources().getDisplayMetrics().density);
+                line.setTranslationY(h);
+                line.setAlpha(endAlpha);
+                line.animate()
+                        .translationY(0f)
+                        .setStartDelay(scaled(delay))
+                        .setDuration(scaled(duration))
+                        .setInterpolator(EASE_LINE)
+                        .start();
+            }
+        });
     }
 
     /** Durum degisiminde sahnedeki katmani yumusakca degistirir. */

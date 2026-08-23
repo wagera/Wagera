@@ -17,7 +17,7 @@ import java.net.URL;
 /**
  * Surum denetimi.
  *
- * Uygulama her acilista internet varsa depodaki {@code surum.json} dosyasina
+ * Uygulama her acilista internet varsa depodaki {@code version.json} dosyasina
  * bakar. Daha yeni bir surum goruldugu anda bu bilgi kalici olarak
  * kaydedilir ve uygulama, kullanici guncellemeyi yukleyene kadar acilmaz —
  * internet sonradan kesilse bile.
@@ -27,9 +27,17 @@ import java.net.URL;
  */
 public final class UpdateChecker {
 
-    /** Depodaki surum bilgisi; dal degisirse burasi guncellenmeli. */
+    /**
+     * Depodaki surum bilgisi.
+     *
+     * <p>Dosya adi <b>version.json</b>'dir. Bir surum boyunca burada
+     * "surum.json" yaziyordu; depoda oyle bir dosya olmadigi icin her
+     * denetim 404 aliyor ve sessizce donuyordu — yani surum denetimi hic
+     * calismadi, kullanicilar hicbir guncellemeyi gormedi. Bu adres
+     * degistirilecekse once {@code curl -I} ile 200 dondugu dogrulanmali.
+     */
     private static final String VERSION_URL =
-            "https://raw.githubusercontent.com/wagera/Wagera/main/AstraUpscale/surum.json";
+            "https://raw.githubusercontent.com/wagera/Wagera/main/AstraUpscale/version.json";
 
     private static final String PREFS = "astraupscale";
     private static final String KEY_PENDING_CODE = "pending_version_code";
@@ -49,6 +57,14 @@ public final class UpdateChecker {
         public boolean checked;
         /** En son basarili denetimin uzerinden gecen sure (ms); hic yapilmadiysa -1. */
         public long lastCheckAgeMillis = -1;
+        /**
+         * Denetim basarisiz olduysa nedeni; basariliysa bos.
+         *
+         * <p>Sessiz basarisizlik bu projede bir kez zaten pahaliya mal oldu:
+         * yanlis dosya adi yuzunden surum denetimi aylarca calismadi ve
+         * hicbir yerde iz birakmadi. Artik neden gorunuyor.
+         */
+        public String failure = "";
 
         public boolean blocking() {
             return versionCode > 0;
@@ -99,7 +115,10 @@ public final class UpdateChecker {
      */
     public static Result check(Context ctx) {
         Result r = pending(ctx);
-        if (!online(ctx)) return r;
+        if (!online(ctx)) {
+            r.failure = "offline";
+            return r;
+        }
 
         HttpURLConnection conn = null;
         try {
@@ -107,7 +126,12 @@ public final class UpdateChecker {
             conn.setConnectTimeout(6000);
             conn.setReadTimeout(6000);
             conn.setRequestProperty("Accept", "application/json");
-            if (conn.getResponseCode() != 200) return r;
+            int status = conn.getResponseCode();
+            if (status != 200) {
+                // Sessizce donme: neden gorunur kalsin.
+                r.failure = "HTTP " + status;
+                return r;
+            }
 
             InputStream in = conn.getInputStream();
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -135,8 +159,9 @@ public final class UpdateChecker {
                         .putString(KEY_PENDING_NOTES, r.notes);
             }
             e.apply();
-        } catch (Throwable ignored) {
-            // Ag hatasi: elimizdeki bilgiyle devam edilir.
+        } catch (Throwable t) {
+            // Ag hatasi: elimizdeki bilgiyle devam edilir, ama iz birakilir.
+            r.failure = t.getClass().getSimpleName();
         } finally {
             if (conn != null) conn.disconnect();
         }

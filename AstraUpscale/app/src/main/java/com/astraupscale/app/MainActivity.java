@@ -65,7 +65,8 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
     private Button onboardingStart;
 
     /** Yeni yerlesim: sahne, eylem cubugu ve acilir ayar bolumleri. */
-    private View stage, appBar, actionBar, stageCaption;
+    private View stage, appBar, actionBar, stageCaption, brandMark;
+    private TextView heroLine1, heroLine2, heroCopy;
     private TextView targetBadge, targetDims;
     private final List<Accordion> sections = Accordion.newGroup();
     private Accordion secResolution, secEngine, secSettings, secDevice;
@@ -74,7 +75,8 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
     private GalleryPicker gallery;
     private LinearLayout galleryOverlay, galleryGrid, galleryPermission;
     private View galleryScroll;
-    private TextView galleryEmpty, galleryClose, galleryFiles;
+    private TextView galleryEmpty, galleryFiles;
+    private ImageView galleryClose;
     private Button galleryGrant;
     /** 0 = buyut, 1 = gecmis, 2 = istekler */
     private int page;
@@ -115,6 +117,11 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         bindViews();
 
         Motion.read(this);
+        // Sinematik zemin: dosya degil, calisma aninda cizilir. Nedeni
+        // Backdrop sinifinin basindaki aciklamada.
+        findViewById(R.id.root).setBackground(
+                ThemeHelper.isDark(this) ? Backdrop.dark() : Backdrop.light());
+
         gallery = new GalleryPicker(this, new GalleryPicker.OnPicked() {
             @Override public void onPicked(Uri uri) {
                 closeGallery();
@@ -142,14 +149,40 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         }
         refreshTexts();
 
-        // Giris koreografisi: goz hangi sirayla okuyacaksa o sirayla belirir.
-        Motion.enter(appBar, stage, stageCaption, actionBar,
-                findViewById(R.id.rowResolution), findViewById(R.id.rowEngine),
-                findViewById(R.id.rowSettings), findViewById(R.id.rowDevice));
+        playEntrance();
 
         applyUpdateState(UpdateChecker.pending(this));
         checkForUpdate();
         Reporter.event(this, "app_open", null);
+    }
+
+    /**
+     * Acilis zaman cizgisi.
+     *
+     * <p>Sira referans tasarimdan alinmistir: marka, baslik satirlari,
+     * aciklama, sahne, birincil eylem, ayar satirlari. Mutlak sureler ise
+     * sikistirilmistir — referans bir acilis sayfasidir ve orada 1.7
+     * saniyelik bir acilis hos durur; bir uygulamada her acilista ayni
+     * sureyi beklemek bedeldir. Merdiven ~1.1 saniyede biter.
+     *
+     * <p>Yalnizca uygulama ilk acildiginda oynatilir; sekmeler arasinda
+     * gidip gelmek yeniden tetiklemez.
+     */
+    private void playEntrance() {
+        Motion.revealLine(heroLine1, 620L, 180L, 1f);
+        Motion.revealLine(heroLine2, 660L, 270L, 0.62f);
+        Motion.enter(
+                Motion.step(brandMark, 420L, 40L),
+                Motion.step(themeButton, 380L, 90L),
+                Motion.step(languageButton, 380L, 120L),
+                Motion.step(heroCopy, 460L, 440L),
+                Motion.step(stage, 620L, 500L),
+                Motion.step(actionBar, 440L, 580L),
+                Motion.step(stageCaption, 400L, 610L),
+                Motion.step(findViewById(R.id.rowResolution), 380L, 640L),
+                Motion.step(findViewById(R.id.rowEngine), 380L, 675L),
+                Motion.step(findViewById(R.id.rowSettings), 380L, 710L),
+                Motion.step(findViewById(R.id.rowDevice), 380L, 745L));
     }
 
     @Override protected void onNewIntent(Intent intent) {
@@ -266,6 +299,10 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
 
         stage = findViewById(R.id.stage);
         appBar = findViewById(R.id.appBar);
+        brandMark = findViewById(R.id.brandMark);
+        heroLine1 = findViewById(R.id.heroLine1);
+        heroLine2 = findViewById(R.id.heroLine2);
+        heroCopy = findViewById(R.id.heroCopy);
         actionBar = findViewById(R.id.actionBar);
         stageCaption = findViewById(R.id.stageCaption);
         targetBadge = findViewById(R.id.targetBadge);
@@ -892,7 +929,15 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         updateGate.setVisibility(View.GONE);
 
         if (UpdateChecker.online(this)) {
-            offlineNote.setVisibility(View.GONE);
+            // Cevrimiciyken denetim yine de basarisiz olabilir (yanlis adres,
+            // sunucu hatasi). Bu daha once sessizce yutuluyordu ve surum
+            // denetimi hic calismadigi halde her sey yolunda gorunuyordu.
+            if (r.failure != null && r.failure.length() > 0 && !"offline".equals(r.failure)) {
+                offlineNote.setText(getString(R.string.update_check_failed, r.failure));
+                offlineNote.setVisibility(View.VISIBLE);
+            } else {
+                offlineNote.setVisibility(View.GONE);
+            }
             return;
         }
         String when;

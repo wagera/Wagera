@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Ikincil dugme: cam diliyle ayni yari saydam yuzey, tam yuvarlak kose. -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
-            <solid android:color="@color/surface_press" />
+            <solid android:color="@color/glass_press" />
             <corners android:radius="16dp" />
-            <stroke android:width="1dp" android:color="@color/hairline_strong" />
+            <stroke android:width="1dp" android:color="@color/glass_stroke" />
         </shape>
     </item>
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@color/surface_high" />
+            <gradient
+                android:angle="235"
+                android:startColor="@color/glass_top"
+                android:endColor="@color/glass_bottom"
+                android:type="linear" />
             <corners android:radius="16dp" />
-            <stroke android:width="1dp" android:color="@color/hairline" />
+            <stroke android:width="1dp" android:color="@color/glass_stroke" />
         </shape>
     </item>
 </selector>

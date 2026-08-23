@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Gosterim yuzu: Space Grotesk.
+
+    Yalnizca buyuk baslikta ve sayisal okumalarda kullanilir. Genis
+    x-yuksekligi ve dar yan bosluklariyla siki harf aralikli buyuk
+    puntolarda dagilmadan durur; UI metninde kullanilirsa fazla karakterli
+    olur, o yuzden govde metni Manrope'a birakilmistir.
+-->
+<font-family xmlns:android="http://schemas.android.com/apk/res/android">
+    <font android:fontStyle="normal" android:fontWeight="500" android:font="@font/spacegrotesk_medium" />
+    <font android:fontStyle="normal" android:fontWeight="700" android:font="@font/spacegrotesk_bold" />
+</font-family>

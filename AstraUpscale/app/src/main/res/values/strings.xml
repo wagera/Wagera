@@ -178,6 +178,11 @@
     <string name="row_engine">Engine</string>
     <string name="row_settings">Settings</string>
     <string name="row_device">Device</string>
+    <string name="update_check_failed">Update check failed (%1$s). The app still works; it will try again next time it opens.</string>
+    <!-- Kahraman baslik: iki satir, ayri ayri belirir -->
+    <string name="hero_line_1">Every pixel,</string>
+    <string name="hero_line_2">resolved.</string>
+    <string name="hero_copy">Nine neural models run entirely on your phone. Nothing is uploaded, nothing is queued on a server — your photo never leaves the device.</string>
     <string name="summary_jpeg">JPEG · %1$d</string>
     <string name="value_none">—</string>
 </resources>

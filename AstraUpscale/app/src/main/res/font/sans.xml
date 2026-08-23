@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Arayuz yuzu: Manrope.
+
+    Butun govde metni, dugmeler, satir basliklari ve etiketler. Uc agirlik
+    yeter: 400 govde, 500 satir basligi, 600 vurgu. Daha fazlasi ayirt
+    edilemez, yalnizca APK'yi buyutur.
+-->
+<font-family xmlns:android="http://schemas.android.com/apk/res/android">
+    <font android:fontStyle="normal" android:fontWeight="400" android:font="@font/manrope_regular" />
+    <font android:fontStyle="normal" android:fontWeight="500" android:font="@font/manrope_medium" />
+    <font android:fontStyle="normal" android:fontWeight="600" android:font="@font/manrope_semibold" />
+</font-family>
