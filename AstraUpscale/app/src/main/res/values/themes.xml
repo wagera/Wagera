@@ -114,4 +114,20 @@
         <item name="android:includeFontPadding">false</item>
         <item name="android:textColor">@color/content</item>
     </style>
+
+    <!--
+        Acilis temasi.
+
+        Activity bu temayla baslar: pencere olusur olusmaz windowBackground
+        cizilir, yani ilk kare hazirlanirken ekranda beyaz/siyah bir bosluk
+        degil isaret durur. MainActivity.onCreate icinde setTheme ile asil
+        temaya gecilir — bu satir setContentView'dan ONCE gelmeli, yoksa
+        gorunumler acilis temasiyla sisirilir.
+    -->
+    <style name="LaunchTheme" parent="@style/AppTheme">
+        <item name="android:windowBackground">@drawable/launch_screen</item>
+        <item name="android:statusBarColor">@color/launch_bg</item>
+        <item name="android:navigationBarColor">@color/launch_bg</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
 </resources>

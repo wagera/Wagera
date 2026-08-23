@@ -131,7 +131,6 @@
     <string name="queue_status_offline">%1$d message(s) waiting · will be sent when there is internet</string>
 
     <!-- Notification -->
-    <string name="channel_name">Upscaling</string>
     <string name="notification_title">Upscaling photo</string>
     <string name="footer">Processing happens entirely on your device</string>
     <!-- Model descriptions -->
@@ -183,6 +182,16 @@
     <string name="hero_line_1">Every pixel,</string>
     <string name="hero_line_2">resolved.</string>
     <string name="hero_copy">Nine neural models run entirely on your phone. Nothing is uploaded, nothing is queued on a server — your photo never leaves the device.</string>
+    <!-- Bildirimler -->
+    <string name="channel_progress">Upscaling</string>
+    <string name="channel_progress_desc">Silent progress while a photo is being upscaled.</string>
+    <string name="channel_result">Results</string>
+    <string name="channel_result_desc">Tells you when a photo is finished or has failed.</string>
+    <string name="notif_running_title">Upscaling to %1$s</string>
+    <string name="notif_running_text">%1$d%% · %2$s</string>
+    <string name="notif_done_title">Photo is ready</string>
+    <string name="notif_done_text">%1$d × %2$d · %3$.1f MP · %4$s · %5$.0f s</string>
+    <string name="notif_failed_title">Upscaling failed</string>
     <string name="summary_jpeg">JPEG · %1$d</string>
     <string name="value_none">—</string>
 </resources>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Acilis ekrani.
+
+    Ayri bir Activity degil: temanin windowBackground'u. Android pencereyi
+    olusturur olusturmaz bunu cizer, yani uygulama daha ilk karesini
+    hazirlarken ekranda zaten isaret durur. Ayri bir acilis Activity'si
+    kurmak bunun aksine bir kare daha ekler ve acilisi yavaslatir.
+
+    Android 12 ve ustunde sistem kendi acilis ekranini zorlar; oradaki
+    karsiligi values-v31/themes.xml icindeki windowSplashScreen* nitelikleri.
+    Bu dosya 8.0 - 11 araligi icindir.
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/launch_bg" />
+    <item android:gravity="center">
+        <bitmap
+            android:gravity="center"
+            android:src="@drawable/mark_launch" />
+    </item>
+</layer-list>

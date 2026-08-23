@@ -1,6 +1,6 @@
 {
-  "versionCode": 8,
-  "versionName": "7.0",
+  "versionCode": 9,
+  "versionName": "8.0",
   "apkUrl": "https://github.com/wagera/Wagera/raw/main/AstraUpscale/release/AstraUpscale.apk",
-  "notes": "New mark, cinematic backdrop, glass surfaces, a two-face type system and a working update check. The previous check pointed at a file that does not exist, so no update ever reached a device."
+  "notes": "Centred launcher icon, a launch screen, rebuilt notifications with cancel and share actions, and every type size pulled onto the scale."
 }

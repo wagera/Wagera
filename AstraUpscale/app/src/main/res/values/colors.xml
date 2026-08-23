@@ -44,4 +44,11 @@
     <color name="glass_sheen">#00FFFFFF</color>
     <color name="glass_press">#FFE8EAF0</color>
     <color name="scrim_glass">#E6F4F5F8</color>
+
+    <!-- Acilis ekrani: tema secilmeden once cizildigi icin her iki
+         temada da ayni. Acilis ani marka anidir; bir yanip sonme
+         yasanmamasi icin uygulamanin ilk karesi de koyu baslar. -->
+    <color name="launch_bg">#FF0B0C0E</color>
+    <!-- Bildirim vurgusu: sistem bunu simge ve baslikta kullanir -->
+    <color name="notification_accent">#FF14161C</color>
 </resources>
