@@ -1,17 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Baslatici simgesinin on plani.
+
+    Uyarlanabilir simgede 108x108'lik tuvalin yalnizca ortadaki 72x72'si
+    her cihazda gorunur; kalani kirpilir. Isaret bu guvenli alana yerlesir:
+    48'lik cizim 0.62 olcekle 29.8 birim kenar bosluguyla ortalanir, yani
+    en dar kirpmada bile kol uclari kesilmez.
+-->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <group android:translateX="29" android:translateY="29" android:scaleX="0.50" android:scaleY="0.50">
+
+    <group
+        android:translateX="29.8"
+        android:translateY="29.8"
+        android:scaleX="0.62"
+        android:scaleY="0.62">
+
+        <group android:pivotX="24" android:pivotY="24" android:rotation="45">
+            <path
+                android:fillColor="#FFFFFFFF"
+                android:fillAlpha="0.38"
+                android:fillType="evenOdd"
+                android:pathData="M24,11
+                                 C24,21 26.9,24 37,24
+                                 C26.9,24 24,26.9 24,37
+                                 C24,26.9 21.1,24 11,24
+                                 C21.1,24 24,21 24,11 Z
+                                 M24,19.9 a4.1,4.1 0 1,1 0,8.2
+                                 a4.1,4.1 0 1,1 0,-8.2 Z" />
+        </group>
+
         <path
             android:fillColor="#FFF5F6F8"
-            android:pathData="M50,2 C50,38.0 38.0,50 2,50 C38.0,50 50,62.0 50,98 C50,62.0 62.0,50 98,50 C62.0,50 50,38.0 50,2 Z" />
-    </group>
-    <group android:translateX="66" android:translateY="20" android:scaleX="0.14" android:scaleY="0.14">
-        <path
-            android:fillColor="#FFB0B6C2"
-            android:pathData="M50,2 C50,38.0 38.0,50 2,50 C38.0,50 50,62.0 50,98 C50,62.0 62.0,50 98,50 C62.0,50 50,38.0 50,2 Z" />
+            android:fillType="evenOdd"
+            android:pathData="M24,2
+                             C24,19 29,24 46,24
+                             C29,24 24,29 24,46
+                             C24,29 19,24 2,24
+                             C19,24 24,19 24,2 Z
+                             M24,19.9 a4.1,4.1 0 1,1 0,8.2
+                             a4.1,4.1 0 1,1 0,-8.2 Z" />
     </group>
 </vector>

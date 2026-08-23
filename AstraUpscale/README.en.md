@@ -173,6 +173,76 @@ When the page opens, elements rise into place in sequence — header → stage �
 action bar → setting rows, the order the eye needs to read them. If the user
 has turned animations off in system settings, nothing is played.
 
+### Design language
+
+**Backdrop.** Behind the page is not a flat colour but a diagonal base
+gradient, two soft light blooms and a vignette. It is not a file: `Backdrop.java`
+draws it at runtime.
+
+Why not a file: it was first produced as a PNG. Film grain was layered on so
+the gradients would not band on an 8-bit panel, and the file came to 293 KB.
+Converting to WebP dropped it to 6 KB — and **destroyed the grain**: measured
+local noise fell from 2.2 to 0.48, and only 33 distinct luminance levels were
+left across an 800-pixel vertical axis, which is exactly the banding the grain
+existed to prevent. Drawing at runtime adds no file to the APK, fits any
+screen ratio exactly, and generates the grain per pixel for real.
+
+**Glass.** Panels float over the backdrop: a translucent 235° gradient, a
+1-pixel hairline border, and a light line along the top edge. No blur is
+applied — the backdrop is already a smooth gradient, and the blur of a smooth
+gradient is itself; putting one there would cost something and return nothing.
+
+**Two faces.** Space Grotesk for display, Manrope for the interface; both are
+bundled, neither depends on the system font. The display face is used only in
+the large headline and in numeric readouts. Both faces carry full Turkish
+coverage — ğ, ş, ı, İ, ö, ü, ç included — verified through their cmap with
+`fontTools`.
+
+These faces carry no geometric symbols. A sweep found that `✕` (U+2715), used
+on the gallery close button, exists in none of the bundled faces — it rendered
+as a tofu box on device. It is a vector now.
+
+**Motion.** On open, elements arrive on a one-shot timeline, and the two
+headline lines rise into place from inside their own clipping windows. The
+order comes from the reference brief; the absolute timings are compressed. The
+reference is a landing page, where a 1.7-second reveal is a pleasure; in an
+app, paying that on every launch is a cost. The ladder finishes in ~1.1s. If
+animations are off in system settings, nothing plays.
+
+### The mark
+
+Four concave blades draw a sharp waist toward the centre, and a second, shorter
+set of rays emerges between them. The opening at the centre is true negative
+space: the same circle is punched through both paths with `evenOdd`, rather
+than a ring drawn on top. The mark is not a solid mass but an aperture that
+light passes through.
+
+`tools/docs/render-mark.py` renders it to PNG; the aperture diameter was tuned
+by looking at it at real usage sizes (14/18/24/48dp). The launcher icon's PNG
+variants come from the same vector via `tools/docs/render-launcher.py` — never
+drawn by hand, so the two cannot drift apart.
+
+### The update check
+
+**This never worked.** The code requested
+`.../AstraUpscale/surum.json`; no such file exists in the repository — it is
+named `version.json`. Every check took a 404 and returned **silently** from the
+`getResponseCode() != 200` branch. The result: no device ever saw an update,
+and nothing anywhere recorded it.
+
+Three things were fixed:
+
+1. The URL is now `version.json`.
+2. Failure is no longer silent: the result carries a `failure` field, and a
+   failed check while online is now shown in the UI.
+3. `tools/desktop/UpdateUrlTest.java` is a regression test — it reads the URL
+   out of `UpdateChecker.java` itself (keeping no second copy, which would
+   drift and make the test lie) and asserts a 200 with a readable `versionCode`.
+
+> Note that this fix cannot reach an old install by itself: the build on the
+> phone is still running the broken checker. The new APK has to be installed
+> by hand once; after that it takes care of itself.
+
 ### Picking a photo, and the permission
 
 Photo selection happens inside the app: with the `READ_MEDIA_IMAGES`
@@ -187,6 +257,14 @@ permission at all.
 file path leaves it — not to a server, not to the Discord webhook, not to
 another app. The only thing that goes out is the feedback the user types, and
 alongside it only the device details listed above.
+
+## Requirement
+
+Android 8.0 (API 26) and above. The floor moved from 24 to 26: `res/font`
+resource families and the adaptive launcher icon arrived in that release.
+Leaving it at 24 would not trouble `aapt2`, but on an Android 7 device
+`@font/*` would fail to resolve and the typography would silently fall back
+to the default.
 
 ## How it works
 

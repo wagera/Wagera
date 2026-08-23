@@ -1,6 +1,6 @@
 {
-  "versionCode": 7,
-  "versionName": "6.0",
+  "versionCode": 8,
+  "versionName": "7.0",
   "apkUrl": "https://github.com/wagera/Wagera/raw/main/AstraUpscale/release/AstraUpscale.apk",
-  "notes": "Rebuilt layout: one state-driven stage, a docked target and start bar, collapsible settings, and an in-app gallery picker."
+  "notes": "New mark, cinematic backdrop, glass surfaces, a two-face type system and a working update check. The previous check pointed at a file that does not exist, so no update ever reached a device."
 }

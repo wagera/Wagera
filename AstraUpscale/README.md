@@ -122,6 +122,77 @@ Sayfa açıldığında öğeler sırayla yükselerek belirir. Sıra, gözün oku
 gereken sırayla aynıdır: başlık → sahne → eylem çubuğu → ayar satırları.
 Kullanıcı sistem ayarlarından animasyonları kapattıysa hiçbir şey oynatılmaz.
 
+### Tasarım dili
+
+**Zemin.** Sayfanın arkasında düz bir renk değil, köşegen bir taban geçişi,
+iki yumuşak ışık patlaması ve bir kenar karartması var. Bu zemin bir dosya
+değil, `Backdrop.java` içinde çalışma anında çizilir.
+
+Neden dosya değil: önce PNG olarak üretilmişti. Geçişlerin 8 bit panelde
+bant yapmaması için üstüne film greni ekleniyordu ve dosya 293 KB tutuyordu.
+WebP'ye çevrilince 6 KB'ye düştü, ama **gren yok oldu** — ölçülen yerel
+gürültü 2.2'den 0.48'e indi ve 800 piksellik dikey eksende yalnızca 33
+benzersiz parlaklık seviyesi kaldı, yani önlenmek istenen bant geri geldi.
+Çalışma anında çizim hem APK'ya hiçbir dosya eklemez, hem her ekran oranına
+tam oturur, hem de greni gerçekten piksel başına üretir.
+
+**Cam.** Paneller zeminin üzerinde yüzer: yarı saydam 235° geçiş, 1 piksellik
+saç çizgisi kenar ve üst kenarda yukarıdan gelen bir ışık çizgisi. Ayrıca
+bulanıklaştırma uygulanmaz — zemin zaten yumuşak bir geçiş olduğu için düz
+bir geçişin bulanığı kendisiyle aynıdır; oraya bir blur koymak bedel öder,
+karşılığında hiçbir şey vermez.
+
+**İki yüz.** Gösterim için Space Grotesk, arayüz için Manrope; ikisi de
+paketlenir, sistem fontuna bağlı değildir. Gösterim yüzü yalnızca büyük
+başlıkta ve sayısal okumalarda kullanılır. Her iki yüz de tam Türkçe
+kapsamalıdır — ğ, ş, ı, İ, ö, ü, ç dahil, `fontTools` ile cmap üzerinden
+doğrulanmıştır.
+
+Bu yüzler geometrik sembol taşımaz. Bir tarama, galeri kapatma düğmesindeki
+`✕` (U+2715) karakterinin paketlenen yüzlerin hiçbirinde olmadığını buldu —
+cihazda tofu kutusu çıkardı; artık bir çizim.
+
+**Hareket.** Açılışta öğeler tek seferlik bir zaman çizgisinde belirir;
+başlığın iki satırı kendi kırpma penceresinden aşağıdan yukarı açılır. Sıra
+referans tasarımdan alınmıştır, mutlak süreler ise sıkıştırılmıştır: referans
+bir açılış sayfasıdır ve orada 1.7 saniyelik bir açılış hoş durur, bir
+uygulamada her açılışta aynı süreyi beklemek bedeldir. Merdiven ~1.1 saniyede
+biter. Sistemde animasyonlar kapalıysa hiçbir şey oynatılmaz.
+
+### İşaret
+
+Dört iç bükey bıçak merkeze doğru keskin bir bel verir; aralarından ikinci ve
+daha kısa bir ışın dizisi çıkar. Ortadaki açıklık gerçek negatif boşluktur:
+her iki yolda da `evenOdd` ile aynı daire delinir, üstüne çizilen bir halka
+değil. İşaret dolu bir kütle değil, ışığın geçtiği bir açıklıktır.
+
+`tools/docs/render-mark.py` işareti PNG'ye çevirir; gerçek kullanım
+ölçülerinde (14/18/24/48dp) bakılarak açıklık çapı ayarlanmıştır.
+Başlatıcı simgesinin PNG sürümleri de `tools/docs/render-launcher.py` ile
+aynı vektörden üretilir — elle çizilmez, ikisi ayrışmaz.
+
+### Sürüm denetimi
+
+**Bu bir süre boyunca hiç çalışmadı.** Kod
+`.../AstraUpscale/surum.json` adresini istiyordu; depoda o dosya yok, adı
+`version.json`. Her denetim 404 alıyor, `getResponseCode() != 200` dalında
+**sessizce** dönüyordu. Sonuç: hiçbir cihaz hiçbir güncellemeyi görmedi ve
+hiçbir yerde iz kalmadı.
+
+Üç şey düzeltildi:
+
+1. Adres `version.json` oldu.
+2. Başarısızlık artık sessiz değil: sonuçta bir `failure` alanı var ve
+   çevrimiçiyken denetim başarısız olursa bu arayüzde yazıyor.
+3. `tools/desktop/UpdateUrlTest.java` bir gerileme sınamasıdır — adresi
+   `UpdateChecker.java` kaynağından okur (ikinci bir kopya tutmaz, yoksa
+   ikisi ayrışır ve sınama yalan söyler), 200 döndüğünü ve `versionCode`
+   alanının okunabildiğini doğrular.
+
+> Bu düzeltmenin eski kuruluma kendiliğinden ulaşamayacağını unutmayın:
+> telefondaki sürüm hâlâ bozuk denetleyiciyi çalıştırıyor. Yeni APK bir kez
+> elle kurulmalı; ondan sonrası kendiliğinden işler.
+
 ### Fotoğraf seçme ve izin
 
 Fotoğraf seçimi uygulamanın içinde olur: `READ_MEDIA_IMAGES` izniyle cihazdaki
@@ -145,6 +216,13 @@ Yukarıdaki `docs/tema-koyu.png` ve `docs/tema-acik.png` cihaz ekran görüntüs
 arasındaki bağ elle güncellenen bir varsayım değil, dosyadan türetilmiş bir
 sonuçtur; yerleşim değişince `python3 tools/docs/render-ui.py` çalıştırmak
 yeter.
+
+## Gereksinim
+
+Android 8.0 (API 26) ve üzeri. Alt sınır 24'ten 26'ya çıkarıldı: `res/font`
+kaynak aileleri ve uyarlanabilir başlatıcı simgesi bu sürümde geldi. 24'te
+bırakılsaydı `aapt2` sorun çıkarmaz, ama Android 7 cihazda `@font/*`
+çözülmez ve tipografi sessizce varsayılana düşerdi.
 
 ## Nasıl çalışıyor
 

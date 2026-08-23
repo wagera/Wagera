@@ -7,6 +7,7 @@
         <item name="android:colorControlActivated">@color/content</item>
         <item name="android:colorControlHighlight">@color/glow_12</item>
         <item name="android:windowBackground">@color/bg</item>
+        <item name="android:fontFamily">@font/sans</item>
         <item name="android:statusBarColor">@color/bg</item>
         <item name="android:navigationBarColor">@color/bg</item>
         <item name="android:windowLightStatusBar">true</item>
@@ -22,7 +23,8 @@
         <item name="android:textColor">@color/content_faint</item>
         <item name="android:textSize">10sp</item>
         <item name="android:letterSpacing">0.22</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">@font/sans</item>
+        <item name="android:textFontWeight">600</item>
         <item name="android:layout_marginTop">28dp</item>
         <item name="android:layout_marginBottom">10dp</item>
     </style>
@@ -34,7 +36,8 @@
         <item name="android:textColor">@color/content_faint</item>
         <item name="android:textSize">10sp</item>
         <item name="android:letterSpacing">0.18</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">@font/sans</item>
+        <item name="android:textFontWeight">600</item>
     </style>
 
     <!-- ══ Yeni yerlesim stilleri ═══════════════════════════════════════
@@ -46,8 +49,9 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/content</item>
         <item name="android:textSize">@dimen/text_row</item>
-        <item name="android:fontFamily">sans-serif</item>
-        <item name="android:letterSpacing">-0.01</item>
+        <item name="android:fontFamily">@font/sans</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="android:letterSpacing">-0.005</item>
     </style>
 
     <!-- Akordeon satirinin sagindaki gecerli deger -->
@@ -56,7 +60,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/content_dim</item>
         <item name="android:textSize">@dimen/text_body</item>
-        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:fontFamily">@font/sans</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
     </style>
@@ -68,6 +72,46 @@
         <item name="android:textColor">@color/content_faint</item>
         <item name="android:textSize">@dimen/text_label</item>
         <item name="android:letterSpacing">0.20</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">@font/sans</item>
+        <item name="android:textFontWeight">600</item>
+    </style>
+
+    <!-- ══ Tipografi ═══════════════════════════════════════════════════
+         Iki yuz: gosterim icin Space Grotesk, arayuz icin Manrope.
+         Gosterim yuzu yalnizca buyuk baslikta ve sayisal okumalarda
+         kullanilir; govde metninde fazla karakterli olur. -->
+
+    <!-- Kahraman baslik: iki satir, siki harf araligi -->
+    <style name="Display">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/display</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="android:textSize">@dimen/text_display</item>
+        <item name="android:letterSpacing">-0.035</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textColor">@color/content</item>
+    </style>
+
+    <!-- Baslik altindaki aciklama -->
+    <style name="HeroCopy">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/sans</item>
+        <item name="android:textSize">@dimen/text_body</item>
+        <item name="android:letterSpacing">0.005</item>
+        <item name="android:lineSpacingExtra">4dp</item>
+        <item name="android:textColor">@color/content_dim</item>
+    </style>
+
+    <!-- Sayisal okuma: hedef cozunurluk, yuzde, olcu -->
+    <style name="Readout">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/display</item>
+        <item name="android:textFontWeight">700</item>
+        <item name="android:letterSpacing">-0.02</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textColor">@color/content</item>
     </style>
 </resources>
