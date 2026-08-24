@@ -30,6 +30,7 @@ import com.astraupscale.engine.Preset;
 
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,6 +72,11 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
     private final List<Accordion> sections = Accordion.newGroup();
     private Accordion secResolution, secEngine, secSettings, secDevice;
 
+    /** Oncesi/sonrasi karsilastirma. */
+    private CompareView compareView;
+    private LinearLayout compareOverlay;
+    private TextView compareZoom;
+
     /** Uygulama ici galeri. */
     private GalleryPicker gallery;
     private LinearLayout galleryOverlay, galleryGrid, galleryPermission;
@@ -88,6 +94,25 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
 
     private Uri sourceUri;
     private int srcWidth, srcHeight;
+    /**
+     * Kaynagin EXIF yonlendirmesi.
+     *
+     * <p>Kucuk resim okunurken zaten hesaplaniyor; karsilastirma ekrani da
+     * ayni degere ihtiyac duyar. Alanda tutmak dosyayi ikinci kez acmaktan
+     * ve iki yerin birbirinden ayrisma riskinden kurtarir.
+     */
+    private int srcOrientation = 1;
+
+    /**
+     * Geri yukleme suruyor mu.
+     *
+     * <p>SeekBar dinleyicisi {@code fromUser} ayrimi yapmadan
+     * {@code refreshTexts()} cagirir, o da durumu yazar. Geri yukleme
+     * sirasinda {@code setProgress} bunu tetikler ve yarim yuklenmis
+     * durum diske yazilir. Bu bayrak, yukleme bitene kadar yazmayi
+     * kapatir.
+     */
+    private boolean restoring;
     private Preset preset = Preset.R4K;
     private SrModel model = SrModel.ESRGAN_FAST;
     private boolean jpeg = true;
@@ -146,6 +171,8 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         buildKindChips();
         setupListeners();
 
+        restoreSession();
+
         if (!NativeSr.available() || !availableModels.contains(model)) {
             model = availableModels.isEmpty() || !NativeSr.available()
                     ? SrModel.LANCZOS : availableModels.get(0);
@@ -153,7 +180,7 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         }
         requestNotificationPermission();
         handleShareIntent(getIntent());
-        showPage(0);
+        showPage(Session.page(this));
         if (!getSharedPreferences("astraupscale", MODE_PRIVATE).getBoolean("onboarded", false)) {
             onboarding.setVisibility(View.VISIBLE);
         }
@@ -164,6 +191,60 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         applyUpdateState(UpdateChecker.pending(this));
         checkForUpdate();
         Reporter.event(this, "app_open", null);
+    }
+
+    /**
+     * Onceki oturumun secimlerini geri yukler.
+     *
+     * <p>Kaynak fotograf en sona birakilir: okunamiyorsa (silinmis, izin
+     * geri alinmis, harici depolama cikarilmis) yalnizca o unutulur,
+     * ayarlar korunur. Bu, kullanicinin kurdugu her seyi tek bir silinmis
+     * dosya yuzunden kaybetmesinden iyidir.
+     */
+    private void restoreSession() {
+        // Butun degerler UYGULAMADAN ONCE okunur. Aksi halde ilk atama bir
+        // dinleyiciyi tetikleyip durumu yazar ve sonraki okumalar kendi
+        // yazdigimiz varsayilanlari geri okur.
+        Preset savedPreset = Session.preset(this, preset);
+        SrModel savedModel = Session.model(this, model);
+        int savedStages = Session.stages(this, stages);
+        boolean savedJpeg = Session.jpeg(this, jpeg);
+        int savedDenoise = Session.denoiseMode(this, denoiseMode);
+        LoadLevel savedLoad = Session.load(this, loadLevel);
+        int savedQuality = Session.quality(this, qualitySeek.getProgress());
+        int savedSharpen = Session.sharpen(this, sharpenSeek.getProgress());
+        Uri savedSource = Session.source(this);
+
+        restoring = true;
+        try {
+            preset = savedPreset;
+            model = savedModel;
+            stages = savedStages;
+            jpeg = savedJpeg;
+            denoiseMode = savedDenoise;
+            loadLevel = savedLoad;
+            qualitySeek.setProgress(savedQuality);
+            sharpenSeek.setProgress(savedSharpen);
+
+            if (savedSource != null) {
+                try {
+                    // Okunabildigini gercekten dogrula; adresin varligi yetmez.
+                    InputStream probe = getContentResolver().openInputStream(savedSource);
+                    if (probe == null) throw new IOException("acilamadi");
+                    probe.close();
+                    sourceUri = savedSource;
+                    loadThumbnail(savedSource);
+                } catch (Throwable t) {
+                    // Fotograf silinmis, izin geri alinmis ya da depolama
+                    // cikarilmis olabilir. Yalnizca adresi unut; kullanicinin
+                    // kurdugu ayarlar tek bir silinmis dosya yuzunden gitmesin.
+                    Session.forgetSource(this);
+                    sourceUri = null;
+                }
+            }
+        } finally {
+            restoring = false;
+        }
     }
 
     /**
@@ -195,6 +276,51 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
                 Motion.step(findViewById(R.id.rowDevice), 380L, 745L));
     }
 
+    /**
+     * Karsilastirma ekranini acar.
+     *
+     * <p>Iki goruntu de gerektiginde okunur; buyuk ciktilar bellege
+     * alinmaz. Acilamazsa ekran hic acilmaz ve kullaniciya sebep soylenir —
+     * bos bir siyah ekran gostermek daha kotudur.
+     */
+    private void openCompare() {
+        UpscaleJob last = lastResult;
+        if (last == null || last.outputUri == null || sourceUri == null) return;
+
+        if (compareView == null) {
+            compareView = new CompareView(this);
+            compareView.setOnZoomChanged(new Runnable() {
+                @Override public void run() { refreshZoomLabel(); }
+            });
+            ((android.view.ViewGroup) findViewById(R.id.compareHost)).addView(compareView,
+                    new android.widget.FrameLayout.LayoutParams(
+                            android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+                            android.view.ViewGroup.LayoutParams.MATCH_PARENT));
+        }
+
+        if (!compareView.load(this, sourceUri, last.outputUri, srcOrientation)) {
+            toast(getString(R.string.compare_failed));
+            return;
+        }
+        compareOverlay.setVisibility(View.VISIBLE);
+        refreshZoomLabel();
+        Reporter.event(this, "compare_opened", null);
+    }
+
+    private void closeCompare() {
+        compareOverlay.setVisibility(View.GONE);
+        // Goruntuleri hemen birak: bir sonraki acilista yeniden okunurlar
+        // ve buyuk bir sonucun karolari bellekte bekletilmez.
+        if (compareView != null) compareView.close();
+    }
+
+    private void refreshZoomLabel() {
+        if (compareView == null) return;
+        compareZoom.setText(compareView.isOneToOne()
+                ? "1:1"
+                : String.format(Locale.getDefault(), "%.1f×", compareView.zoomFactor()));
+    }
+
     /** Gecerli temaya gore yeni bir zemin ornegi. */
     private Backdrop newBackdrop() {
         return ThemeHelper.isDark(this) ? Backdrop.dark() : Backdrop.light();
@@ -223,12 +349,17 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
     @Override protected void onDestroy() {
         super.onDestroy();
         if (gallery != null) gallery.shutdown();
+        if (compareView != null) compareView.release();
     }
 
     @Override public void onBackPressed() {
         if (updateGate.getVisibility() == View.VISIBLE) {
             // Yeni surum yuklenmeden uygulama kullanilamaz.
             finishAffinity();
+            return;
+        }
+        if (compareOverlay.getVisibility() == View.VISIBLE) {
+            closeCompare();
             return;
         }
         if (galleryOverlay.getVisibility() == View.VISIBLE) {
@@ -323,6 +454,8 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         targetBadge = findViewById(R.id.targetBadge);
         targetDims = findViewById(R.id.targetDims);
 
+        compareOverlay = findViewById(R.id.compareOverlay);
+        compareZoom = findViewById(R.id.compareZoom);
         galleryOverlay = findViewById(R.id.galleryOverlay);
         galleryGrid = findViewById(R.id.galleryGrid);
         galleryPermission = findViewById(R.id.galleryPermission);
@@ -591,6 +724,20 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         stage.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 if (UpscaleJob.current() == null) pickPhoto();
+            }
+        });
+        findViewById(R.id.compareButton).setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) { openCompare(); }
+        });
+        findViewById(R.id.compareClose).setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) { closeCompare(); }
+        });
+        compareZoom.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                if (compareView != null) {
+                    compareView.toggleOneToOne();
+                    refreshZoomLabel();
+                }
             }
         });
         galleryClose.setOnClickListener(new View.OnClickListener() {
@@ -1083,6 +1230,7 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
                     ex.close();
                 }
             }
+            srcOrientation = orientation;
             boolean swap = orientation >= 5 && orientation <= 8;
             srcWidth = swap ? bounds.outHeight : bounds.outWidth;
             srcHeight = swap ? bounds.outWidth : bounds.outHeight;
@@ -1095,7 +1243,7 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
             Bitmap bmp = BitmapFactory.decodeStream(in2, null, opts);
             if (in2 != null) in2.close();
             if (bmp != null) {
-                sourcePreview.setImageBitmap(applyOrientation(bmp, orientation));
+                sourcePreview.setImageBitmap(orient(bmp, orientation));
             }
         } catch (Throwable t) {
             toast(getString(R.string.photo_read_failed));
@@ -1103,7 +1251,14 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         }
     }
 
-    private static Bitmap applyOrientation(Bitmap bmp, int orientation) {
+    /**
+     * EXIF yonlendirmesini uygular; gereksizse ayni bitmap'i dondurur.
+     *
+     * <p>CompareView de bunu kullanir: motor cikisi donusu uygulayarak
+     * yazdigi icin karsilastirmada kaynak tarafi da ayni donusu almalidir,
+     * yoksa iki taraf birbirine gore doner.
+     */
+    static Bitmap orient(Bitmap bmp, int orientation) {
         if (orientation <= 1) return bmp;
         Matrix m = new Matrix();
         switch (orientation) {
@@ -1218,6 +1373,14 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         startButton.setEnabled(hasSource && UpscaleJob.current() == null);
 
         refreshSummaries(hasSource);
+        // refreshTexts her secim degisiminden sonra cagriliyor, yani burasi
+        // durumun yazilmasi icin dogru tek nokta. Ayri ayri her dinleyiciye
+        // kaydetme eklemek, birini unutmak demektir.
+        if (!restoring) {
+            Session.save(this, sourceUri, preset, model, stages, jpeg,
+                    qualitySeek.getProgress(), sharpenSeek.getProgress(),
+                    denoiseMode, loadLevel, page);
+        }
     }
 
     /**

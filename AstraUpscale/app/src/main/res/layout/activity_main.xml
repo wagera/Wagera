@@ -434,6 +434,19 @@
                             android:orientation="horizontal">
 
                             <Button
+                                android:id="@+id/compareButton"
+                                android:layout_width="0dp"
+                                android:layout_height="42dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/btn_secondary"
+                                android:text="@string/compare"
+                                android:textAllCaps="false"
+                                android:textColor="@color/content_soft"
+                                android:textSize="@dimen/text_body" />
+
+                            <Space android:layout_width="8dp" android:layout_height="1dp" />
+
+                            <Button
                                 android:id="@+id/openButton"
                                 android:layout_width="0dp"
                                 android:layout_height="42dp"
@@ -1253,6 +1266,124 @@
                     android:textColor="@color/content_faint"
                     android:textSize="@dimen/text_label" />
             </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- ══ Karsilastirma ekrani ═══════════════════════════════════════
+         Oncesi/sonrasi. Govdesi koddan eklenen bir CompareView'dir;
+         burada yalnizca cerceve ve baslik durur. -->
+    <LinearLayout
+        android:id="@+id/compareOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FF08090B"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/header_height"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/gutter"
+            android:paddingEnd="12dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/sans"
+                android:textFontWeight="600"
+                android:text="@string/compare_title"
+                android:textColor="#FFF5F6F8"
+                android:textSize="@dimen/text_row" />
+
+            <TextView
+                android:id="@+id/compareZoom"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginEnd="6dp"
+                android:background="@drawable/btn_secondary"
+                android:fontFamily="@font/display"
+                android:gravity="center"
+                android:minWidth="52dp"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:textColor="#FFC5C9CF"
+                android:textSize="@dimen/text_fine" />
+
+            <ImageView
+                android:id="@+id/compareClose"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@drawable/btn_secondary"
+                android:contentDescription="@string/cancel"
+                android:padding="9dp"
+                android:src="@drawable/ic_close" />
+        </LinearLayout>
+
+        <!-- Karsilastirma govdesi buraya eklenir -->
+        <FrameLayout
+            android:id="@+id/compareHost"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <!--
+            Etiketler ve ipucu ayri satirlarda.
+
+            Uc metni tek satirda esit paylastirmak, uzun ipucu metninin
+            kenardaki etiketlerin ustune binmesine yol aciyordu: ipucu
+            ekranin ucte birine sigmiyor. Etiketler kendi satirinda kenarlara
+            yaslanir, ipucu altta ortalanir.
+        -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/gutter"
+            android:paddingEnd="@dimen/gutter"
+            android:paddingTop="12dp"
+            android:paddingBottom="20dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/sans"
+                    android:textFontWeight="600"
+                    android:text="@string/compare_before"
+                    android:textColor="#FFC5C9CF"
+                    android:textSize="@dimen/text_body" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/sans"
+                    android:textFontWeight="600"
+                    android:gravity="end"
+                    android:text="@string/compare_after"
+                    android:textColor="#FFC5C9CF"
+                    android:textSize="@dimen/text_body" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:fontFamily="@font/sans"
+                android:gravity="center"
+                android:text="@string/compare_hint"
+                android:textColor="#FF5F646C"
+                android:textSize="@dimen/text_fine" />
         </LinearLayout>
     </LinearLayout>
 

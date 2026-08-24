@@ -1,6 +1,6 @@
 {
-  "versionCode": 9,
-  "versionName": "8.0",
+  "versionCode": 10,
+  "versionName": "9.0",
   "apkUrl": "https://github.com/wagera/Wagera/raw/main/AstraUpscale/release/AstraUpscale.apk",
-  "notes": "Centred launcher icon, a launch screen, rebuilt notifications with cancel and share actions, and every type size pulled onto the scale."
+  "notes": "Before/after comparison with pinch-zoom to 1:1, and your photo and settings now survive the app being killed in the background."
 }

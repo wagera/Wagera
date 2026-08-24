@@ -445,6 +445,90 @@ def render_notification(theme):
     return img.convert("RGB")
 
 
+
+def render_compare(theme):
+    """
+    Oncesi/sonrasi karsilastirma ekrani.
+
+    Iki taraf ayni bakis penceresini paylasir; solda kaynak ayni olcude
+    buyutulmus, sagda sonuc. Cizimde fark, sol tarafa bulaniklik ve sag
+    tarafa keskinlik uygulanarak temsil edilir — gercek uygulamada bu fark
+    modelin kendi ciktisidir.
+    """
+    folder = "values" if theme == "light" else "values-night"
+    C = load_colors(os.path.join(RES, folder, "colors.xml"))
+    W, H = px(DP_W), px(DP_H)
+    img = Image.new("RGBA", (W, H), (8, 9, 11, 255))
+    d = ImageDraw.Draw(img, "RGBA")
+
+    hh = DIM["header_height"]
+    gutter = DIM["gutter"]
+
+    # ── Baslik ───────────────────────────────────────────────────────
+    d.text((px(gutter), px(hh / 2)), STR["compare_title"],
+           font=font(F_BOLD, DIM["text_row"]), fill=(245, 246, 248, 255), anchor="lm")
+    for i, (label, w) in enumerate((("1:1", 52), ("", 32))):
+        bx = DP_W - gutter - (52 + 6) * (1 - i) - w if i == 0 else DP_W - gutter - w
+        d.rounded_rectangle([px(bx), px(hh / 2 - 16), px(bx + w), px(hh / 2 + 16)],
+                            radius=px(9), outline=(60, 64, 72, 255), width=max(1, SCALE // 3))
+        if label:
+            d.text((px(bx + w / 2), px(hh / 2)), label, font=font(F_DISPLAY, DIM["text_fine"]),
+                   fill=(197, 201, 207, 255), anchor="mm")
+        else:
+            cx, cy, a = px(bx + w / 2), px(hh / 2), px(5)
+            d.line([(cx - a, cy - a), (cx + a, cy + a)], fill=(197, 201, 207, 255), width=SCALE)
+            d.line([(cx + a, cy - a), (cx - a, cy + a)], fill=(197, 201, 207, 255), width=SCALE)
+
+    # ── Govde: yapay bir detay dokusu ────────────────────────────────
+    body_top, body_bottom = hh + 8, DP_H - 62
+    bw, bh = W, px(body_bottom - body_top)
+    rnd = random.Random(7)
+    detail = Image.new("RGB", (bw // 6, bh // 6))
+    dp_ = detail.load()
+    for yy in range(detail.height):
+        for xx in range(detail.width):
+            # Ic ice halkalar + gren: buyutmenin fark ettigi turden detay
+            r = math.hypot(xx - detail.width * 0.42, yy - detail.height * 0.46)
+            v = 128 + 92 * math.sin(r * 0.44) + rnd.gauss(0, 16)
+            v = max(0, min(255, int(v)))
+            dp_[xx, yy] = (v, int(v * 0.94), int(v * 0.86))
+    detail = detail.resize((bw, bh), Image.LANCZOS)
+
+    split = int(bw * 0.46)
+    # Sol: kaynak — buyutulmus, yumusak
+    left = detail.crop((0, 0, split, bh))
+    left = left.resize((max(1, split // 5), max(1, bh // 5)), Image.BILINEAR)
+    left = left.resize((split, bh), Image.BILINEAR)
+    img.paste(left, (0, px(body_top)))
+    # Sag: sonuc — keskin
+    img.paste(detail.crop((split, 0, bw, bh)), (split, px(body_top)))
+
+    # Bolme cizgisi ve tutamagi
+    d.line([(split, px(body_top)), (split, px(body_bottom))],
+           fill=(255, 255, 255, 255), width=max(2, int(1.5 * SCALE)))
+    hy = px((body_top + body_bottom) / 2)
+    r = px(17)
+    d.ellipse([split - r, hy - r, split + r, hy + r], fill=(255, 255, 255, 255))
+    a = r * 0.42
+    for sx in (-1, 1):
+        d.line([(split + sx * a * 0.4, hy - a * 0.55), (split + sx * a, hy)],
+               fill=(16, 18, 21, 255), width=max(1, int(2 * SCALE)))
+        d.line([(split + sx * a * 0.4, hy + a * 0.55), (split + sx * a, hy)],
+               fill=(16, 18, 21, 255), width=max(1, int(2 * SCALE)))
+
+    # ── Alt etiketler ────────────────────────────────────────────────
+    # Etiketler kendi satirinda, ipucu altta ortali
+    ly = DP_H - 46
+    d.text((px(gutter), px(ly)), STR["compare_before"], font=font(F_BOLD, DIM["text_body"]),
+           fill=(197, 201, 207, 255), anchor="lm")
+    d.text((px(DP_W - gutter), px(ly)), STR["compare_after"], font=font(F_BOLD, DIM["text_body"]),
+           fill=(197, 201, 207, 255), anchor="rm")
+    d.text((px(DP_W / 2), px(ly + 20)), STR["compare_hint"], font=font(F_REG, DIM["text_fine"]),
+           fill=(95, 100, 108, 255), anchor="mm")
+
+    return img.convert("RGB")
+
+
 def main():
     os.makedirs(DOCS, exist_ok=True)
     for theme, name in (("light", "tema-acik.png"), ("dark", "tema-koyu.png")):
@@ -454,6 +538,9 @@ def main():
 
     render_launch("dark").save(os.path.join(DOCS, "acilis.png"))
     print("yazildi: docs/acilis.png")
+
+    render_compare("dark").save(os.path.join(DOCS, "karsilastirma.png"))
+    print("yazildi: docs/karsilastirma.png")
 
     for theme, name in (("dark", "bildirim-koyu.png"), ("light", "bildirim-acik.png")):
         render_notification(theme).save(os.path.join(DOCS, name))
