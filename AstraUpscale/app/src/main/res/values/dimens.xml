@@ -18,8 +18,17 @@
     <dimen name="gap_section">24dp</dimen>
 
     <!-- Bilesenler -->
-    <dimen name="radius_card">14dp</dimen>
-    <dimen name="radius_stage">18dp</dimen>
+    <!--
+        Yaricaplar.
+
+        Alet dilinde koseler neredeyse diktir: 3dp yumusatma, "kesilmis"
+        gorunmesini engelleyecek kadar; yuvarlaklik duygusu vermeyecek
+        kadar az. Onceki dilde 14 ve 18dp'ydi ve her sey yastik gibi
+        dururdu.
+    -->
+    <dimen name="radius_card">3dp</dimen>
+    <dimen name="radius_chip">2dp</dimen>
+    <dimen name="radius_stage">0dp</dimen>
     <dimen name="row_height">54dp</dimen>
     <dimen name="cta_height">54dp</dimen>
     <dimen name="stage_min">240dp</dimen>

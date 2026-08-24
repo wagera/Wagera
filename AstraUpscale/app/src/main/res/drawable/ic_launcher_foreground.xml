@@ -3,17 +3,9 @@
     Baslatici simgesinin on plani.
 
     Uyarlanabilir simgede 108x108'lik tuvalin yalnizca ortadaki 72x72'si
-    her cihazda gorunur; kalani baslaticinin sectigi maskeye gore kirpilir.
-
-    Geometri bir surum boyunca yanlisti: olcek 0.62 ve translate 29.8 idi.
-    48 birimlik cizim 0.62 ile 29.76 birime iner — tuvalin yalnizca %28'i —
-    ve 29.8'e konunca merkezi 44.68'e duser, oysa tuvalin merkezi 54.
-    Yani isaret hem asiri kucuktu hem 9.32 birim (%8.6) sola yukari kaymisti.
-
-    Dogru hesap: isaret 62 birim kaplasin (72'lik guvenli alanin icinde,
-    kenarda nefes payi kalir), yani olcek 62/48 = 1.29167; ortalamak icin
-    translate = (108 - 62) / 2 = 23. Bu iki sayi birbirine baglidir —
-    biri degisirse digeri de degismeli.
+    her cihazda gorunur. Isaret 62 birim kaplar (guvenli alanin icinde,
+    kenarda nefes payi kalir): olcek 62/48 = 1.29167, ortalamak icin
+    translate (108 - 62) / 2 = 23. Bu iki sayi birbirine baglidir.
 -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
@@ -22,34 +14,12 @@
     android:viewportHeight="108">
 
     <group
-        android:translateX="23"
-        android:translateY="23"
-        android:scaleX="1.29167"
-        android:scaleY="1.29167">
+        android:translateX="26"
+        android:translateY="26"
+        android:scaleX="1.16667"
+        android:scaleY="1.16667">
 
-        <group android:pivotX="24" android:pivotY="24" android:rotation="45">
-            <path
-                android:fillColor="#FFFFFFFF"
-                android:fillAlpha="0.38"
-                android:fillType="evenOdd"
-                android:pathData="M24,11
-                                 C24,21 26.9,24 37,24
-                                 C26.9,24 24,26.9 24,37
-                                 C24,26.9 21.1,24 11,24
-                                 C21.1,24 24,21 24,11 Z
-                                 M24,19.9 a4.1,4.1 0 1,1 0,8.2
-                                 a4.1,4.1 0 1,1 0,-8.2 Z" />
-        </group>
-
-        <path
-            android:fillColor="#FFF5F6F8"
-            android:fillType="evenOdd"
-            android:pathData="M24,2
-                             C24,19 29,24 46,24
-                             C29,24 24,29 24,46
-                             C24,29 19,24 2,24
-                             C19,24 24,19 24,2 Z
-                             M24,19.9 a4.1,4.1 0 1,1 0,8.2
-                             a4.1,4.1 0 1,1 0,-8.2 Z" />
+        <path android:fillColor="#FFF5F6F8" android:pathData="M24,3.5 L43,44 L34,44 L24,16.5 Z" />
+        <path android:fillColor="#FFF5F6F8" android:pathData="M24,3.5 L20.2,3.5 L20.2,11.6 L16.4,11.6 L16.4,19.7 L12.6,19.7 L12.6,27.8 L8.8,27.8 L8.8,35.9 L5,35.9 L5,44 L14,44 L24,16.5 Z" />
     </group>
 </vector>

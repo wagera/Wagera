@@ -1,6 +1,6 @@
 {
-  "versionCode": 10,
-  "versionName": "9.0",
+  "versionCode": 12,
+  "versionName": "10.0",
   "apkUrl": "https://github.com/wagera/Wagera/raw/main/AstraUpscale/release/AstraUpscale.apk",
-  "notes": "Before/after comparison with pinch-zoom to 1:1, and your photo and settings now survive the app being killed in the background."
+  "notes": "A new mark and a completely different interface: the glass language replaced by a hard instrument face, one signal colour, a viewfinder instead of a card, and the 14 resolution presets laid out on a single scale."
 }

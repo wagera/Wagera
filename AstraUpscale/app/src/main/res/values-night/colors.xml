@@ -1,44 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- AstraUpscale renk olcegi — KARANLIK tema (siyah agirlikli). -->
 <resources>
-    <color name="bg">#FF050506</color>
-    <color name="surface_low">#FF0B0C0E</color>
-    <color name="surface">#FF0F1013</color>
-    <color name="surface_high">#FF16171B</color>
-    <color name="surface_press">#FF1D1F24</color>
+    <color name="bg">#FF0A0A08</color>
+    <color name="surface_low">#FF101010</color>
+    <color name="surface">#FF141412</color>
+    <color name="surface_high">#FF1C1C19</color>
+    <color name="surface_press">#FF262622</color>
 
-    <color name="hairline">#FF1D1F23</color>
-    <color name="hairline_strong">#FF2A2D33</color>
+    <color name="rule">#FF2A2A26</color>
+    <color name="rule_strong">#FFE8E8E2</color>
+    <color name="grid">#12FFFFFF</color>
 
-    <color name="content">#FFF5F6F8</color>
-    <color name="content_soft">#FFC5C9CF</color>
-    <color name="content_dim">#FF8B9098</color>
-    <color name="content_faint">#FF5F646C</color>
-    <color name="content_ghost">#FF3A3E45</color>
+    <color name="content">#FFF2F2EC</color>
+    <color name="content_soft">#FFC4C4BC</color>
+    <color name="content_dim">#FF8A8A82</color>
+    <color name="content_faint">#FF5E5E58</color>
+    <color name="content_ghost">#FF3A3A36</color>
 
-    <!-- Kartin ust kenarinda yukaridan gelen cok hafif isik -->
-    <color name="sheen">#0EFFFFFF</color>
-    <color name="sheen_soft">#03FFFFFF</color>
+    <!-- Koyu zeminde sinyal elektrik limonuna doner -->
+    <color name="signal">#FFD8FF3E</color>
+    <color name="signal_on">#FF0A0A08</color>
+    <color name="signal_dim">#FF7C8F2A</color>
 
     <color name="glow_12">#1FFFFFFF</color>
     <color name="glow_08">#14FFFFFF</color>
-
-    <!-- Sahneyi orten katman: opak degil, alttaki fotograf sezilir -->
-    <color name="scrim_fill">#F00B0C0E</color>
-
-    <!-- ══ Cam dili ═══════════════════════════════════════════════════
-         Paneller zeminin uzerinde yuzer: ic dolgu yari saydamdir, kenari
-         1px sac cizgisi, ust kenarinda yukaridan gelen bir isik cizgisi.
-         Zemin zaten yumusak bir gecis oldugu icin ayrica bulaniklastirma
-         uygulanmaz — duz bir gecisin bulanigi kendisiyle aynidir. -->
-    <color name="glass_top">#B21A1D24</color>
-    <color name="glass_bottom">#C20B0D11</color>
-    <color name="glass_stroke">#24FFFFFF</color>
-    <color name="glass_sheen">#1FFFFFFF</color>
-    <color name="glass_press">#D2232730</color>
-    <!-- Sahne uzerindeki katman: altindaki fotograf sezilir kalir -->
-    <color name="scrim_glass">#D904060A</color>
-
-    <color name="launch_bg">#FF0B0C0E</color>
-    <color name="notification_accent">#FFF5F6F8</color>
+    <color name="notification_accent">#FFD8FF3E</color>
+    <color name="scrim_glass">#F00A0A08</color>
+    <color name="launch_bg">#FF0A0A08</color>
 </resources>

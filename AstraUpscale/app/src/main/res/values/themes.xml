@@ -130,4 +130,131 @@
         <item name="android:navigationBarColor">@color/launch_bg</item>
         <item name="android:windowLightStatusBar">false</item>
     </style>
+
+    <!-- ══ Kunye ═══════════════════════════════════════════════════════
+         Alet dilinin satir dilbilgisi: solda etiket, sagda deger, altinda
+         cizgi. Kart yok, golge yok, yaricap yok — yalnizca hizalama. -->
+
+    <style name="SpecRow">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/row_height</item>
+        <item name="android:background">@drawable/row_press</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:paddingStart">@dimen/gutter</item>
+        <item name="android:paddingEnd">@dimen/gutter</item>
+    </style>
+
+    <style name="SpecKey">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/display</item>
+        <item name="android:letterSpacing">0.10</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/content_faint</item>
+        <item name="android:textSize">@dimen/text_fine</item>
+    </style>
+
+    <style name="SpecValue">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:fontFamily">@font/sans</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="android:gravity">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textColor">@color/content</item>
+        <item name="android:textSize">@dimen/text_body</item>
+    </style>
+
+    <style name="SpecChevron">
+        <item name="android:layout_width">14dp</item>
+        <item name="android:layout_height">14dp</item>
+        <item name="android:layout_marginStart">10dp</item>
+        <item name="android:src">@drawable/ic_chevron</item>
+    </style>
+
+    <style name="SpecRule">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/rule</item>
+    </style>
+
+    <style name="SpecPanel">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/surface_low</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:paddingStart">@dimen/gutter</item>
+        <item name="android:paddingEnd">@dimen/gutter</item>
+        <item name="android:paddingTop">14dp</item>
+        <item name="android:paddingBottom">16dp</item>
+    </style>
+
+    <style name="SpecNote">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/sans</item>
+        <item name="android:lineSpacingExtra">3dp</item>
+        <item name="android:textColor">@color/content_faint</item>
+        <item name="android:textSize">@dimen/text_fine</item>
+    </style>
+
+    <style name="SpecReadout">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/display</item>
+        <item name="android:textFontWeight">700</item>
+        <item name="android:textColor">@color/content</item>
+        <item name="android:textSize">@dimen/text_body</item>
+    </style>
+
+    <style name="SpecChip">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@drawable/chip</item>
+        <item name="android:fontFamily">@font/sans</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/chip_text</item>
+        <item name="android:textSize">@dimen/text_body</item>
+    </style>
+
+    <style name="SpecSeek">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:maxHeight">2dp</item>
+        <item name="android:minHeight">2dp</item>
+        <item name="android:progressDrawable">@drawable/seek_track</item>
+        <item name="android:splitTrack">false</item>
+        <item name="android:thumb">@drawable/seek_thumb</item>
+        <item name="android:thumbOffset">2dp</item>
+    </style>
+
+    <!-- Alan etiketi: kucuk, seyrek, buyuk harf -->
+    <style name="FieldLabel">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/display</item>
+        <item name="android:letterSpacing">0.14</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/content_faint</item>
+        <item name="android:textSize">@dimen/text_label</item>
+    </style>
+
+    <!-- Olcegin altindaki kademe etiketi -->
+    <style name="ScaleTick">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/display</item>
+        <item name="android:letterSpacing">0.10</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/content_ghost</item>
+        <item name="android:textSize">9sp</item>
+    </style>
 </resources>

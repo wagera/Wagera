@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Birincil dugmenin yazisi.
+
+    Dugme sinyal rengiyle dolduruldugu icin yazi "sinyal ustu" renge doner:
+    aydinlik temada acik, karanlikta koyu. Bu kural iki temada da
+    kendiliginden tersine doner.
+-->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_enabled="false" android:color="@color/content_ghost" />
-    <item android:color="@color/bg" />
+    <item android:color="@color/signal_on" />
 </selector>

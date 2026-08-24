@@ -196,6 +196,8 @@
     <string name="compare_hint">Tutamağı sürükleyin · yakınlaştırmak için sıkıştırın</string>
     <string name="compare_fit">Sığdır</string>
     <string name="compare_failed">Karşılaştırma açılamadı.</string>
+    <string name="status_format">%1$s · %2$d iş parçacığı</string>
+    <string name="spec_title">Künye</string>
     <string name="summary_jpeg">JPEG · %1$d</string>
     <string name="value_none">—</string>
 </resources>

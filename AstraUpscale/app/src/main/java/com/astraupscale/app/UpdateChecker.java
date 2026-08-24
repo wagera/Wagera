@@ -126,6 +126,19 @@ public final class UpdateChecker {
             conn.setConnectTimeout(6000);
             conn.setReadTimeout(6000);
             conn.setRequestProperty("Accept", "application/json");
+            /*
+             * Onbellege takilmayi engelle.
+             *
+             * GitHub'in ham dosya sunucusu yanitlari max-age=300 ile
+             * onbellekler; yeni bir surum yayinlandiktan sonra bes dakika
+             * kadar eski dosya donebilir. Bu kendiliginden duzelir.
+             * Duzelmeyen ise istemci tarafi: HttpURLConnection'in yanit
+             * onbellegi devredeyse takilmis bir yanit surekli kalabilir.
+             * Bu yuzden burada acikca kapatiliyor.
+             */
+            conn.setUseCaches(false);
+            conn.setRequestProperty("Cache-Control", "no-cache");
+            conn.setRequestProperty("Pragma", "no-cache");
             int status = conn.getResponseCode();
             if (status != 200) {
                 // Sessizce donme: neden gorunur kalsin.

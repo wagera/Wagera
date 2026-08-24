@@ -66,11 +66,12 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
     private Button onboardingStart;
 
     /** Yeni yerlesim: sahne, eylem cubugu ve acilir ayar bolumleri. */
-    private View stage, appBar, actionBar, stageCaption, brandMark;
-    private TextView heroLine1, heroLine2, heroCopy;
+    private View stage, appBar, stageCaption, brandMark;
+    private LinearLayout scale;
+    private TextView statusText, statusThermal;
     private TextView targetBadge, targetDims;
     private final List<Accordion> sections = Accordion.newGroup();
-    private Accordion secResolution, secEngine, secSettings, secDevice;
+    private Accordion secEngine, secSettings, secDevice;
 
     /** Oncesi/sonrasi karsilastirma. */
     private CompareView compareView;
@@ -86,6 +87,16 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
     private Button galleryGrant;
     /** 0 = buyut, 1 = gecmis, 2 = istekler */
     private int page;
+
+    /**
+     * Kodla olusturulan gorunumlerin yuzleri.
+     *
+     * <p>XML'deki gorunumler @font/sans ve @font/display kullaniyor, ama
+     * kodla olusturulanlar sistem yuzune dusuyordu ("sans-serif-medium",
+     * Typeface.MONOSPACE). Sonuc: ayni ekranda iki farkli yuz. Bir kez
+     * yuklenip saklaniyorlar; getFont her cagrida dosyayi yeniden okur.
+     */
+    private Typeface faceSans, faceDisplay;
     private LinearLayout[] tiers;
     private TextView[] tierLabels;
     private SeekBar sharpenSeek, qualitySeek;
@@ -145,6 +156,9 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         setContentView(R.layout.activity_main);
         bindViews();
 
+        faceSans = getResources().getFont(R.font.sans);
+        faceDisplay = getResources().getFont(R.font.display);
+
         Motion.read(this);
         // Sinematik zemin. Tam ekran katmanlar da ayni zemini alir; yoksa
         // galeri ya da tanitim ekrani acilinca zemin duz renge duser ve
@@ -166,7 +180,7 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
 
         device = DeviceProfile.scan(this);
         buildModelList();
-        buildPresetTiers();
+        buildScale();
         buildLoadLevels();
         buildKindChips();
         setupListeners();
@@ -260,20 +274,21 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
      * gidip gelmek yeniden tetiklemez.
      */
     private void playEntrance() {
-        Motion.revealLine(heroLine1, 620L, 180L, 1f);
-        Motion.revealLine(heroLine2, 660L, 270L, 0.62f);
+        // Alet paneli yukaridan asagi kurulur: durum seridi, vizor, olcek,
+        // eylem, kunye. Kahraman baslik kaldirildigi icin merdiven kisaldi
+        // ve acilis daha da hizli bitiyor (~0.9 sn).
         Motion.enter(
-                Motion.step(brandMark, 420L, 40L),
-                Motion.step(themeButton, 380L, 90L),
-                Motion.step(languageButton, 380L, 120L),
-                Motion.step(heroCopy, 460L, 440L),
-                Motion.step(stage, 620L, 500L),
-                Motion.step(actionBar, 440L, 580L),
-                Motion.step(stageCaption, 400L, 610L),
-                Motion.step(findViewById(R.id.rowResolution), 380L, 640L),
-                Motion.step(findViewById(R.id.rowEngine), 380L, 675L),
-                Motion.step(findViewById(R.id.rowSettings), 380L, 710L),
-                Motion.step(findViewById(R.id.rowDevice), 380L, 745L));
+                Motion.step(brandMark, 380L, 30L),
+                Motion.step(themeButton, 340L, 70L),
+                Motion.step(languageButton, 340L, 95L),
+                Motion.step(findViewById(R.id.statusStrip), 340L, 120L),
+                Motion.step(stage, 560L, 180L),
+                Motion.step(stageCaption, 360L, 320L),
+                Motion.step(scale, 420L, 370L),
+                Motion.step(startButton, 400L, 470L),
+                Motion.step(findViewById(R.id.rowEngine), 340L, 540L),
+                Motion.step(findViewById(R.id.rowSettings), 340L, 570L),
+                Motion.step(findViewById(R.id.rowDevice), 340L, 600L));
     }
 
     /**
@@ -443,13 +458,12 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         pageRequests = findViewById(R.id.pageRequests);
         kindRow = findViewById(R.id.kindRow);
 
+        scale = findViewById(R.id.scale);
+        statusText = findViewById(R.id.statusText);
+        statusThermal = findViewById(R.id.statusThermal);
         stage = findViewById(R.id.stage);
         appBar = findViewById(R.id.appBar);
         brandMark = findViewById(R.id.brandMark);
-        heroLine1 = findViewById(R.id.heroLine1);
-        heroLine2 = findViewById(R.id.heroLine2);
-        heroCopy = findViewById(R.id.heroCopy);
-        actionBar = findViewById(R.id.actionBar);
         stageCaption = findViewById(R.id.stageCaption);
         targetBadge = findViewById(R.id.targetBadge);
         targetDims = findViewById(R.id.targetDims);
@@ -466,10 +480,6 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         galleryGrant = findViewById(R.id.galleryGrant);
 
         // Acilir bolumler: ayni anda yalnizca biri acik kalir.
-        secResolution = Accordion.attach(findViewById(R.id.rowResolution),
-                (ViewGroup) findViewById(R.id.panelResolution),
-                (TextView) findViewById(R.id.valueResolution),
-                (ImageView) findViewById(R.id.chevronResolution), sections);
         secEngine = Accordion.attach(findViewById(R.id.rowEngine),
                 (ViewGroup) findViewById(R.id.panelEngine),
                 (TextView) findViewById(R.id.valueEngine),
@@ -539,7 +549,7 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
             TextView badge = new TextView(this);
             badge.setText(m.isNeural() ? m.scale + "×" : "—");
             badge.setTextSize(11f);
-            badge.setTypeface(Typeface.MONOSPACE);
+            badge.setTypeface(faceDisplay);
             badge.setTextColor(getColor(R.color.content_ghost));
             LinearLayout.LayoutParams bp = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -594,48 +604,79 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
      * esit genislikte ciplerden olusur. Hedef boyut cip icinde degil, altta
      * tek bir ozet satirinda gosterilir.
      */
-    private void buildPresetTiers() {
-        for (LinearLayout t : tiers) t.removeAllViews();
+    /**
+     * Cozunurluk olcegini kurar.
+     *
+     * <p>14 on ayar artik bir cekmecede duran cipler degil, tek bir olcek
+     * uzerinde yan yana duran centikler. Butun aralik ayni anda gorunur ve
+     * secim tek dokunusla yapilir; kullanici "8K nerede" diye bir bolum
+     * acmaz.
+     *
+     * <p>Her centigin yuksekligi kademesine gore artar (standart, yuksek,
+     * uc): olcege bakan goz, saga gidildikce isin agirlastigini bicimden
+     * okur. Secili centik sinyal rengini alir ve etiketi altinda gorunur.
+     */
+    private void buildScale() {
+        scale.removeAllViews();
         presetChips.clear();
         Preset[] values = Preset.values();
+
         for (int i = 0; i < values.length; i++) {
             final Preset p = values[i];
             int tier = i < TIER_STANDARD_END ? 0 : (i < TIER_HIGH_END ? 1 : 2);
 
-            LinearLayout chip = new LinearLayout(this);
-            chip.setOrientation(LinearLayout.VERTICAL);
-            chip.setGravity(Gravity.CENTER);
-            chip.setBackgroundResource(R.drawable.chip);
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, dp(46), 1f);
-            if (tiers[tier].getChildCount() > 0) lp.leftMargin = dp(6);
-            chip.setLayoutParams(lp);
+            // Centik: dikey bir cubuk, kademesine gore uzayan
+            LinearLayout tick = new LinearLayout(this);
+            tick.setOrientation(LinearLayout.VERTICAL);
+            tick.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+            LinearLayout.LayoutParams lp =
+                    new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
+            tick.setLayoutParams(lp);
+            tick.setBackgroundResource(R.drawable.tick_press);
 
+            View bar = new View(this);
+            int height = dp(18 + tier * 9);
+            LinearLayout.LayoutParams bp = new LinearLayout.LayoutParams(dp(3), height);
+            bar.setLayoutParams(bp);
+            bar.setBackgroundResource(R.drawable.tick_bar);
+            tick.addView(bar);
+
+            // Etiket yalnizca secili centikte gorunur; hepsini yazmak
+            // 14 etiketi ust uste bindirirdi.
             TextView label = new TextView(this);
             label.setText(p.label);
-            label.setTextSize(13.5f);
+            label.setTextSize(9f);
+            label.setTypeface(faceDisplay);
             label.setGravity(Gravity.CENTER);
-            label.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
-            chip.addView(label);
+            label.setTextColor(getColorStateList(R.color.tick_text));
+            label.setPadding(0, dp(4), 0, 0);
+            label.setVisibility(View.INVISIBLE);
+            tick.addView(label);
 
-            chip.setOnClickListener(new View.OnClickListener() {
+            tick.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
                     preset = p;
                     refreshTexts();
                 }
             });
-            tiers[tier].addView(chip);
-            presetChips.add(chip);
+            scale.addView(tick);
+            presetChips.add(tick);
         }
     }
 
+    /** Secili centigi isaretler ve yalnizca onun etiketini gosterir. */
     private void updatePresetChips() {
         Preset[] values = Preset.values();
         for (int i = 0; i < presetChips.size(); i++) {
-            LinearLayout chip = presetChips.get(i);
+            LinearLayout tick = presetChips.get(i);
             boolean on = values[i] == preset;
-            chip.setSelected(on);
-            ((TextView) chip.getChildAt(0)).setTextColor(
-                    getColor(on ? R.color.bg : R.color.content_soft));
+            tick.setSelected(on);
+            // Cocuklar secili durumu kendiliginden almaz; renk durum
+            // listelerinin calismasi icin acikca aktarilir.
+            tick.getChildAt(0).setSelected(on);
+            View label = tick.getChildAt(1);
+            label.setSelected(on);
+            label.setVisibility(on ? View.VISIBLE : View.INVISIBLE);
         }
     }
 
@@ -648,6 +689,8 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
             b.setTextSize(12.5f);
             b.setAllCaps(false);
             b.setBackgroundResource(R.drawable.chip);
+            b.setTypeface(faceSans);
+            b.setTextColor(getColorStateList(R.color.chip_text));
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, dp(42), 1f);
             if (loadButtons.size() > 0) lp.leftMargin = dp(8);
             b.setLayoutParams(lp);
@@ -669,7 +712,7 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         for (int i = 0; i < loadButtons.size(); i++) {
             boolean on = values[i] == loadLevel;
             loadButtons.get(i).setSelected(on);
-            loadButtons.get(i).setTextColor(getColor(on ? R.color.bg : R.color.content_soft));
+            // Renk color/chip_text'ten; elle boyama yok.
         }
         StringBuilder sb = new StringBuilder(getString(loadLevel.descriptionRes));
         sb.append('\n').append(getString(R.string.load_detail,
@@ -693,6 +736,8 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
             b.setTextSize(12.5f);
             b.setAllCaps(false);
             b.setBackgroundResource(R.drawable.chip);
+            b.setTypeface(faceSans);
+            b.setTextColor(getColorStateList(R.color.chip_text));
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, dp(44), 1f);
             if (i > 0) lp.leftMargin = dp(8);
             b.setLayoutParams(lp);
@@ -712,7 +757,7 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         for (int i = 0; i < kindButtons.size(); i++) {
             boolean on = i == feedbackKind;
             kindButtons.get(i).setSelected(on);
-            kindButtons.get(i).setTextColor(getColor(on ? R.color.bg : R.color.content_soft));
+            // Renk color/chip_text'ten; elle boyama yok.
         }
     }
 
@@ -1002,7 +1047,7 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         TextView meta = new TextView(this);
         meta.setText(getString(R.string.history_item, w, h, formatSize(size)));
         meta.setTextSize(11f);
-        meta.setTypeface(Typeface.MONOSPACE);
+        meta.setTypeface(faceDisplay);
         meta.setTextColor(getColor(R.color.content_faint));
         LinearLayout.LayoutParams mp = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -1350,7 +1395,9 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
                 : (denoiseMode == 1 ? R.string.denoise_on : R.string.denoise_off));
         boolean denoiseOn = denoiseActive();
         denoiseToggle.setSelected(denoiseOn);
-        denoiseToggle.setTextColor(getColor(denoiseOn ? R.color.bg : R.color.content_soft));
+        // Yazi rengi color/chip_text durum listesinden gelir: secili olan
+        // sinyal ustu renge doner. Burada elle boyamak, sinyal rengi geldigi
+        // icin yanlis sonuc verirdi (eskiden zemin rengine boyaniyordu).
         if (denoiseMode == 0) {
             denoiseInfo.setText(denoiseOn ? R.string.denoise_auto_active : R.string.denoise_auto_inactive);
         } else {
@@ -1364,11 +1411,6 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         qualitySeek.setEnabled(jpeg);
         formatJpeg.setSelected(jpeg);
         formatPng.setSelected(!jpeg);
-        formatJpeg.setTextColor(getColor(jpeg ? R.color.bg : R.color.content_soft));
-        formatPng.setTextColor(getColor(jpeg ? R.color.content_soft : R.color.bg));
-        stage1.setTextColor(getColor(stages == 1 ? R.color.bg : R.color.content_soft));
-        stage2.setTextColor(getColor(!model.isNeural() ? R.color.content_ghost
-                : (stages == 2 ? R.color.bg : R.color.content_soft)));
 
         startButton.setEnabled(hasSource && UpscaleJob.current() == null);
 
@@ -1391,7 +1433,6 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
      * "Motor — Real-ESRGAN 4x" satiri, panelin acilmasina gerek birakmaz.
      */
     private void refreshSummaries(boolean hasSource) {
-        secResolution.setValue(preset.label);
         secEngine.setValue(model.label);
         secSettings.setValue(jpeg
                 ? getString(R.string.summary_jpeg, jpegQuality())
@@ -1401,10 +1442,42 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         targetBadge.setText(preset.label);
         if (hasSource) {
             int[] t = preset.targetSize(srcWidth, srcHeight);
-            targetDims.setText(String.format(Locale.getDefault(), "%d × %d", t[0], t[1]));
+            targetDims.setText(String.format(Locale.getDefault(), "%d × %d  ·  %.1f MP",
+                    t[0], t[1], t[0] * (long) t[1] / 1e6));
         } else {
             targetDims.setText(R.string.pick_photo_first);
         }
+        refreshStatusStrip();
+    }
+
+    /**
+     * Ust durum seridi.
+     *
+     * <p>Cihazin o anki hali tek satirda: hangi motorun kullanilacagi, kac
+     * is parcacigi, ve sicaklik. Bir aletin ust panelindeki gosterge gibi —
+     * kullanici bir bolum acmadan makinenin durumunu bilir.
+     *
+     * <p>Nokta, isin durumuna gore renk degistirir: bos, calisiyor, bitti.
+     */
+    private void refreshStatusStrip() {
+        if (device == null) return;
+
+        String engine = model.isNeural()
+                ? (NativeSr.gpuAvailable() ? getString(R.string.engine_gpu)
+                                           : getString(R.string.engine_cpu))
+                : SrModel.LANCZOS.label;
+        statusText.setText(getString(R.string.status_format,
+                engine, loadLevel.threads(device)));
+
+        statusThermal.setText(DeviceProfile.thermalTextRes(
+                DeviceProfile.thermalStatus(this)));
+
+        View dot = findViewById(R.id.statusDot);
+        boolean running = UpscaleJob.current() != null;
+        dot.setBackgroundResource(running
+                ? R.drawable.dot_signal
+                : (sourceUri != null ? R.drawable.dot_signal : R.drawable.dot_idle));
+        dot.setAlpha(running ? 1f : (sourceUri != null ? 0.7f : 1f));
     }
 
     private boolean denoiseActive() {

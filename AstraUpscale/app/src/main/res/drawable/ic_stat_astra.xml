@@ -1,32 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Durum cubugu simgesi.
+    AstraUpscale isareti — durum cubugu surumu.
 
-    Android durum cubugundaki simgeyi tek renge indirger: yalnizca
-    ortuculuk kanali kullanilir, renk yok sayilir. Bu yuzden burada
-    mark_astra'nin ikinci (soluk) isin dizisi yoktur — %38 ortuculukteki
-    o katman duz beyaza cevrildiginde siluete yapisir ve isaret bulaniklasir.
+    Android durum cubugu simgelerini tek renge indirger; bu yuzden
+    burada tint yoktur ve renk sabittir.
 
-    Ayrica merkez acikligi burada biraz daha genistir (4.6 / 4.1): durum
-    cubugu simgesi 24dp cizilip cogu cihazda daha da kucultuldugu icin dar
-    bir delik kapanir ve isaret dolu bir baklava dilimine doner.
+    Kroksuz bir "A": sol bacak kuculen basamaklarla iner, sag bacak duz bir
+    diyagonaldir. Basamaklar isin oncesidir — piksel; duz kenar sonrasi —
+    cozulmus. Yani isaret hem markanin harfi, hem uygulamanin yaptigi is.
 
-    Daha once bu simge android.R.drawable.ic_menu_gallery idi — sistemin
-    genel galeri simgesi, markayla hicbir ilgisi yok.
+    Onceki isaret dort kollu bir yildizdi. Kendi basina fena degildi ama
+    ayirt edici degildi: her yapay zeka uygulamasi yildiz kullaniyor.
+
+    Basamak sayisi 5'te sabitlendi. 200 pikselde ilerleme acikca okunuyor,
+    36 pikselde siluet hala "A" olarak duruyor; 6 basamakta kucuk boyda
+    basamaklar birbirine giriyor, 4'te ilerleme duygusu zayifliyor.
 -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"
     android:height="24dp"
     android:viewportWidth="48"
     android:viewportHeight="48">
-    <path
-        android:fillColor="#FFFFFFFF"
-        android:fillType="evenOdd"
-        android:pathData="M24,2
-                         C24,19 29,24 46,24
-                         C29,24 24,29 24,46
-                         C24,29 19,24 2,24
-                         C19,24 24,19 24,2 Z
-                         M24,19.4 a4.6,4.6 0 1,1 0,9.2
-                         a4.6,4.6 0 1,1 0,-9.2 Z" />
+
+    <!-- Sag bacak: duz kenar -->
+    <path android:fillColor="#FFFFFFFF" android:pathData="M24,3.5 L43,44 L34,44 L24,16.5 Z" />
+
+    <!-- Sol bacak: basamakli kenar -->
+    <path android:fillColor="#FFFFFFFF" android:pathData="M24,3.5 L20.2,3.5 L20.2,11.6 L16.4,11.6 L16.4,19.7 L12.6,19.7 L12.6,27.8 L8.8,27.8 L8.8,35.9 L5,35.9 L5,44 L14,44 L24,16.5 Z" />
 </vector>

@@ -1,21 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Secili sekme: cam bir kapsul; secili olmayan seffaf kalir. -->
+<!--
+    Sekme.
+
+    Secili sekme dolgu almaz; ustunde 2dp'lik bir sinyal cizgisi belirir.
+    Bir aletin etkin kanalini gosterme bicimi budur — kapsul degil, isaret.
+-->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_selected="true">
-        <shape android:shape="rectangle">
-            <gradient
-                android:angle="235"
-                android:startColor="@color/glass_top"
-                android:endColor="@color/glass_bottom"
-                android:type="linear" />
-            <corners android:radius="11dp" />
-            <stroke android:width="1dp" android:color="@color/glass_stroke" />
-        </shape>
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle">
+                    <solid android:color="@android:color/transparent" />
+                </shape>
+            </item>
+            <item android:gravity="top" android:height="2dp" android:left="14dp" android:right="14dp">
+                <shape android:shape="rectangle">
+                    <solid android:color="@color/signal" />
+                </shape>
+            </item>
+        </layer-list>
     </item>
     <item>
         <shape android:shape="rectangle">
             <solid android:color="@android:color/transparent" />
-            <corners android:radius="11dp" />
         </shape>
     </item>
 </selector>

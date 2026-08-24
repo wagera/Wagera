@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
-    <solid android:color="@color/content" />
-    <size android:width="14dp" android:height="14dp" />
+<!-- Kaydirici tutamagi: yuvarlak degil, dikey bir cubuk — alet gostergesi. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <size android:width="4dp" android:height="20dp" />
+    <solid android:color="@color/signal" />
+    <corners android:radius="1dp" />
 </shape>

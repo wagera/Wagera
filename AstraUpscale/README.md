@@ -124,64 +124,63 @@ Kullanıcı sistem ayarlarından animasyonları kapattıysa hiçbir şey oynatı
 
 ### Tasarım dili
 
-**Zemin.** Sayfanın arkasında düz bir renk değil, köşegen bir taban geçişi,
-iki yumuşak ışık patlaması ve bir kenar karartması var. Bu zemin bir dosya
-değil, `Backdrop.java` içinde çalışma anında çizilir.
+Dil "sinematik cam"dan **"alet"e** geçti. Önceki dilde yüzeyler yarı
+saydamdı, kenarlar yumuşak, köşeler geniş yarıçaplıydı; her şey yüzüyormuş
+gibi dururdu. Yenisinde yüzeyler opak, ayrımlar 1 piksellik kesin çizgiler,
+köşeler neredeyse dik (14–18dp yarıçap → **3dp**). Amaç bir ölçüm aletinin
+yüzü: yumuşaklık değil kesinlik.
 
-Neden dosya değil: önce PNG olarak üretilmişti. Geçişlerin 8 bit panelde
-bant yapmaması için üstüne film greni ekleniyordu ve dosya 293 KB tutuyordu.
-WebP'ye çevrilince 6 KB'ye düştü, ama **gren yok oldu** — ölçülen yerel
-gürültü 2.2'den 0.48'e indi ve 800 piksellik dikey eksende yalnızca 33
-benzersiz parlaklık seviyesi kaldı, yani önlenmek istenen bant geri geldi.
-Çalışma anında çizim hem APK'ya hiçbir dosya eklemez, hem her ekran oranına
-tam oturur, hem de greni gerçekten piksel başına üretir.
+Üç değişiklik görünümü baştan aşağı taşır:
 
-**Cam.** Paneller zeminin üzerinde yüzer: yarı saydam 235° geçiş, 1 piksellik
-saç çizgisi kenar ve üst kenarda yukarıdan gelen bir ışık çizgisi. Ayrıca
-bulanıklaştırma uygulanmaz — zemin zaten yumuşak bir geçiş olduğu için düz
-bir geçişin bulanığı kendisiyle aynıdır; oraya bir blur koymak bedel öder,
-karşılığında hiçbir şey vermez.
+**Cam ve bulanıklık yok.** Yüzeyler birbirinden saydamlıkla değil çizgiyle
+ayrılır. Sinematik zemin (köşegen geçiş + iki ışık patlaması + kenar
+karartması) yerini düz bir zemine ve üzerindeki soluk bir **ölçü ızgarasına**
+bıraktı.
 
-**İki yüz.** Gösterim için Space Grotesk, arayüz için Manrope; ikisi de
-paketlenir, sistem fontuna bağlı değildir. Gösterim yüzü yalnızca büyük
-başlıkta ve sayısal okumalarda kullanılır. Her iki yüz de tam Türkçe
-kapsamalıdır — ğ, ş, ı, İ, ö, ü, ç dahil, `fontTools` ile cmap üzerinden
-doğrulanmıştır.
+**Tek bir sinyal rengi.** Önceki dilde vurgu rengi hiç yoktu; seçili öge
+içerik rengine boyanırdı. Artık sayfada tek bir şey sinyal taşır ve göz
+nereye dokunacağını aramaz. Renk kendi zeminine göre döner: karanlık temada
+elektrik limonu `#D8FF3E`, aydınlıkta koyu zeytin `#4A5A00` — parlak limon
+açık zeminde, koyu zeytin siyahta okunmaz.
 
-Bu yüzler geometrik sembol taşımaz. Bir tarama, galeri kapatma düğmesindeki
-`✕` (U+2715) karakterinin paketlenen yüzlerin hiçbirinde olmadığını buldu —
-cihazda tofu kutusu çıkardı; artık bir çizim.
+**Çözünürlük bir ölçek oldu.** 14 ön ayar artık bir çekmecede duran çipler
+değil, tek bir yatay ölçek üzerinde yan yana duran çentikler. Bütün aralık
+aynı anda görünür ve seçim tek dokunuşla yapılır; kullanıcı "8K nerede" diye
+bir bölüm açmaz. Her çentiğin yüksekliği kademesine göre artar (standart /
+yüksek / uç), yani ölçeğe bakan göz sağa gidildikçe işin ağırlaştığını
+biçimden okur.
 
-**Hareket.** Açılışta öğeler tek seferlik bir zaman çizgisinde belirir;
-başlığın iki satırı kendi kırpma penceresinden aşağıdan yukarı açılır. Sıra
-referans tasarımdan alınmıştır, mutlak süreler ise sıkıştırılmıştır: referans
-bir açılış sayfasıdır ve orada 1.7 saniyelik bir açılış hoş durur, bir
-uygulamada her açılışta aynı süreyi beklemek bedeldir. Merdiven ~1.1 saniyede
-biter. Sistemde animasyonlar kapalıysa hiçbir şey oynatılmaz.
+Sayfanın geri kalanı da yeniden kuruldu:
+
+| | |
+|---|---|
+| **Durum şeridi** | Cihazın o anki hali tek satırda: motor, iş parçacığı, sıcaklık. Bir aletin üst panelindeki gösterge. |
+| **Vizör** | Fotoğraf artık yuvarlak köşeli bir kartta değil, dört köşe ayracı içinde. Kenarın tamamı çizilmez; çerçeve fotoğrafın önüne geçmez. |
+| **Künye** | Motor, geçiş, biçim, kalite, keskinlik, gürültü ve cihaz dört açılır çekmecede değil, tek bir dökümde. Solda etiket, sağda değer, altında çizgi. |
+| **Eylem** | Tam genişlikte, dik köşeli, sinyal renginde tek bir çubuk. |
+
+Büyük kahraman başlık ("Her piksel, yerli yerinde.") kaldırıldı: bir alet
+kendini tanıtmaz, durumunu gösterir. Açılış merdiveni de kısaldı, ~0.9
+saniyede biter.
 
 ### İşaret
 
-Dört iç bükey bıçak merkeze doğru keskin bir bel verir; aralarından ikinci ve
-daha kısa bir ışın dizisi çıkar. Ortadaki açıklık gerçek negatif boşluktur:
-her iki yolda da `evenOdd` ile aynı daire delinir, üstüne çizilen bir halka
-değil. İşaret dolu bir kütle değil, ışığın geçtiği bir açıklıktır.
+Kroksuz bir **"A"**: sol bacak küçülen basamaklarla iner, sağ bacak düz bir
+diyagonaldir. Basamaklar işin öncesidir — piksel; düz kenar sonrası —
+çözülmüş. Yani işaret hem markanın harfi, hem uygulamanın yaptığı iş.
 
-**Başlatıcı simgesi bir sürüm boyunca yanlıştı.** Uyarlanabilir simgede
-ölçek 0.62 ve translate 29.8 idi: 48 birimlik çizim 29.76 birime iniyordu —
-108 birimlik tuvalin yalnızca **%28**'i — ve merkezi 44.68'e düşüyordu, oysa
-tuvalin merkezi 54. Yani işaret hem aşırı küçüktü hem **9.32 birim (%8.6)
-sola yukarı kaymıştı**. Bu hiçbir yerde görülmedi çünkü ön plan tek başına
-hiç göze bakılmamıştı.
+Önceki işaret dört kollu bir yıldızdı. Kendi başına fena değildi ama ayırt
+edici değildi: her yapay zekâ uygulaması yıldız kullanıyor.
 
-Doğrusu: işaret 62 birim kaplar (72'lik güvenli alanın içinde), yani ölçek
-62/48 = 1.29167 ve translate (108−62)/2 = 23. `tools/docs/render-adaptive.py`
-simgeyi başlatıcının uyguladığı dört maskeyle (daire, yuvarlak kare, kare,
-sıkıştırılmış daire) çizer; kayma artık ölçülebilir ve sıfırdır.
+Basamak sayısı 5'te sabitlendi. 200 pikselde ilerleme açıkça okunuyor, 36
+pikselde siluet hâlâ "A" olarak duruyor; 6 basamakta küçük boyda basamaklar
+birbirine giriyor, 4'te ilerleme duygusu zayıflıyor. Uyarlanabilir simgede
+işaret 56 birim kaplar (72'lik güvenli alanın içinde): yeni glif yıldızdan
+geniş olduğu için 62 birimde daire maskesinde bacaklar kenara değiyordu.
 
-`tools/docs/render-mark.py` işareti PNG'ye çevirir; gerçek kullanım
-ölçülerinde (14/18/24/48dp) bakılarak açıklık çapı ayarlanmıştır.
-Başlatıcı simgesinin PNG sürümleri de `tools/docs/render-launcher.py` ile
-aynı vektörden üretilir — elle çizilmez, ikisi ayrışmaz.
+Bu kararlar `tools/docs/render-mark.py`, `render-launcher.py` ve
+`render-adaptive.py` ile gerçek kullanım ölçülerinde ve başlatıcının
+uyguladığı dört maskede bakılarak verildi.
 
 ### Öncesi / sonrası karşılaştırma
 
@@ -298,7 +297,12 @@ hiçbir yerde iz kalmadı.
 1. Adres `version.json` oldu.
 2. Başarısızlık artık sessiz değil: sonuçta bir `failure` alanı var ve
    çevrimiçiyken denetim başarısız olursa bu arayüzde yazıyor.
-3. `tools/desktop/UpdateUrlTest.java` bir gerileme sınamasıdır — adresi
+3. İstemci tarafında önbelleğe takılma kapatıldı (`setUseCaches(false)`
+   ve no-cache başlıkları). GitHub'ın ham dosya sunucusu yanıtları
+   `max-age=300` ile önbellekler — yeni bir sürüm yayınlandıktan sonra beş
+   dakika kadar eskisi dönebilir, bu kendiliğinden düzelir. Düzelmeyen,
+   istemcinin kendi yanıt önbelleğine takılmış bir cevaptır.
+4. `tools/desktop/UpdateUrlTest.java` bir gerileme sınamasıdır — adresi
    `UpdateChecker.java` kaynağından okur (ikinci bir kopya tutmaz, yoksa
    ikisi ayrışır ve sınama yalan söyler), 200 döndüğünü ve `versionCode`
    alanının okunabildiğini doğrular.

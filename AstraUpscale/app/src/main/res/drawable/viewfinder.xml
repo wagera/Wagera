@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Vizor cercevesi.
+
+    Fotografin durdugu alan artik yuvarlak koseli bir kart degil, kose
+    ayracli bir bakis alani — bir vizorun ya da kirpma isaretlerinin
+    yaptigi is. Kenarin tamami cizilmez; yalnizca dort kose isaretlenir,
+    boylece cerceve fotografin onune gecmez.
+
+    Ayraclar layer-list ile kuruluyor: her kose icin iki ince dikdortgen.
+    inset degerleri kenar boslugunu, width/height ayracin uzunlugunu verir.
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Alan zemini -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/surface_low" />
+        </shape>
+    </item>
+
+    <!-- Sol ust -->
+    <item android:gravity="top|start" android:width="18dp" android:height="2dp">
+        <shape android:shape="rectangle"><solid android:color="@color/rule_strong" /></shape>
+    </item>
+    <item android:gravity="top|start" android:width="2dp" android:height="18dp">
+        <shape android:shape="rectangle"><solid android:color="@color/rule_strong" /></shape>
+    </item>
+    <!-- Sag ust -->
+    <item android:gravity="top|end" android:width="18dp" android:height="2dp">
+        <shape android:shape="rectangle"><solid android:color="@color/rule_strong" /></shape>
+    </item>
+    <item android:gravity="top|end" android:width="2dp" android:height="18dp">
+        <shape android:shape="rectangle"><solid android:color="@color/rule_strong" /></shape>
+    </item>
+    <!-- Sol alt -->
+    <item android:gravity="bottom|start" android:width="18dp" android:height="2dp">
+        <shape android:shape="rectangle"><solid android:color="@color/rule_strong" /></shape>
+    </item>
+    <item android:gravity="bottom|start" android:width="2dp" android:height="18dp">
+        <shape android:shape="rectangle"><solid android:color="@color/rule_strong" /></shape>
+    </item>
+    <!-- Sag alt -->
+    <item android:gravity="bottom|end" android:width="18dp" android:height="2dp">
+        <shape android:shape="rectangle"><solid android:color="@color/rule_strong" /></shape>
+    </item>
+    <item android:gravity="bottom|end" android:width="2dp" android:height="18dp">
+        <shape android:shape="rectangle"><solid android:color="@color/rule_strong" /></shape>
+    </item>
+</layer-list>

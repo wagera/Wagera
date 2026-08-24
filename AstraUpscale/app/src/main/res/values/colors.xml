@@ -2,53 +2,55 @@
 <!--
     AstraUpscale renk olcegi — AYDINLIK tema.
 
-    Renk yerine derinlik: her yuzey bir onceki katmandan bir tik ayrilir,
-    ayrimlar 1 px sac cizgileriyle yapilir. Vurgu rengi yoktur; secili oge
-    "content" rengine boyanir ve yazisi "bg" rengine doner. Ayni kural karanlik
-    temada kendiliginden tersine doner.
+    Tasarim dili "cam"dan "alet"e gecti. Onceki dilde yuzeyler yari
+    saydamdi, kenarlar yumusak, koseler genis yaricapliydi; her sey
+    yuzuyormus gibi dururdu. Yenisinde yuzeyler opak, kenarlar 1 piksellik
+    kesin cizgiler, koseler neredeyse dik. Amac bir olcum aletinin
+    yuzu: yumusaklik degil kesinlik.
+
+    Iki degisiklik butun gorunumu tasir:
+      1. Cam ve bulaniklik yok. Yuzeyler birbirinden saydamlikla degil,
+         cizgiyle ayrilir.
+      2. Tek bir SINYAL rengi var. Onceki dilde vurgu rengi hic yoktu ve
+         secili oge icerik rengine boyanirdi; artik secili ve birincil
+         olan sinyal rengini alir. Tek renk, tek anlam: "etkin olan bu".
 -->
 <resources>
     <!-- Yuzeyler: sayfa zemininden yukari dogru -->
-    <color name="bg">#FFF6F7F9</color>
-    <color name="surface_low">#FFF0F1F4</color>
+    <color name="bg">#FFF7F7F5</color>
+    <color name="surface_low">#FFEFEFEC</color>
     <color name="surface">#FFFFFFFF</color>
-    <color name="surface_high">#FFEDEEF2</color>
-    <color name="surface_press">#FFE2E4EA</color>
+    <color name="surface_high">#FFE6E6E2</color>
+    <color name="surface_press">#FFDBDBD6</color>
 
-    <!-- Sac cizgileri -->
-    <color name="hairline">#FFE3E5EA</color>
-    <color name="hairline_strong">#FFD3D6DD</color>
+    <!-- Cizgiler. Alet dilinde ayrimlar cizgiyle yapilir, golgeyle degil. -->
+    <color name="rule">#FFD6D6D0</color>
+    <color name="rule_strong">#FF2A2A28</color>
+    <!-- Izgara cizgisi: sayfanin arkasindaki olcu agi -->
+    <color name="grid">#14000000</color>
 
     <!-- Icerik: birincilden en sessize -->
-    <color name="content">#FF14161C</color>
-    <color name="content_soft">#FF3C414B</color>
-    <color name="content_dim">#FF697079</color>
-    <color name="content_faint">#FF8E949E</color>
-    <color name="content_ghost">#FFB6BAC3</color>
+    <color name="content">#FF14140F</color>
+    <color name="content_soft">#FF3D3D37</color>
+    <color name="content_dim">#FF6B6B63</color>
+    <color name="content_faint">#FF91918A</color>
+    <color name="content_ghost">#FFB8B8B1</color>
 
-    <!-- Kart ustundeki isik: aydinlik temada gorunmez -->
-    <color name="sheen">#00FFFFFF</color>
-    <color name="sheen_soft">#00FFFFFF</color>
+    <!--
+        Sinyal rengi.
 
-    <!-- Dokunma parlamasi -->
+        Aydinlik temada koyu bir zeytin-yesili; karanlik temada ayni
+        renk elektrik limonuna doner. Ikisi de ayni anlami tasir ama
+        kendi zemininde okunur kalir: acik zeminde parlak limon
+        gorunmez, koyu zeminde koyu zeytin gorunmez.
+    -->
+    <color name="signal">#FF4A5A00</color>
+    <color name="signal_on">#FFF7F7F5</color>
+    <color name="signal_dim">#FF8A9A3A</color>
+
     <color name="glow_12">#14000000</color>
     <color name="glow_08">#0D000000</color>
-
-    <!-- Sahneyi orten katman: opak degil, alttaki fotograf sezilir -->
-    <color name="scrim_fill">#F2F6F7F9</color>
-
-    <!-- ══ Cam dili — acik temada kagit uzerinde ince bir tabaka ═══════ -->
-    <color name="glass_top">#E6FFFFFF</color>
-    <color name="glass_bottom">#F2F7F8FB</color>
-    <color name="glass_stroke">#1F000000</color>
-    <color name="glass_sheen">#00FFFFFF</color>
-    <color name="glass_press">#FFE8EAF0</color>
-    <color name="scrim_glass">#E6F4F5F8</color>
-
-    <!-- Acilis ekrani: tema secilmeden once cizildigi icin her iki
-         temada da ayni. Acilis ani marka anidir; bir yanip sonme
-         yasanmamasi icin uygulamanin ilk karesi de koyu baslar. -->
-    <color name="launch_bg">#FF0B0C0E</color>
-    <!-- Bildirim vurgusu: sistem bunu simge ve baslikta kullanir -->
-    <color name="notification_accent">#FF14161C</color>
+    <color name="notification_accent">#FF4A5A00</color>
+    <color name="scrim_glass">#F2F7F7F5</color>
+    <color name="launch_bg">#FF0A0A08</color>
 </resources>

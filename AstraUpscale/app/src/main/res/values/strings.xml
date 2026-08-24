@@ -200,6 +200,8 @@
     <string name="compare_hint">Drag the handle · pinch to zoom</string>
     <string name="compare_fit">Fit</string>
     <string name="compare_failed">Could not open the comparison.</string>
+    <string name="status_format">%1$s · %2$d threads</string>
+    <string name="spec_title">Specification</string>
     <string name="summary_jpeg">JPEG · %1$d</string>
     <string name="value_none">—</string>
 </resources>

@@ -175,65 +175,63 @@ has turned animations off in system settings, nothing is played.
 
 ### Design language
 
-**Backdrop.** Behind the page is not a flat colour but a diagonal base
-gradient, two soft light blooms and a vignette. It is not a file: `Backdrop.java`
-draws it at runtime.
+The language moved from "cinematic glass" to **instrument**. In the old one
+surfaces were translucent, edges soft, corners generously rounded; everything
+appeared to float. In the new one surfaces are opaque, separations are
+1-pixel rules, and corners are nearly square (14–18dp radius → **3dp**). The
+aim is the face of a measuring instrument: precision rather than softness.
 
-Why not a file: it was first produced as a PNG. Film grain was layered on so
-the gradients would not band on an 8-bit panel, and the file came to 293 KB.
-Converting to WebP dropped it to 6 KB — and **destroyed the grain**: measured
-local noise fell from 2.2 to 0.48, and only 33 distinct luminance levels were
-left across an 800-pixel vertical axis, which is exactly the banding the grain
-existed to prevent. Drawing at runtime adds no file to the APK, fits any
-screen ratio exactly, and generates the grain per pixel for real.
+Three changes carry the whole look:
 
-**Glass.** Panels float over the backdrop: a translucent 235° gradient, a
-1-pixel hairline border, and a light line along the top edge. No blur is
-applied — the backdrop is already a smooth gradient, and the blur of a smooth
-gradient is itself; putting one there would cost something and return nothing.
+**No glass, no blur.** Surfaces are separated by lines, not by transparency.
+The cinematic backdrop (diagonal gradient plus two light blooms plus a
+vignette) gave way to a flat ground with a faint **measurement grid** over it.
 
-**Two faces.** Space Grotesk for display, Manrope for the interface; both are
-bundled, neither depends on the system font. The display face is used only in
-the large headline and in numeric readouts. Both faces carry full Turkish
-coverage — ğ, ş, ı, İ, ö, ü, ç included — verified through their cmap with
-`fontTools`.
+**One signal colour.** The old language had no accent at all; a selected item
+was painted in the content colour. Now exactly one thing on the page carries
+signal, and the eye does not hunt for where to press. The colour turns with
+its ground: electric lime `#D8FF3E` in the dark theme, deep olive `#4A5A00`
+in light — bright lime is invisible on paper, dark olive is invisible on
+black.
 
-These faces carry no geometric symbols. A sweep found that `✕` (U+2715), used
-on the gallery close button, exists in none of the bundled faces — it rendered
-as a tofu box on device. It is a vector now.
+**Resolution became a scale.** The 14 presets are no longer chips inside a
+drawer but ticks along a single horizontal scale. The whole range is visible
+at once and selection is one tap; nobody opens a section to find where 8K
+went. Each tick's height grows with its tier (standard / high / extreme), so
+the eye reads from the shape that the work gets heavier to the right.
 
-**Motion.** On open, elements arrive on a one-shot timeline, and the two
-headline lines rise into place from inside their own clipping windows. The
-order comes from the reference brief; the absolute timings are compressed. The
-reference is a landing page, where a 1.7-second reveal is a pleasure; in an
-app, paying that on every launch is a cost. The ladder finishes in ~1.1s. If
-animations are off in system settings, nothing plays.
+The rest of the page was rebuilt too:
+
+| | |
+|---|---|
+| **Status strip** | The device's present state on one line: engine, threads, thermal. The gauge on an instrument's top panel. |
+| **Viewfinder** | The photo no longer sits in a rounded card but inside four corner brackets. The full edge is never drawn; the frame does not compete with the photo. |
+| **Specification** | Engine, passes, format, quality, sharpening, denoise and device are one listing rather than four drawers. Label left, value right, rule beneath. |
+| **Action** | A single full-width, square-cornered bar in the signal colour. |
+
+The large hero headline ("Every pixel, resolved.") is gone: an instrument
+does not introduce itself, it reports its state. The entrance ladder shortened
+with it and now finishes in ~0.9s.
 
 ### The mark
 
-Four concave blades draw a sharp waist toward the centre, and a second, shorter
-set of rays emerges between them. The opening at the centre is true negative
-space: the same circle is punched through both paths with `evenOdd`, rather
-than a ring drawn on top. The mark is not a solid mass but an aperture that
-light passes through.
+A crossbarless **"A"**: the left leg descends in shrinking steps, the right
+leg is a straight diagonal. The steps are the before — pixels; the straight
+edge is the after — resolved. The mark is at once the brand's letter and the
+work the app does.
 
-**The launcher icon was wrong for a release.** The adaptive icon used a scale
-of 0.62 and a translate of 29.8: the 48-unit drawing came down to 29.76 units
-— only **28%** of the 108-unit canvas — and its centre landed at 44.68 when
-the canvas centre is 54. The mark was both far too small and **9.32 units
-(8.6%) off toward the top left**. Nothing caught it because the foreground was
-never once looked at on its own.
+The previous mark was a four-pointed star. Not bad in itself, but not
+distinctive: every AI app uses a star.
 
-Correct: the mark spans 62 units (inside the 72-unit safe zone), so the scale
-is 62/48 = 1.29167 and the translate is (108−62)/2 = 23.
-`tools/docs/render-adaptive.py` renders the icon under the four masks a
-launcher may apply (circle, rounded square, square, squircle); the offset is
-now measurable and zero.
+The step count settled at 5. At 200 pixels the progression reads clearly; at
+36 the silhouette still holds as an "A". At 6 the steps merge at small sizes;
+at 4 the sense of progression weakens. In the adaptive icon the mark spans 56
+units (inside the 72-unit safe zone): the new glyph is wider than the star, so
+at 62 units its legs touched the edge under the circle mask.
 
-`tools/docs/render-mark.py` renders it to PNG; the aperture diameter was tuned
-by looking at it at real usage sizes (14/18/24/48dp). The launcher icon's PNG
-variants come from the same vector via `tools/docs/render-launcher.py` — never
-drawn by hand, so the two cannot drift apart.
+These decisions were made by looking — `tools/docs/render-mark.py`,
+`render-launcher.py` and `render-adaptive.py` render the mark at real usage
+sizes and under the four masks a launcher may apply.
 
 ### Before / after comparison
 
@@ -350,7 +348,12 @@ Three things were fixed:
 1. The URL is now `version.json`.
 2. Failure is no longer silent: the result carries a `failure` field, and a
    failed check while online is now shown in the UI.
-3. `tools/desktop/UpdateUrlTest.java` is a regression test — it reads the URL
+3. Client-side caching is disabled (`setUseCaches(false)` plus no-cache
+   headers). GitHub's raw file server caches responses with `max-age=300`,
+   so for about five minutes after publishing it can still serve the old
+   file — that resolves itself. What does not resolve itself is a response
+   pinned in the client's own HTTP cache.
+4. `tools/desktop/UpdateUrlTest.java` is a regression test — it reads the URL
    out of `UpdateChecker.java` itself (keeping no second copy, which would
    drift and make the test lie) and asserts a 200 with a readable `versionCode`.
 
