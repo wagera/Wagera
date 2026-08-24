@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Ana eylem: zemin beyaza doner, yazi siyah olur. -->
+<!--
+    Birincil eylem.
+
+    Sinyal rengiyle boyanir. Onceki dilde birincil eylem "icerik" rengine
+    boyanirdi (koyu temada beyaz, acikta siyah); artik tek bir sinyal rengi
+    var ve sayfada yalnizca bir sey onu tasir. Boylece goz nereye
+    dokunacagini aramaz.
+-->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_enabled="false">
         <shape android:shape="rectangle">
             <solid android:color="@color/surface_high" />
-            <corners android:radius="18dp" />
-            <stroke android:width="1dp" android:color="@color/hairline" />
+            <corners android:radius="@dimen/radius_card" />
         </shape>
     </item>
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
-            <solid android:color="@color/content_soft" />
-            <corners android:radius="18dp" />
+            <solid android:color="@color/signal_dim" />
+            <corners android:radius="@dimen/radius_card" />
         </shape>
     </item>
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@color/content" />
-            <corners android:radius="18dp" />
+            <solid android:color="@color/signal" />
+            <corners android:radius="@dimen/radius_card" />
         </shape>
     </item>
 </selector>

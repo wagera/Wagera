@@ -96,7 +96,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/glass_stroke" />
+            android:background="@color/rule" />
 
         <ScrollView
             android:id="@+id/scroll"
@@ -126,64 +126,88 @@
                     android:visibility="gone" />
 
                 <!-- ══════════════════════════════════════════════════════
-                     SAYFA: BUYUT
+                     SAYFA: BUYUT — alet paneli
+
+                     Onceki duzen bir "acilis sayfasi" gibiydi: buyuk bir
+                     kahraman baslik, yuvarlak koseli bir sahne, altinda
+                     dort acilir bolum. Bu duzen yerini bir alet yuzune
+                     birakti:
+
+                       durum seridi   — cihazin o anki hali, tek satir
+                       vizor          — fotograf, kose ayraclari icinde
+                       cozunurluk     — yatay bir olcek uzerinde 14 centik
+                       kunye          — iki sutunlu teknik dokum
+                       eylem          — tam genislikte tek cubuk
+
+                     En buyuk degisiklik cozunurlukte: 14 on ayar artik bir
+                     cekmecede duran cipler degil, tek bir olcek uzerinde
+                     yan yana duran centikler. Butun aralik ayni anda
+                     goruluyor ve secim tek dokunusla yapiliyor.
                      ══════════════════════════════════════════════════════ -->
                 <LinearLayout
                     android:id="@+id/pageUpscale"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingStart="@dimen/gutter"
-                    android:paddingEnd="@dimen/gutter"
-                    android:paddingTop="@dimen/gap_block"
                     android:paddingBottom="@dimen/gap_section">
 
-                    <!-- ── Kahraman baslik ──────────────────────────────
-                         Iki satir, her biri kendi kirpma penceresinden
-                         asagidan yukari belirir. Gosterim yuzu yalnizca
-                         burada ve sayisal okumalarda kullanilir. -->
-                    <FrameLayout
-                        android:id="@+id/heroClip1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:clipChildren="true">
+                    <!-- ── Durum seridi ─────────────────────────────────
+                         Cihazin o anki hali tek satirda: motor, is parcacigi,
+                         sicaklik. Bir aletin ust panelindeki gosterge. -->
+                    <LinearLayout
+                        android:id="@+id/statusStrip"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:background="@color/surface_low"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingStart="@dimen/gutter"
+                        android:paddingEnd="@dimen/gutter">
+
+                        <View
+                            android:id="@+id/statusDot"
+                            android:layout_width="6dp"
+                            android:layout_height="6dp"
+                            android:background="@drawable/dot_signal" />
 
                         <TextView
-                            android:id="@+id/heroLine1"
-                            style="@style/Display"
-                            android:text="@string/hero_line_1" />
-                    </FrameLayout>
-
-                    <FrameLayout
-                        android:id="@+id/heroClip2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:clipChildren="true">
+                            android:id="@+id/statusText"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="8dp"
+                            android:fontFamily="@font/display"
+                            android:letterSpacing="0.04"
+                            android:maxLines="1"
+                            android:ellipsize="end"
+                            android:textColor="@color/content_dim"
+                            android:textSize="10sp" />
 
                         <TextView
-                            android:id="@+id/heroLine2"
-                            style="@style/Display"
-                            android:alpha="0.62"
-                            android:text="@string/hero_line_2" />
-                    </FrameLayout>
+                            android:id="@+id/statusThermal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/display"
+                            android:letterSpacing="0.04"
+                            android:textColor="@color/content_faint"
+                            android:textSize="10sp" />
+                    </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/heroCopy"
-                        style="@style/HeroCopy"
-                        android:layout_marginTop="12dp"
-                        android:text="@string/hero_copy" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/rule" />
 
-                    <!-- ── Sahne ─────────────────────────────────────────
-                         Dort durum ayni dikdortgeni paylasir. -->
+                    <!-- ── Vizor ────────────────────────────────────────
+                         Dort durum ayni alani paylasir. Cerceve yerine
+                         kose ayraclari: fotografin onune gecmez. -->
                     <FrameLayout
                         android:id="@+id/stage"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/gap_section"
-                        android:background="@drawable/glass_stage"
+                        android:background="@drawable/viewfinder"
                         android:minHeight="@dimen/stage_min">
 
-                        <!-- 1. Bos durum: dokununca galeri acilir -->
                         <LinearLayout
                             android:id="@+id/emptyState"
                             android:layout_width="match_parent"
@@ -195,8 +219,8 @@
                             android:paddingBottom="48dp">
 
                             <ImageView
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
+                                android:layout_width="26dp"
+                                android:layout_height="26dp"
                                 android:contentDescription="@string/no_photo"
                                 android:src="@drawable/ic_photo" />
 
@@ -204,20 +228,23 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="14dp"
+                                android:fontFamily="@font/display"
+                                android:letterSpacing="0.10"
                                 android:text="@string/no_photo"
+                                android:textAllCaps="true"
                                 android:textColor="@color/content_dim"
-                                android:textSize="@dimen/text_body" />
+                                android:textSize="@dimen/text_fine" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="5dp"
+                                android:layout_marginTop="6dp"
+                                android:fontFamily="@font/sans"
                                 android:text="@string/stage_tap_hint"
-                                android:textColor="@color/content_ghost"
+                                android:textColor="@color/content_faint"
                                 android:textSize="@dimen/text_fine" />
                         </LinearLayout>
 
-                        <!-- 2. Secilen fotograf -->
                         <ImageView
                             android:id="@+id/sourcePreview"
                             android:layout_width="match_parent"
@@ -227,7 +254,6 @@
                             android:scaleType="centerCrop"
                             android:visibility="gone" />
 
-                        <!-- 3. Sonuc onizlemesi: fotografin uzerini kaplar -->
                         <ImageView
                             android:id="@+id/resultPreview"
                             android:layout_width="match_parent"
@@ -236,7 +262,6 @@
                             android:scaleType="centerCrop"
                             android:visibility="gone" />
 
-                        <!-- 4. Islem sirasinda: sahneyi orten katman -->
                         <LinearLayout
                             android:id="@+id/progressCard"
                             android:layout_width="match_parent"
@@ -251,25 +276,30 @@
                                 android:id="@+id/progressPercent"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:fontFamily="@font/sans"
-                                android:letterSpacing="-0.02"
-                                android:textColor="@color/content"
+                                android:fontFamily="@font/display"
+                                android:textFontWeight="700"
+                                android:letterSpacing="-0.03"
+                                android:includeFontPadding="false"
+                                android:textColor="@color/signal"
                                 android:textSize="@dimen/text_display" />
 
                             <TextView
                                 android:id="@+id/progressText"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
+                                android:layout_marginTop="6dp"
+                                android:fontFamily="@font/display"
                                 android:gravity="center"
+                                android:letterSpacing="0.06"
+                                android:textAllCaps="true"
                                 android:textColor="@color/content_dim"
-                                android:textSize="@dimen/text_fine" />
+                                android:textSize="10sp" />
 
                             <ProgressBar
                                 android:id="@+id/progressBar"
                                 style="?android:attr/progressBarStyleHorizontal"
                                 android:layout_width="match_parent"
-                                android:layout_height="2dp"
+                                android:layout_height="3dp"
                                 android:layout_marginTop="18dp"
                                 android:max="1000"
                                 android:progressDrawable="@drawable/progress_bar" />
@@ -277,9 +307,10 @@
                             <Button
                                 android:id="@+id/cancelButton"
                                 android:layout_width="wrap_content"
-                                android:layout_height="38dp"
+                                android:layout_height="36dp"
                                 android:layout_marginTop="18dp"
                                 android:background="@drawable/btn_secondary"
+                                android:fontFamily="@font/sans"
                                 android:paddingStart="20dp"
                                 android:paddingEnd="20dp"
                                 android:text="@string/cancel"
@@ -289,14 +320,21 @@
                         </LinearLayout>
                     </FrameLayout>
 
-                    <!-- ── Sahne altyazisi: kaynak bilgisi solda, degistir sagda ── -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/rule" />
+
+                    <!-- ── Kaynak kunyesi ───────────────────────────────
+                         Vizorun hemen altinda, tek satir teknik dokum. -->
                     <LinearLayout
                         android:id="@+id/stageCaption"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/gap_row"
+                        android:layout_height="38dp"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:paddingStart="@dimen/gutter"
+                        android:paddingEnd="12dp">
 
                         <TextView
                             android:id="@+id/sourceInfo"
@@ -306,90 +344,158 @@
                             android:fontFamily="@font/display"
                             android:maxLines="1"
                             android:ellipsize="end"
-                            android:textColor="@color/content_faint"
+                            android:textColor="@color/content_dim"
                             android:textSize="@dimen/text_fine"
                             android:visibility="gone" />
 
                         <Button
                             android:id="@+id/pickButton"
                             android:layout_width="wrap_content"
-                            android:layout_height="36dp"
+                            android:layout_height="28dp"
                             android:background="@drawable/btn_secondary"
-                            android:paddingStart="16dp"
-                            android:paddingEnd="16dp"
+                            android:fontFamily="@font/sans"
+                            android:minWidth="0dp"
+                            android:paddingStart="14dp"
+                            android:paddingEnd="14dp"
                             android:text="@string/pick_photo"
                             android:textAllCaps="false"
                             android:textColor="@color/content_soft"
                             android:textSize="@dimen/text_fine" />
                     </LinearLayout>
 
-                    <!-- ── Eylem cubugu ──────────────────────────────────
-                         Hedef okumasi ve birincil eylem tek bir satirda,
-                         her zaman katlamanin ustunde. -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/rule" />
+
+                    <!-- ── Cozunurluk olcegi ────────────────────────────
+                         14 on ayar tek bir olcek uzerinde. Butun aralik
+                         ayni anda gorunur; secim tek dokunus. Kademeler
+                         (standart / yuksek / uc) olcegin uzerindeki
+                         etiketlerle ayrilir, ayri satirlarla degil. -->
                     <LinearLayout
-                        android:id="@+id/actionBar"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/gap_block"
-                        android:orientation="horizontal">
+                        android:orientation="vertical"
+                        android:paddingStart="@dimen/gutter"
+                        android:paddingEnd="@dimen/gutter"
+                        android:paddingTop="@dimen/gap_block"
+                        android:paddingBottom="12dp">
 
                         <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="@dimen/cta_height"
-                            android:layout_weight="1"
-                            android:layout_marginEnd="@dimen/gap_row"
-                            android:background="@drawable/glass_card"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:orientation="vertical"
-                            android:paddingStart="14dp"
-                            android:paddingEnd="10dp">
+                            android:orientation="horizontal">
+
+                            <TextView
+                                style="@style/FieldLabel"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:text="@string/row_resolution" />
 
                             <TextView
                                 android:id="@+id/targetBadge"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:fontFamily="@font/sans"
-                                android:textFontWeight="600"
-                                android:letterSpacing="0.02"
+                                android:fontFamily="@font/display"
+                                android:textFontWeight="700"
+                                android:includeFontPadding="false"
+                                android:letterSpacing="-0.02"
                                 android:text="—"
                                 android:textColor="@color/content"
-                                android:textSize="@dimen/text_row" />
-
-                            <TextView
-                                android:id="@+id/targetDims"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/display"
-                                android:maxLines="1"
-                                android:ellipsize="end"
-                                android:textColor="@color/content_faint"
-                                android:textSize="@dimen/text_label" />
+                                android:textSize="@dimen/text_read" />
                         </LinearLayout>
 
-                        <Button
-                            android:id="@+id/startButton"
-                            android:layout_width="0dp"
-                            android:layout_height="@dimen/cta_height"
-                            android:layout_weight="1"
-                            android:background="@drawable/btn_primary"
+                        <!-- Olcegin kendisi: centikler koddan doldurulur -->
+                        <LinearLayout
+                            android:id="@+id/scale"
+                            android:layout_width="match_parent"
+                            android:layout_height="52dp"
+                            android:layout_marginTop="10dp"
+                            android:orientation="horizontal" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tierLabel1"
+                                style="@style/ScaleTick"
+                                android:layout_weight="5"
+                                android:text="@string/tier_standard" />
+
+                            <TextView
+                                android:id="@+id/tierLabel2"
+                                style="@style/ScaleTick"
+                                android:layout_weight="4"
+                                android:gravity="center"
+                                android:text="@string/tier_high" />
+
+                            <TextView
+                                android:id="@+id/tierLabel3"
+                                style="@style/ScaleTick"
+                                android:layout_weight="5"
+                                android:gravity="end"
+                                android:text="@string/tier_extreme" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/targetDims"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:fontFamily="@font/display"
+                            android:lineSpacingExtra="4dp"
+                            android:textColor="@color/content_dim"
+                            android:textSize="@dimen/text_fine" />
+
+                        <TextView
+                            android:id="@+id/targetInfo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
                             android:fontFamily="@font/sans"
-                            android:textFontWeight="600"
-                            android:letterSpacing="0.04"
-                            android:text="@string/start"
-                            android:textAllCaps="false"
-                            android:textColor="@color/btn_primary_text"
-                            android:textSize="@dimen/text_row" />
+                            android:lineSpacingExtra="4dp"
+                            android:textColor="@color/content_faint"
+                            android:textSize="@dimen/text_fine" />
                     </LinearLayout>
 
-                    <!-- ── Sonuc eylemleri: yalniz sonuc varken gorunur ── -->
+                    <!-- ── Eylem cubugu ─────────────────────────────────
+                         Tam genislikte, dik koseli, sinyal renginde. -->
+                    <Button
+                        android:id="@+id/startButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/cta_height"
+                        android:layout_marginStart="@dimen/gutter"
+                        android:layout_marginEnd="@dimen/gutter"
+                        android:layout_marginTop="4dp"
+                        android:background="@drawable/btn_primary"
+                        android:fontFamily="@font/sans"
+                        android:textFontWeight="600"
+                        android:letterSpacing="0.04"
+                        android:text="@string/start"
+                        android:textAllCaps="false"
+                        android:textColor="@color/btn_primary_text"
+                        android:textSize="@dimen/text_row" />
+
+                    <!-- ── Sonuc ────────────────────────────────────────
+                         Sinyal serit tasiyan bir dokum. -->
                     <LinearLayout
                         android:id="@+id/resultCard"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/gap_row"
-                        android:background="@drawable/glass_card"
+                        android:layout_marginStart="@dimen/gutter"
+                        android:layout_marginEnd="@dimen/gutter"
+                        android:layout_marginTop="@dimen/gap_block"
+                        android:background="@drawable/preview_bg"
                         android:orientation="vertical"
-                        android:padding="14dp"
+                        android:paddingStart="14dp"
+                        android:paddingEnd="14dp"
+                        android:paddingTop="14dp"
+                        android:paddingBottom="14dp"
                         android:visibility="gone">
 
                         <LinearLayout
@@ -411,20 +517,21 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:layout_marginStart="9dp"
-                                android:fontFamily="@font/sans"
-                                android:textFontWeight="600"
+                                android:fontFamily="@font/display"
+                                android:letterSpacing="0.08"
+                                android:textAllCaps="true"
                                 android:textColor="@color/content"
-                                android:textSize="@dimen/text_body" />
+                                android:textSize="@dimen/text_fine" />
                         </LinearLayout>
 
                         <TextView
                             android:id="@+id/resultInfo"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="6dp"
+                            android:layout_marginTop="8dp"
                             android:fontFamily="@font/display"
-                            android:lineSpacingExtra="3dp"
-                            android:textColor="@color/content_faint"
+                            android:lineSpacingExtra="4dp"
+                            android:textColor="@color/content_dim"
                             android:textSize="@dimen/text_fine" />
 
                         <LinearLayout
@@ -436,537 +543,332 @@
                             <Button
                                 android:id="@+id/compareButton"
                                 android:layout_width="0dp"
-                                android:layout_height="42dp"
+                                android:layout_height="40dp"
                                 android:layout_weight="1"
                                 android:background="@drawable/btn_secondary"
+                                android:fontFamily="@font/sans"
                                 android:text="@string/compare"
                                 android:textAllCaps="false"
                                 android:textColor="@color/content_soft"
-                                android:textSize="@dimen/text_body" />
+                                android:textSize="@dimen/text_fine" />
 
-                            <Space android:layout_width="8dp" android:layout_height="1dp" />
+                            <Space android:layout_width="6dp" android:layout_height="1dp" />
 
                             <Button
                                 android:id="@+id/openButton"
                                 android:layout_width="0dp"
-                                android:layout_height="42dp"
+                                android:layout_height="40dp"
                                 android:layout_weight="1"
                                 android:background="@drawable/btn_secondary"
+                                android:fontFamily="@font/sans"
                                 android:text="@string/open"
                                 android:textAllCaps="false"
                                 android:textColor="@color/content_soft"
-                                android:textSize="@dimen/text_body" />
+                                android:textSize="@dimen/text_fine" />
 
-                            <Space android:layout_width="8dp" android:layout_height="1dp" />
+                            <Space android:layout_width="6dp" android:layout_height="1dp" />
 
                             <Button
                                 android:id="@+id/shareButton"
                                 android:layout_width="0dp"
-                                android:layout_height="42dp"
+                                android:layout_height="40dp"
                                 android:layout_weight="1"
                                 android:background="@drawable/btn_secondary"
+                                android:fontFamily="@font/sans"
                                 android:text="@string/share"
                                 android:textAllCaps="false"
                                 android:textColor="@color/content_soft"
-                                android:textSize="@dimen/text_body" />
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <!-- ══ Akordeonlar ═══════════════════════════════════
-                         Dort bolum, dort satir. Kapaliyken sayfa 1.3 ekran;
-                         eski tasarimda ayni icerik 5 ekran suruyordu.
-                         Her satir gecerli degerini sagda tasir. -->
-
-                    <!-- ── Cozunurluk ────────────────────────────────── -->
-                    <LinearLayout
-                        android:id="@+id/rowResolution"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/row_height"
-                        android:layout_marginTop="@dimen/gap_section"
-                        android:background="@drawable/glass_row"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingStart="14dp"
-                        android:paddingEnd="12dp">
-
-                        <TextView style="@style/RowTitle" android:text="@string/row_resolution" />
-
-                        <Space android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" />
-
-                        <TextView android:id="@+id/valueResolution" style="@style/RowValue" />
-
-                        <ImageView
-                            android:id="@+id/chevronResolution"
-                            android:layout_width="16dp"
-                            android:layout_height="16dp"
-                            android:layout_marginStart="8dp"
-                            android:contentDescription="@string/row_resolution"
-                            android:src="@drawable/ic_chevron" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/panelResolution"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/glass_panel"
-                        android:orientation="vertical"
-                        android:padding="14dp"
-                        android:visibility="gone">
-
-                        <TextView
-                            android:id="@+id/tierLabel1"
-                            style="@style/TierLabel"
-                            android:text="@string/tier_standard" />
-
-                        <LinearLayout
-                            android:id="@+id/tier1"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal" />
-
-                        <TextView
-                            android:id="@+id/tierLabel2"
-                            style="@style/TierLabel"
-                            android:layout_marginTop="16dp"
-                            android:text="@string/tier_high" />
-
-                        <LinearLayout
-                            android:id="@+id/tier2"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal" />
-
-                        <TextView
-                            android:id="@+id/tierLabel3"
-                            style="@style/TierLabel"
-                            android:layout_marginTop="16dp"
-                            android:text="@string/tier_extreme" />
-
-                        <LinearLayout
-                            android:id="@+id/tier3"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal" />
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginTop="16dp"
-                            android:background="@color/glass_stroke" />
-
-                        <TextView
-                            android:id="@+id/targetInfo"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="14dp"
-                            android:fontFamily="@font/display"
-                            android:lineSpacingExtra="4dp"
-                            android:textColor="@color/content_dim"
-                            android:textSize="@dimen/text_fine" />
-                    </LinearLayout>
-
-                    <!-- ── Motor ─────────────────────────────────────── -->
-                    <LinearLayout
-                        android:id="@+id/rowEngine"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/row_height"
-                        android:layout_marginTop="@dimen/gap_row"
-                        android:background="@drawable/glass_row"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingStart="14dp"
-                        android:paddingEnd="12dp">
-
-                        <TextView style="@style/RowTitle" android:text="@string/row_engine" />
-
-                        <Space android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" />
-
-                        <TextView android:id="@+id/valueEngine" style="@style/RowValue" android:maxWidth="170dp" />
-
-                        <ImageView
-                            android:id="@+id/chevronEngine"
-                            android:layout_width="16dp"
-                            android:layout_height="16dp"
-                            android:layout_marginStart="8dp"
-                            android:contentDescription="@string/row_engine"
-                            android:src="@drawable/ic_chevron" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/panelEngine"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/glass_panel"
-                        android:orientation="vertical"
-                        android:paddingTop="8dp"
-                        android:paddingBottom="14dp"
-                        android:visibility="gone">
-
-                        <LinearLayout
-                            android:id="@+id/modelList"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical" />
-
-                        <TextView
-                            android:id="@+id/modelInfo"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="14dp"
-                            android:layout_marginEnd="14dp"
-                            android:layout_marginTop="12dp"
-                            android:lineSpacingExtra="3dp"
-                            android:textColor="@color/content_faint"
-                            android:textSize="@dimen/text_fine" />
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginStart="14dp"
-                            android:layout_marginEnd="14dp"
-                            android:layout_marginTop="14dp"
-                            android:background="@color/glass_stroke" />
-
-                        <TextView
-                            style="@style/PanelLabel"
-                            android:layout_marginStart="14dp"
-                            android:layout_marginEnd="14dp"
-                            android:layout_marginTop="14dp"
-                            android:text="@string/passes" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="14dp"
-                            android:layout_marginEnd="14dp"
-                            android:layout_marginTop="10dp"
-                            android:orientation="horizontal">
-
-                            <Button
-                                android:id="@+id/stage1"
-                                android:layout_width="0dp"
-                                android:layout_height="44dp"
-                                android:layout_weight="1"
-                                android:background="@drawable/chip"
-                                android:text="@string/pass_single"
-                                android:textAllCaps="false"
-                                android:textColor="@color/chip_text"
-                                android:textSize="@dimen/text_body" />
-
-                            <Space android:layout_width="8dp" android:layout_height="1dp" />
-
-                            <Button
-                                android:id="@+id/stage2"
-                                android:layout_width="0dp"
-                                android:layout_height="44dp"
-                                android:layout_weight="1"
-                                android:background="@drawable/chip"
-                                android:text="@string/pass_double"
-                                android:textAllCaps="false"
-                                android:textColor="@color/chip_text"
-                                android:textSize="@dimen/text_body" />
-                        </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/stageInfo"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="14dp"
-                            android:layout_marginEnd="14dp"
-                            android:layout_marginTop="10dp"
-                            android:lineSpacingExtra="3dp"
-                            android:textColor="@color/content_faint"
-                            android:textSize="@dimen/text_fine" />
-                    </LinearLayout>
-
-                    <!-- ── Ayarlar ───────────────────────────────────── -->
-                    <LinearLayout
-                        android:id="@+id/rowSettings"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/row_height"
-                        android:layout_marginTop="@dimen/gap_row"
-                        android:background="@drawable/glass_row"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingStart="14dp"
-                        android:paddingEnd="12dp">
-
-                        <TextView style="@style/RowTitle" android:text="@string/row_settings" />
-
-                        <Space android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" />
-
-                        <TextView android:id="@+id/valueSettings" style="@style/RowValue" />
-
-                        <ImageView
-                            android:id="@+id/chevronSettings"
-                            android:layout_width="16dp"
-                            android:layout_height="16dp"
-                            android:layout_marginStart="8dp"
-                            android:contentDescription="@string/row_settings"
-                            android:src="@drawable/ic_chevron" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/panelSettings"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/glass_panel"
-                        android:orientation="vertical"
-                        android:padding="14dp"
-                        android:visibility="gone">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="@string/sharpen"
-                                android:textColor="@color/content_soft"
-                                android:textSize="@dimen/text_body" />
-
-                            <TextView
-                                android:id="@+id/sharpenValue"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/display"
-                                android:textColor="@color/content"
-                                android:textSize="@dimen/text_body" />
-                        </LinearLayout>
-
-                        <SeekBar
-                            android:id="@+id/sharpenSeek"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="6dp"
-                            android:max="100"
-                            android:maxHeight="2dp"
-                            android:minHeight="2dp"
-                            android:progress="45"
-                            android:progressDrawable="@drawable/seek_track"
-                            android:splitTrack="false"
-                            android:thumb="@drawable/seek_thumb"
-                            android:thumbOffset="7dp" />
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginTop="16dp"
-                            android:background="@color/glass_stroke" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:orientation="horizontal">
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/denoise"
-                                    android:textColor="@color/content_soft"
-                                    android:textSize="@dimen/text_body" />
-
-                                <TextView
-                                    android:id="@+id/denoiseInfo"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="3dp"
-                                    android:lineSpacingExtra="2dp"
-                                    android:textColor="@color/content_faint"
-                                    android:textSize="@dimen/text_fine" />
-                            </LinearLayout>
-
-                            <Button
-                                android:id="@+id/denoiseToggle"
-                                android:layout_width="92dp"
-                                android:layout_height="40dp"
-                                android:layout_marginStart="12dp"
-                                android:background="@drawable/chip"
-                                android:textAllCaps="false"
-                                android:textColor="@color/chip_text"
                                 android:textSize="@dimen/text_fine" />
                         </LinearLayout>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginTop="16dp"
-                            android:background="@color/glass_stroke" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:text="@string/format"
-                            android:textColor="@color/content_soft"
-                            android:textSize="@dimen/text_body" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:orientation="horizontal">
-
-                            <Button
-                                android:id="@+id/formatJpeg"
-                                android:layout_width="0dp"
-                                android:layout_height="44dp"
-                                android:layout_weight="1"
-                                android:background="@drawable/chip"
-                                android:letterSpacing="0.06"
-                                android:text="JPEG"
-                                android:textAllCaps="false"
-                                android:textColor="@color/chip_text"
-                                android:textSize="@dimen/text_body" />
-
-                            <Space android:layout_width="8dp" android:layout_height="1dp" />
-
-                            <Button
-                                android:id="@+id/formatPng"
-                                android:layout_width="0dp"
-                                android:layout_height="44dp"
-                                android:layout_weight="1"
-                                android:background="@drawable/chip"
-                                android:letterSpacing="0.06"
-                                android:text="PNG"
-                                android:textAllCaps="false"
-                                android:textColor="@color/chip_text"
-                                android:textSize="@dimen/text_body" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/qualityRow"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="@string/quality"
-                                android:textColor="@color/content_soft"
-                                android:textSize="@dimen/text_body" />
-
-                            <TextView
-                                android:id="@+id/qualityValue"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/display"
-                                android:textColor="@color/content"
-                                android:textSize="@dimen/text_body" />
-                        </LinearLayout>
-
-                        <SeekBar
-                            android:id="@+id/qualitySeek"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="6dp"
-                            android:max="30"
-                            android:maxHeight="2dp"
-                            android:minHeight="2dp"
-                            android:progress="22"
-                            android:progressDrawable="@drawable/seek_track"
-                            android:splitTrack="false"
-                            android:thumb="@drawable/seek_thumb"
-                            android:thumbOffset="7dp" />
                     </LinearLayout>
 
-                    <!-- ── Cihaz ─────────────────────────────────────── -->
+                    <!-- ══ Kunye ════════════════════════════════════════
+                         Motor, gecis sayisi, bicim, kalite, keskinlik,
+                         gurultu ve cihaz artik dort acilir cekmecede degil,
+                         tek bir dokumde. Her satir: solda etiket, sagda
+                         deger, altinda cizgi. Bir aletin arka yuzundeki
+                         kunye plakasi gibi okunur — acilip kapanmaz, hep
+                         gorunur.
+
+                         Ayarlanabilir olanlar satira dokununca yerinde
+                         acilir; okunur olanlar (cihaz) yalnizca gosterir.
+                         ═══════════════════════════════════════════════ -->
                     <LinearLayout
-                        android:id="@+id/rowDevice"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/row_height"
-                        android:layout_marginTop="@dimen/gap_row"
-                        android:background="@drawable/glass_row"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingStart="14dp"
-                        android:paddingEnd="12dp">
-
-                        <TextView style="@style/RowTitle" android:text="@string/row_device" />
-
-                        <Space android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" />
-
-                        <TextView android:id="@+id/valueDevice" style="@style/RowValue" />
-
-                        <ImageView
-                            android:id="@+id/chevronDevice"
-                            android:layout_width="16dp"
-                            android:layout_height="16dp"
-                            android:layout_marginStart="8dp"
-                            android:contentDescription="@string/row_device"
-                            android:src="@drawable/ic_chevron" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/panelDevice"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/glass_panel"
-                        android:orientation="vertical"
-                        android:padding="14dp"
-                        android:visibility="gone">
+                        android:layout_marginTop="@dimen/gap_section"
+                        android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/deviceInfo"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/display"
-                            android:lineSpacingExtra="4dp"
-                            android:textColor="@color/content_dim"
-                            android:textSize="@dimen/text_fine" />
+                            style="@style/FieldLabel"
+                            android:layout_marginStart="@dimen/gutter"
+                            android:layout_marginEnd="@dimen/gutter"
+                            android:layout_marginBottom="10dp"
+                            android:text="@string/spec_title" />
 
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginTop="14dp"
-                            android:background="@color/glass_stroke" />
+                        <!-- ── Motor ──────────────────────────────────── -->
+                        <LinearLayout
+                            android:id="@+id/rowEngine"
+                            style="@style/SpecRow">
 
-                        <TextView
-                            style="@style/PanelLabel"
-                            android:layout_marginTop="14dp"
-                            android:text="@string/load_level" />
+                            <TextView style="@style/SpecKey" android:text="@string/row_engine" />
+
+                            <TextView android:id="@+id/valueEngine" style="@style/SpecValue" />
+
+                            <ImageView
+                                android:id="@+id/chevronEngine"
+                                style="@style/SpecChevron"
+                                android:contentDescription="@string/row_engine" />
+                        </LinearLayout>
+
+                        <View style="@style/SpecRule" />
 
                         <LinearLayout
-                            android:id="@+id/loadLevels"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:orientation="horizontal" />
+                            android:id="@+id/panelEngine"
+                            style="@style/SpecPanel"
+                            android:visibility="gone">
 
-                        <TextView
-                            android:id="@+id/loadInfo"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:lineSpacingExtra="3dp"
-                            android:textColor="@color/content_faint"
-                            android:textSize="@dimen/text_fine" />
+                            <LinearLayout
+                                android:id="@+id/modelList"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical" />
+
+                            <TextView
+                                android:id="@+id/modelInfo"
+                                style="@style/SpecNote"
+                                android:layout_marginTop="10dp" />
+
+                            <TextView
+                                style="@style/FieldLabel"
+                                android:layout_marginTop="16dp"
+                                android:text="@string/passes" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:orientation="horizontal">
+
+                                <Button
+                                    android:id="@+id/stage1"
+                                    style="@style/SpecChip"
+                                    android:text="@string/pass_single" />
+
+                                <Space android:layout_width="6dp" android:layout_height="1dp" />
+
+                                <Button
+                                    android:id="@+id/stage2"
+                                    style="@style/SpecChip"
+                                    android:text="@string/pass_double" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/stageInfo"
+                                style="@style/SpecNote"
+                                android:layout_marginTop="8dp" />
+                        </LinearLayout>
+
+                        <!-- ── Bicim ──────────────────────────────────── -->
+                        <LinearLayout
+                            android:id="@+id/rowSettings"
+                            style="@style/SpecRow">
+
+                            <TextView style="@style/SpecKey" android:text="@string/row_settings" />
+
+                            <TextView android:id="@+id/valueSettings" style="@style/SpecValue" />
+
+                            <ImageView
+                                android:id="@+id/chevronSettings"
+                                style="@style/SpecChevron"
+                                android:contentDescription="@string/row_settings" />
+                        </LinearLayout>
+
+                        <View style="@style/SpecRule" />
+
+                        <LinearLayout
+                            android:id="@+id/panelSettings"
+                            style="@style/SpecPanel"
+                            android:visibility="gone">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <Button
+                                    android:id="@+id/formatJpeg"
+                                    style="@style/SpecChip"
+                                    android:letterSpacing="0.06"
+                                    android:text="JPEG" />
+
+                                <Space android:layout_width="6dp" android:layout_height="1dp" />
+
+                                <Button
+                                    android:id="@+id/formatPng"
+                                    style="@style/SpecChip"
+                                    android:letterSpacing="0.06"
+                                    android:text="PNG" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/qualityRow"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="16dp"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    style="@style/FieldLabel"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:text="@string/quality" />
+
+                                <TextView
+                                    android:id="@+id/qualityValue"
+                                    style="@style/SpecReadout" />
+                            </LinearLayout>
+
+                            <SeekBar
+                                android:id="@+id/qualitySeek"
+                                style="@style/SpecSeek"
+                                android:max="30"
+                                android:progress="22" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="16dp"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    style="@style/FieldLabel"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:text="@string/sharpen" />
+
+                                <TextView
+                                    android:id="@+id/sharpenValue"
+                                    style="@style/SpecReadout" />
+                            </LinearLayout>
+
+                            <SeekBar
+                                android:id="@+id/sharpenSeek"
+                                style="@style/SpecSeek"
+                                android:max="100"
+                                android:progress="45" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="16dp"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        style="@style/FieldLabel"
+                                        android:text="@string/denoise" />
+
+                                    <TextView
+                                        android:id="@+id/denoiseInfo"
+                                        style="@style/SpecNote"
+                                        android:layout_marginTop="4dp" />
+                                </LinearLayout>
+
+                                <Button
+                                    android:id="@+id/denoiseToggle"
+                                    android:layout_width="86dp"
+                                    android:layout_height="36dp"
+                                    android:layout_marginStart="12dp"
+                                    android:background="@drawable/chip"
+                                    android:fontFamily="@font/sans"
+                                    android:textAllCaps="false"
+                                    android:textColor="@color/chip_text"
+                                    android:textSize="@dimen/text_fine" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <!-- ── Cihaz ──────────────────────────────────── -->
+                        <LinearLayout
+                            android:id="@+id/rowDevice"
+                            style="@style/SpecRow">
+
+                            <TextView style="@style/SpecKey" android:text="@string/row_device" />
+
+                            <TextView android:id="@+id/valueDevice" style="@style/SpecValue" />
+
+                            <ImageView
+                                android:id="@+id/chevronDevice"
+                                style="@style/SpecChevron"
+                                android:contentDescription="@string/row_device" />
+                        </LinearLayout>
+
+                        <View style="@style/SpecRule" />
+
+                        <LinearLayout
+                            android:id="@+id/panelDevice"
+                            style="@style/SpecPanel"
+                            android:visibility="gone">
+
+                            <TextView
+                                android:id="@+id/deviceInfo"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/display"
+                                android:lineSpacingExtra="4dp"
+                                android:textColor="@color/content_dim"
+                                android:textSize="@dimen/text_fine" />
+
+                            <TextView
+                                style="@style/FieldLabel"
+                                android:layout_marginTop="16dp"
+                                android:text="@string/load_level" />
+
+                            <LinearLayout
+                                android:id="@+id/loadLevels"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:orientation="horizontal" />
+
+                            <TextView
+                                android:id="@+id/loadInfo"
+                                style="@style/SpecNote"
+                                android:layout_marginTop="8dp" />
+                        </LinearLayout>
                     </LinearLayout>
+
+                    <!-- Eski cozunurluk cekmecesinin kimlikleri; olcek
+                         onlarin yerini aldi ama MainActivity hala tier
+                         kaplarina yaziyor. Gorunmez tutuluyorlar. -->
+                    <LinearLayout
+                        android:id="@+id/tier1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:visibility="gone" />
+
+                    <LinearLayout
+                        android:id="@+id/tier2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:visibility="gone" />
+
+                    <LinearLayout
+                        android:id="@+id/tier3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:visibility="gone" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/pageHistory"
                     android:layout_width="match_parent"
@@ -982,7 +884,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/glass_card"
+                        android:background="@drawable/panel"
                         android:orientation="vertical"
                         android:padding="14dp">
 
@@ -1053,7 +955,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/glass_card"
+                        android:background="@drawable/panel"
                         android:orientation="vertical"
                         android:padding="18dp">
 
@@ -1137,7 +1039,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:layout_marginTop="20dp"
-                            android:background="@color/glass_stroke" />
+                            android:background="@color/rule" />
 
                         <TextView
                             android:id="@+id/queueStatus"
@@ -1163,7 +1065,7 @@
                     android:layout_height="1dp"
                     android:layout_marginStart="@dimen/gutter"
                     android:layout_marginEnd="@dimen/gutter"
-                    android:background="@color/glass_stroke" />
+                    android:background="@color/rule" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -1445,7 +1347,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/glass_stroke" />
+            android:background="@color/rule" />
 
         <!-- Izin henuz verilmemisken gorunen aciklama -->
         <LinearLayout

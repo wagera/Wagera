@@ -141,57 +141,26 @@ def font(path, sp):
 
 def backdrop(size, theme):
     """
-    Sinematik zemin.
+    Sayfa zemini.
 
-    Backdrop.java ile ayni matematik: kosegen taban gecisi, iki yumusak
-    isik patlamasi, kenar karartmasi ve gren. Degerler orada da burada da
-    elle tutuldugu icin biri degisirse digeri de degismeli.
+    Alet dilinde zemin duzdur. Onceki dilde kosegen bir gecis, iki isik
+    patlamasi ve kenar karartmasi vardi — hepsi "sinematik" bir derinlik
+    icindi. Yeni dil derinlik degil kesinlik ariyor, o yuzden zemin tek
+    renk ve uzerine ince bir olcu izgarasi geliyor.
     """
     w, h = size
-    base_top, base_bottom, cool, warm, vig, grain_up = (
-        ((13, 14, 17), (4, 4, 5), (46, 56, 78), (44, 36, 32), 0.30, True)
-        if theme == "dark" else
-        ((255, 255, 255), (234, 236, 242), (222, 228, 240), (236, 231, 226), 0.06, False)
-    )
-    img = Image.new("RGB", (w, h))
-    px = img.load()
-    rnd = random.Random(20260823)
+    folder = "values" if theme == "light" else "values-night"
+    C = load_colors(os.path.join(RES, folder, "colors.xml"))
+    img = Image.new("RGB", (w, h), C["bg"][:3])
+    d = ImageDraw.Draw(img, "RGBA")
 
-    for y in range(h):
-        v = y / (h - 1.0)
-        for x in range(w):
-            u = x / (w - 1.0)
-            t = min(1.0, max(0.0, v * 0.78 + u * 0.22))
-            r = base_top[0] + (base_bottom[0] - base_top[0]) * t
-            g = base_top[1] + (base_bottom[1] - base_top[1]) * t
-            b = base_top[2] + (base_bottom[2] - base_top[2]) * t
-
-            for (cx, cy, rad, col, strength) in (
-                (w * 0.18, h * 0.10, w * 1.05, cool, 0.40),
-                (w * 0.92, h * 0.74, w * 0.78, warm, 0.30),
-            ):
-                dx, dy = (x - cx) / rad, (y - cy) / rad
-                d = math.sqrt(dx * dx + dy * dy)
-                if d < 1.0:
-                    f = (1 - d) ** 2 * strength
-                    if theme == "dark":
-                        r += col[0] * f
-                        g += col[1] * f
-                        b += col[2] * f
-                    else:
-                        r = r * (1 - f) + col[0] * f
-                        g = g * (1 - f) + col[1] * f
-                        b = b * (1 - f) + col[2] * f
-
-            dx, dy = (u - 0.5) * 2, (v - 0.5) * 2
-            edge = min(1.0, math.sqrt(dx * dx + dy * dy) / 1.35)
-            k = 1.0 - vig * edge * edge
-            r, g, b = r * k, g * k, b * k
-
-            n = rnd.gauss(0, 2.0) * (1 if grain_up else -1)
-            px[x, y] = (max(0, min(255, int(r + n))),
-                        max(0, min(255, int(g + n))),
-                        max(0, min(255, int(b + n))))
+    # Olcu izgarasi: 8dp araliklarla, cok soluk
+    step = px(8)
+    grid = C["grid"]
+    for x in range(0, w, step):
+        d.line([(x, 0), (x, h)], fill=grid, width=1)
+    for y in range(0, h, step):
+        d.line([(0, y), (w, y)], fill=grid, width=1)
     return img
 
 
@@ -206,7 +175,7 @@ def mark_image(size, color):
 
 
 def render(theme):
-    """theme: 'light' -> values/colors.xml, 'dark' -> values-night/colors.xml"""
+    """Buyut sayfasi — alet paneli."""
     folder = "values" if theme == "light" else "values-night"
     C = load_colors(os.path.join(RES, folder, "colors.xml"))
 
@@ -214,33 +183,36 @@ def render(theme):
     img = backdrop((W, H), theme).convert("RGBA")
     d = ImageDraw.Draw(img, "RGBA")
 
-    def glass(x, y, w, h, radius, pressed=False):
-        """Cam panel: yari saydam gecis + sac cizgisi + ust isik cizgisi."""
-        box = [px(x), px(y), px(x + w), px(y + h)]
-        top = C["glass_press"] if pressed else C["glass_top"]
-        bottom = C["glass_bottom"]
-        # Dikey gecisi satir satir cizip yuvarlak koseli maskeyle kirp
-        panel = Image.new("RGBA", (box[2] - box[0], box[3] - box[1]))
-        pd = ImageDraw.Draw(panel)
-        for row in range(panel.height):
-            t = row / max(1, panel.height - 1)
-            col = tuple(int(top[i] + (bottom[i] - top[i]) * t) for i in range(3))
-            a = int(top[3] + (bottom[3] - top[3]) * t)
-            pd.line([(0, row), (panel.width, row)], fill=col + (a,))
-        mask = Image.new("L", panel.size, 0)
-        ImageDraw.Draw(mask).rounded_rectangle(
-            [0, 0, panel.width - 1, panel.height - 1], radius=px(radius), fill=255)
-        img.paste(panel, (box[0], box[1]), mask)
-        d.rounded_rectangle(box, radius=px(radius), outline=C["glass_stroke"],
-                            width=max(1, SCALE // 3))
-        # Ust kenardaki isik cizgisi
-        if C["glass_sheen"][3] > 0:
-            inset = px(radius * 0.8)
-            d.line([(box[0] + inset, box[1] + 1), (box[2] - inset, box[1] + 1)],
-                   fill=C["glass_sheen"], width=max(1, SCALE // 3))
+    def rule(y, x0=0, x1=DP_W):
+        d.line([(px(x0), px(y)), (px(x1), px(y))], fill=C["rule"],
+               width=max(1, SCALE // 3))
 
-    def text(x, y, s, f, color, anchor="la"):
-        d.text((px(x), px(y)), s, font=f, fill=color[:3] + (255,), anchor=anchor)
+    def text(x, y, s_, f, color, anchor="la"):
+        d.text((px(x), px(y)), s_, font=f, fill=color[:3] + (255,), anchor=anchor)
+
+    def tracked_width(s_, f, spacing):
+        """Harf araligi acilmis metnin toplam genisligi (piksel)."""
+        if not s_:
+            return 0
+        return sum(d.textlength(ch, font=f) for ch in s_) + spacing * (len(s_) - 1)
+
+    def tracked(x, y, s_, f, color, spacing, anchor="la"):
+        """
+        Harf araligi acilmis metin.
+
+        PIL letterSpacing bilmez, harfler tek tek yerlestirilir. Hizalama
+        icin once toplam genislik olculur; onceki surumde metin once yanlis
+        yere cizilip uzeri zeminle boyanmaya calisiliyordu ve ekranda iz
+        birakiyordu.
+        """
+        cx = px(x)
+        if anchor == "ra":
+            cx -= tracked_width(s_, f, spacing)
+        elif anchor == "ma":
+            cx -= tracked_width(s_, f, spacing) / 2
+        for ch in s_:
+            d.text((cx, px(y)), ch, font=f, fill=color[:3] + (255,), anchor="la")
+            cx += d.textlength(ch, font=f) + spacing
 
     gutter = DIM["gutter"]
     inner = DP_W - 2 * gutter
@@ -250,96 +222,142 @@ def render(theme):
     mark_px = px(22)
     img.alpha_composite(mark_image(mark_px, "#%02X%02X%02X" % C["content"][:3]),
                         (px(gutter), px(hh / 2) - mark_px // 2))
-    bx = px(gutter) + mark_px + px(9)
-    f_b1, f_b2 = font(F_BOLD, 11), font(F_REG, 11)
+    bx = px(gutter) + mark_px + px(10)
+    f_b1, f_b2 = font(F_BOLD, DIM["text_body"]), font(F_REG, DIM["text_body"])
     d.text((bx, px(hh / 2)), STR["brand_first"], font=f_b1,
            fill=C["content"][:3] + (255,), anchor="lm")
     bx += int(d.textlength(STR["brand_first"], font=f_b1)) + px(3)
     d.text((bx, px(hh / 2)), STR["brand_second"], font=f_b2,
            fill=C["content_dim"][:3] + (255,), anchor="lm")
-    # Gercek uygulama sembol degil metin kullanir; cizim de oyle olsun
     for i, label in enumerate((STR["theme_dark"], "TR")):
         bw = 38 if i == 0 else 30
-        bxx = DP_W - gutter - (30 + 6) * (1 - i) - bw if i == 0 else DP_W - gutter - bw
-        glass(bxx, hh / 2 - 15, bw, 30, 8)
-        text(bxx + bw / 2, hh / 2, label, font(F_REG, 9), C["content_soft"], anchor="mm")
+        bxx = (DP_W - gutter - (30 + 6) - bw) if i == 0 else (DP_W - gutter - bw)
+        d.rounded_rectangle([px(bxx), px(hh / 2 - 15), px(bxx + bw), px(hh / 2 + 15)],
+                            radius=px(3), outline=C["rule"], width=max(1, SCALE // 3))
+        text(bxx + bw / 2, hh / 2, label, font(F_REG, DIM["text_fine"]),
+             C["content_soft"], anchor="mm")
+    rule(hh)
 
-    y = hh + DIM["gap_block"]
+    # ── Durum seridi ─────────────────────────────────────────────────
+    strip_h = 30
+    d.rectangle([0, px(hh), W, px(hh + strip_h)], fill=C["surface_low"])
+    dy = hh + strip_h / 2
+    d.ellipse([px(gutter), px(dy - 3), px(gutter + 6), px(dy + 3)], fill=C["signal"])
+    tracked(gutter + 14, dy - 5, fmt(STR["status_format"], "GPU", 6),
+            font(F_DISPLAY, 10), C["content_dim"], px(0.4))
+    tracked(DP_W - gutter, dy - 5, STR["thermal_none"], font(F_DISPLAY, 10),
+            C["content_faint"], px(0.4), anchor="ra")
+    rule(hh + strip_h)
 
-    # ── Kahraman baslik ──────────────────────────────────────────────
-    f_disp = font(F_DISPLAY, DIM["text_display"])
-    line_h = DIM["text_display"] * 1.06
-    text(gutter, y, STR["hero_line_1"], f_disp, C["content"])
-    y += line_h
-    d.text((px(gutter), px(y)), STR["hero_line_2"], font=f_disp,
-           fill=C["content"][:3] + (158,))          # ikinci satir %62 ortuculuk
-    y += line_h + 12
+    y = hh + strip_h
 
-    f_copy = font(F_REG, DIM["text_body"])
-    for line in wrap(STR["hero_copy"], f_copy, px(inner), d):
-        text(gutter, y, line, f_copy, C["content_dim"])
-        y += DIM["text_body"] * 1.42
-    y += DIM["gap_section"] - DIM["text_body"] * 0.42
-
-    # ── Sahne ────────────────────────────────────────────────────────
+    # ── Vizor ────────────────────────────────────────────────────────
     stage_h = DIM["stage_min"]
-    glass(gutter, y, inner, stage_h, DIM["radius_stage"])
+    d.rectangle([0, px(y), W, px(y + stage_h)], fill=C["surface_low"])
+    # Kose ayraclari
+    arm, thick = px(18), max(2, int(2 * SCALE / 3))
+    for cx, cy, sx, sy in ((0, y, 1, 1), (DP_W, y, -1, 1),
+                           (0, y + stage_h, 1, -1), (DP_W, y + stage_h, -1, -1)):
+        X, Y = px(cx), px(cy)
+        d.rectangle([min(X, X + sx * arm), min(Y, Y + sy * thick),
+                     max(X, X + sx * arm), max(Y, Y + sy * thick)], fill=C["rule_strong"])
+        d.rectangle([min(X, X + sx * thick), min(Y, Y + sy * arm),
+                     max(X, X + sx * thick), max(Y, Y + sy * arm)], fill=C["rule_strong"])
+
     cx, cy = DP_W / 2, y + stage_h / 2
-    d.rounded_rectangle([px(cx - 15), px(cy - 30), px(cx + 15), px(cy - 8)],
-                        radius=px(3), outline=C["content_ghost"], width=max(1, SCALE // 3))
-    d.line([(px(cx - 15), px(cy - 13)), (px(cx - 5), px(cy - 21)),
-            (px(cx + 2), px(cy - 16)), (px(cx + 8), px(cy - 21)),
-            (px(cx + 15), px(cy - 13))],
+    d.rounded_rectangle([px(cx - 13), px(cy - 28), px(cx + 13), px(cy - 9)],
+                        radius=px(2), outline=C["content_ghost"], width=max(1, SCALE // 3))
+    d.line([(px(cx - 13), px(cy - 13)), (px(cx - 4), px(cy - 20)),
+            (px(cx + 3), px(cy - 15)), (px(cx + 13), px(cy - 22))],
            fill=C["content_ghost"], width=max(1, SCALE // 3))
-    text(cx, cy + 6, STR["no_photo"], font(F_MED, DIM["text_body"]),
-         C["content_dim"], anchor="mm")
-    text(cx, cy + 23, STR["stage_tap_hint"], font(F_REG, DIM["text_fine"]),
-         C["content_ghost"], anchor="mm")
-    y += stage_h + DIM["gap_block"]
+    f_empty = font(F_DISPLAY, DIM["text_fine"])
+    tracked(cx, cy + 2, STR["no_photo"].upper(), f_empty, C["content_dim"], px(1.0),
+            anchor="ma")
+    text(cx, cy + 22, STR["stage_tap_hint"], font(F_REG, DIM["text_fine"]),
+         C["content_faint"], anchor="mm")
+    y += stage_h
+    rule(y)
+
+    # ── Kaynak kunyesi ───────────────────────────────────────────────
+    cap_h = 38
+    bw = 84
+    d.rounded_rectangle([px(DP_W - gutter - bw), px(y + 5), px(DP_W - gutter), px(y + 33)],
+                        radius=px(3), outline=C["rule"], width=max(1, SCALE // 3))
+    text(DP_W - gutter - bw / 2, y + cap_h / 2, STR["pick_photo"],
+         font(F_REG, DIM["text_fine"]), C["content_soft"], anchor="mm")
+    y += cap_h
+    rule(y)
+
+    # ── Cozunurluk olcegi ────────────────────────────────────────────
+    y += DIM["gap_block"]
+    tracked(gutter, y, STR["row_resolution"].upper(), font(F_DISPLAY, DIM["text_label"]),
+            C["content_faint"], px(1.4))
+    text(DP_W - gutter, y - 4, "8K", font(F_DISPLAY_B, DIM["text_read"]),
+         C["content"], anchor="ra")
+
+    y += 22
+    scale_h = 52
+    ticks = ["2K", "2.5K", "3K", "4K", "5K", "6K", "8K", "10K", "12K", "16K",
+             "32K", "64K", "128K", "256K"]
+    slot = inner / len(ticks)
+    selected = 6
+    for i, label in enumerate(ticks):
+        tier = 0 if i < 5 else (1 if i < 9 else 2)
+        bar_h = 18 + tier * 9
+        tx = gutter + slot * (i + 0.5)
+        col = C["signal"] if i == selected else C["content_ghost"]
+        d.rectangle([px(tx - 1.5), px(y + scale_h - bar_h), px(tx + 1.5), px(y + scale_h)],
+                    fill=col)
+        if i == selected:
+            text(tx, y + scale_h + 9, label, font(F_DISPLAY, 9), C["signal"], anchor="mm")
+    y += scale_h + 18
+
+    for i, (label, align) in enumerate(((STR["tier_standard"], "la"),
+                                        (STR["tier_high"], "mm"),
+                                        (STR["tier_extreme"], "ra"))):
+        pos = gutter if i == 0 else (DP_W / 2 if i == 1 else DP_W - gutter)
+        tracked(pos, y, label.upper(), font(F_DISPLAY, 9), C["content_ghost"], px(1.0),
+                anchor={"la": "la", "mm": "ma", "ra": "ra"}[align])
+    y += 20
+
+    text(gutter, y, "7680 × 5760  ·  44.2 MP", font(F_DISPLAY, DIM["text_fine"]),
+         C["content_dim"])
+    y += 26
 
     # ── Eylem cubugu ─────────────────────────────────────────────────
     cta_h = DIM["cta_height"]
-    half = (inner - DIM["gap_row"]) / 2
-    glass(gutter, y, half, cta_h, DIM["radius_card"])
-    text(gutter + 14, y + cta_h / 2 - 8, "4K", font(F_DISPLAY_B, DIM["text_row"]),
-         C["content"], anchor="lm")
-    text(gutter + 14, y + cta_h / 2 + 11, STR["pick_photo_first"][:24],
-         font(F_DISPLAY, 8), C["content_faint"], anchor="lm")
-    # Birincil eylem: icerik rengine boyanir, yazisi zemin rengine doner
-    d.rounded_rectangle(
-        [px(gutter + half + DIM["gap_row"]), px(y),
-         px(gutter + half + DIM["gap_row"] + half), px(y + cta_h)],
-        radius=px(DIM["radius_card"]), fill=C["content"][:3] + (255,))
-    text(gutter + half + DIM["gap_row"] + half / 2, y + cta_h / 2,
-         STR["start"], font(F_BOLD, DIM["text_row"]), C["bg"], anchor="mm")
+    d.rounded_rectangle([px(gutter), px(y), px(DP_W - gutter), px(y + cta_h)],
+                        radius=px(3), fill=C["signal"])
+    text(DP_W / 2, y + cta_h / 2, STR["start"], font(F_BOLD, DIM["text_row"]),
+         C["signal_on"], anchor="mm")
     y += cta_h + DIM["gap_section"]
 
-    # ── Akordeon satirlari ───────────────────────────────────────────
-    rows = (
-        (STR["row_resolution"], "4K"),
-        (STR["row_engine"], "Real-ESRGAN 4x"),
-        (STR["row_settings"], "JPEG \u00b7 95"),
-        (STR["row_device"], STR["load_balanced"]),
-    )
+    # ── Kunye ────────────────────────────────────────────────────────
+    tracked(gutter, y, STR["spec_title"].upper(), font(F_DISPLAY, DIM["text_label"]),
+            C["content_faint"], px(1.4))
+    y += 18
+
+    rows = ((STR["row_engine"], "Real-ESRGAN 4x"),
+            (STR["row_settings"], "JPEG · 95"),
+            (STR["row_device"], STR["load_balanced"]))
     rh = DIM["row_height"]
     for title, value in rows:
-        glass(gutter, y, inner, rh, DIM["radius_card"])
-        text(gutter + 14, y + rh / 2, title, font(F_MED, DIM["text_row"]),
-             C["content"], anchor="lm")
-        text(DP_W - gutter - 30, y + rh / 2, value, font(F_REG, DIM["text_body"]),
-             C["content_dim"], anchor="rm")
-        ax = DP_W - gutter - 20
-        d.line([(px(ax - 4), px(y + rh / 2 - 2)), (px(ax), px(y + rh / 2 + 2)),
-                (px(ax + 4), px(y + rh / 2 - 2))],
+        tracked(gutter, y + rh / 2 - 5, title.upper(), font(F_DISPLAY, DIM["text_fine"]),
+                C["content_faint"], px(1.0))
+        text(DP_W - gutter - 22, y + rh / 2, value, font(F_MED, DIM["text_body"]),
+             C["content"], anchor="rm")
+        ax = DP_W - gutter - 8
+        d.line([(px(ax - 4), px(y + rh / 2 - 2)), (px(ax - 1), px(y + rh / 2 + 1)),
+                (px(ax + 2), px(y + rh / 2 - 2))],
                fill=C["content_faint"], width=max(1, SCALE // 3))
-        y += rh + DIM["gap_row"]
+        y += rh
+        rule(y)
 
     # ── Alt gezinme ──────────────────────────────────────────────────
     nav_h = 62
     ny = DP_H - nav_h
-    d.rectangle([0, px(ny), W, H], fill=C["glass_bottom"])
-    d.line([(0, px(ny)), (W, px(ny))], fill=C["glass_stroke"],
-           width=max(1, SCALE // 3))
+    d.rectangle([0, px(ny), W, H], fill=C["bg"])
+    rule(ny)
     tabs = (STR["nav_upscale"], STR["nav_history"], STR["nav_requests"])
     pad = 10
     slot = (DP_W - 2 * pad) / 3
@@ -347,13 +365,13 @@ def render(theme):
         left = pad + i * slot
         active = i == 0
         if active:
-            glass(left + 3, ny + 6, slot - 6, nav_h - 12, 11)
+            d.rectangle([px(left + 14), px(ny), px(left + slot - 14), px(ny + 2)],
+                        fill=C["signal"])
         text(left + slot / 2, ny + nav_h / 2, label,
-             font(F_BOLD if active else F_REG, 11),
+             font(F_BOLD if active else F_REG, DIM["text_fine"]),
              C["content"] if active else C["content_faint"], anchor="mm")
 
     return img.convert("RGB")
-
 
 
 def render_launch(theme):
@@ -391,7 +409,7 @@ def render_notification(theme):
     def shade(x, y, w, h, radius):
         box = [px(x), px(y), px(x + w), px(y + h)]
         d.rounded_rectangle(box, radius=px(radius),
-                            fill=C["glass_top"], outline=C["glass_stroke"],
+                            fill=C["surface"], outline=C["rule"],
                             width=max(1, SCALE // 3))
 
     gutter = 12

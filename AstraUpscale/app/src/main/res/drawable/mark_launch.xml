@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Acilis ekranindaki isaret.
+    AstraUpscale isareti.
 
-    mark_astra.xml ile ayni geometri, ama tint yok: acilis ekrani cizilirken
-    tema henuz cozulmemistir, dolayisiyla @color/content'e bagli bir tint
-    burada guvenilir degil. Renk sabit.
+    Kroksuz bir "A": sol bacak kuculen basamaklarla iner, sag bacak duz bir
+    diyagonaldir. Basamaklar isin oncesidir — piksel; duz kenar sonrasi —
+    cozulmus. Yani isaret hem markanin harfi, hem uygulamanin yaptigi is.
+
+    Onceki isaret dort kollu bir yildizdi. Kendi basina fena degildi ama
+    ayirt edici degildi: her yapay zeka uygulamasi yildiz kullaniyor.
+
+    Basamak sayisi 5'te sabitlendi. 200 pikselde ilerleme acikca okunuyor,
+    36 pikselde siluet hala "A" olarak duruyor; 6 basamakta kucuk boyda
+    basamaklar birbirine giriyor, 4'te ilerleme duygusu zayifliyor.
 -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="96dp"
@@ -12,28 +19,9 @@
     android:viewportWidth="48"
     android:viewportHeight="48">
 
-    <group android:pivotX="24" android:pivotY="24" android:rotation="45">
-        <path
-            android:fillColor="#FFF5F6F8"
-            android:fillAlpha="0.38"
-            android:fillType="evenOdd"
-            android:pathData="M24,11
-                             C24,21 26.9,24 37,24
-                             C26.9,24 24,26.9 24,37
-                             C24,26.9 21.1,24 11,24
-                             C21.1,24 24,21 24,11 Z
-                             M24,19.9 a4.1,4.1 0 1,1 0,8.2
-                             a4.1,4.1 0 1,1 0,-8.2 Z" />
-    </group>
+    <!-- Sag bacak: duz kenar -->
+    <path android:fillColor="#FFF5F6F8" android:pathData="M24,3.5 L43,44 L34,44 L24,16.5 Z" />
 
-    <path
-        android:fillColor="#FFF5F6F8"
-        android:fillType="evenOdd"
-        android:pathData="M24,2
-                         C24,19 29,24 46,24
-                         C29,24 24,29 24,46
-                         C24,29 19,24 2,24
-                         C19,24 24,19 24,2 Z
-                         M24,19.9 a4.1,4.1 0 1,1 0,8.2
-                         a4.1,4.1 0 1,1 0,-8.2 Z" />
+    <!-- Sol bacak: basamakli kenar -->
+    <path android:fillColor="#FFF5F6F8" android:pathData="M24,3.5 L20.2,3.5 L20.2,11.6 L16.4,11.6 L16.4,19.7 L12.6,19.7 L12.6,27.8 L8.8,27.8 L8.8,35.9 L5,35.9 L5,44 L14,44 L24,16.5 Z" />
 </vector>
