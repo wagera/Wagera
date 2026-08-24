@@ -298,7 +298,12 @@ hiçbir yerde iz kalmadı.
 1. Adres `version.json` oldu.
 2. Başarısızlık artık sessiz değil: sonuçta bir `failure` alanı var ve
    çevrimiçiyken denetim başarısız olursa bu arayüzde yazıyor.
-3. `tools/desktop/UpdateUrlTest.java` bir gerileme sınamasıdır — adresi
+3. İstemci tarafında önbelleğe takılma kapatıldı (`setUseCaches(false)`
+   ve no-cache başlıkları). GitHub'ın ham dosya sunucusu yanıtları
+   `max-age=300` ile önbellekler — yeni bir sürüm yayınlandıktan sonra beş
+   dakika kadar eskisi dönebilir, bu kendiliğinden düzelir. Düzelmeyen,
+   istemcinin kendi yanıt önbelleğine takılmış bir cevaptır.
+4. `tools/desktop/UpdateUrlTest.java` bir gerileme sınamasıdır — adresi
    `UpdateChecker.java` kaynağından okur (ikinci bir kopya tutmaz, yoksa
    ikisi ayrışır ve sınama yalan söyler), 200 döndüğünü ve `versionCode`
    alanının okunabildiğini doğrular.

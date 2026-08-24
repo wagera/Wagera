@@ -350,7 +350,12 @@ Three things were fixed:
 1. The URL is now `version.json`.
 2. Failure is no longer silent: the result carries a `failure` field, and a
    failed check while online is now shown in the UI.
-3. `tools/desktop/UpdateUrlTest.java` is a regression test — it reads the URL
+3. Client-side caching is disabled (`setUseCaches(false)` plus no-cache
+   headers). GitHub's raw file server caches responses with `max-age=300`,
+   so for about five minutes after publishing it can still serve the old
+   file — that resolves itself. What does not resolve itself is a response
+   pinned in the client's own HTTP cache.
+4. `tools/desktop/UpdateUrlTest.java` is a regression test — it reads the URL
    out of `UpdateChecker.java` itself (keeping no second copy, which would
    drift and make the test lie) and asserts a 200 with a readable `versionCode`.
 

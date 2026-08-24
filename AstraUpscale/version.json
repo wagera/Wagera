@@ -1,6 +1,6 @@
 {
-  "versionCode": 10,
-  "versionName": "9.0",
+  "versionCode": 11,
+  "versionName": "9.1",
   "apkUrl": "https://github.com/wagera/Wagera/raw/main/AstraUpscale/release/AstraUpscale.apk",
-  "notes": "Before/after comparison with pinch-zoom to 1:1, and your photo and settings now survive the app being killed in the background."
+  "notes": "Before/after comparison with pinch-zoom to 1:1, settings that survive the app being killed, and an update check that cannot get pinned to a cached response."
 }
