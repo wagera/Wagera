@@ -235,6 +235,62 @@ by looking at it at real usage sizes (14/18/24/48dp). The launcher icon's PNG
 variants come from the same vector via `tools/docs/render-launcher.py` — never
 drawn by hand, so the two cannot drift apart.
 
+### Before / after comparison
+
+The whole value of an upscaler is in detail you notice later with the naked
+eye. Showing the result as a small thumbnail makes that value **invisible**.
+In the comparison screen the two images share one viewport: source left of
+the divider, result right of it. Zoom and pan apply to both, so the same
+region is always being compared. A double tap toggles between fit and
+**1:1** — what the upscaling actually did is only visible at 1:1.
+
+**Two images, two different methods.** The result can be gigapixels and will
+not fit in memory, so only the visible region is read through
+`BitmapRegionDecoder`. The source is at most a few megapixels and is decoded
+once and kept — the source side is always shown magnified, so it needs no
+region reads. Measured: on an 8K output the fit view reads 2.8 MP, and at 1:1
+the region read is 1.7 MP, i.e. screen-sized.
+
+**Alignment.** The engine writes its output with the EXIF rotation applied
+(`BitmapPixelSource(bitmap, orientation)`), so the result file is upright.
+The comparison decodes the source with the same rotation; otherwise a photo
+carrying EXIF would show the two sides 90 degrees apart.
+
+**The maths is separate and tested.** Zoom and pan are too easy to get wrong
+to check by eye: a sign error slides the image out from under your finger, a
+bounds error shows what lies outside it. Since the app cannot be run in this
+environment (no KVM), the maths lives in `engine/Viewport.java`, which has no
+Android dependency, and is tested directly by
+`tools/desktop/ViewportTest.java` — 22 checks: the focus point staying put,
+clamping at the edges, zoom limits, sample size, source/result alignment, and
+a small image staying centred. `CompareView` uses that class and keeps no
+second copy.
+
+### Persistence of selection and settings
+
+Nothing was stored before, and there was no `onSaveInstanceState` either: let
+the app sit in the background long enough and Android ends the process, so on
+return both the chosen photo and every setting were gone. Preparing a 512K
+job and putting the phone in a pocket was enough to trigger it.
+
+`Session.java` writes the choices to persistent storage — instance state only
+lives inside the same process and does not come back after process death.
+What is stored is a few hundred bytes: not the photo, only the address that
+points at it.
+
+Restoring had two traps, both now closed:
+
+1. **Writing half a state.** The SeekBar listener calls `refreshTexts()`
+   without checking `fromUser`, and that writes the state. During a restore
+   `setProgress` triggered it, and the sharpening value was overwritten with
+   the default before it had been read. Every value is now read *before* any
+   is applied, and a `restoring` flag suppresses writing until the load
+   finishes.
+2. **A deleted photo.** The address existing is not enough; it is verified as
+   actually readable. If it is not, only that address is forgotten and the
+   settings are kept — nobody should lose everything they set up over one
+   deleted file.
+
 ### The launch screen
 
 Not a separate Activity — the theme's `windowBackground`. Android paints it

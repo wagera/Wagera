@@ -183,6 +183,63 @@ sıkıştırılmış daire) çizer; kayma artık ölçülebilir ve sıfırdır.
 Başlatıcı simgesinin PNG sürümleri de `tools/docs/render-launcher.py` ile
 aynı vektörden üretilir — elle çizilmez, ikisi ayrışmaz.
 
+### Öncesi / sonrası karşılaştırma
+
+Bir büyütme uygulamasının bütün değeri, sonradan çıplak gözle bakıldığında
+göze çarpan detaydadır. Sonucu küçük bir küçük resim olarak göstermek o
+değeri **görünmez** bırakır. Karşılaştırma ekranında iki görüntü aynı bakış
+penceresini paylaşır: bölme çizgisinin solunda kaynak, sağında sonuç.
+Yakınlaştırma ve kaydırma ikisine birden uygulanır, yani her an aynı bölge
+karşılaştırılır. Çift dokunuş sığdırma ile **1:1** arasında gider gelir —
+büyütmenin gerçekten ne yaptığı ancak 1:1'de görünür.
+
+**İki görüntü, iki farklı yöntem.** Sonuç gigapiksel olabilir, belleğe
+sığmaz; yalnızca ekranda görünen bölge `BitmapRegionDecoder` ile okunur.
+Kaynak ise en fazla birkaç megapikseldir, bir kez çözülüp tutulur — kaynak
+tarafı zaten büyütülmüş gösterileceği için bölge okumaya gerek yoktur.
+Ölçüldü: 8K bir çıkışta sığdırma görünümü 2.8 MP okuyor, 1:1'de okunan bölge
+1.7 MP (yani ekran kadar).
+
+**Hizalama.** Motor çıkışı EXIF dönüşünü uygulayarak yazar
+(`BitmapPixelSource(bitmap, orientation)`), yani sonuç dosyası doğru
+yöndedir. Karşılaştırmada kaynak da aynı dönüşle çözülür; aksi halde EXIF
+taşıyan bir fotoğrafta iki taraf birbirine göre 90 derece kayardı.
+
+**Matematik ayrı ve sınanmış.** Yakınlaştırma ve kaydırma gözle
+denetlenemeyecek kadar hataya açıktır: bir işaret hatası görüntüyü parmağın
+altından kaçırır, bir sınır hatası görüntünün dışını gösterir. Uygulama bu
+ortamda çalıştırılamadığı için (KVM yok) matematik Android'e bağlı olmayan
+`engine/Viewport.java` sınıfına çıkarıldı ve
+`tools/desktop/ViewportTest.java` ile doğrudan sınanıyor — 22 denetim:
+odak noktasının sabit kalması, sınırlara dayanma, yakınlık sınırları,
+örnekleme aralığı, kaynak/sonuç hizası ve sığan bir görüntünün ortalı
+kalması. `CompareView` bu sınıfı kullanır; ikinci bir kopya tutmaz.
+
+### Seçim ve ayarların kalıcılığı
+
+Önceden hiçbir şey saklanmıyordu ve `onSaveInstanceState` da yoktu:
+uygulama arka planda yeterince beklerse Android süreci sonlandırır ve
+kullanıcı geri döndüğünde seçtiği fotoğraf da, kurduğu bütün ayarlar da
+gitmiş olurdu. 512K'lık bir işi hazırlayıp telefonu cebe koymak bunu
+tetiklemeye yeterdi.
+
+`Session.java` seçimleri kalıcı depolamaya yazar — instance state yalnızca
+aynı süreç içinde yaşar, süreç ölümünden sonra geri gelmez. Saklanan
+birkaç yüz bayttır; fotoğrafın kendisi değil, yalnızca ona işaret eden
+adres.
+
+Geri yüklerken iki tuzak vardı ve ikisi de kapatıldı:
+
+1. **Yarım durum yazma.** SeekBar dinleyicisi `fromUser` ayrımı yapmadan
+   `refreshTexts()` çağırır, o da durumu yazar. Geri yüklerken
+   `setProgress` bunu tetikliyor ve keskinlik değeri okunmadan önce
+   varsayılanla eziliyordu. Artık bütün değerler *uygulanmadan önce*
+   okunuyor ve bir `restoring` bayrağı yükleme bitene kadar yazmayı
+   kapatıyor.
+2. **Silinmiş fotoğraf.** Adresin varlığı yetmez; gerçekten okunabildiği
+   doğrulanır. Okunamıyorsa yalnızca o adres unutulur, ayarlar korunur —
+   kullanıcının kurduğu her şey tek bir silinmiş dosya yüzünden gitmesin.
+
 ### Açılış ekranı
 
 Ayrı bir Activity değil, temanın `windowBackground`'u. Android pencereyi

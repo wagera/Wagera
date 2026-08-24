@@ -192,6 +192,14 @@
     <string name="notif_done_title">Photo is ready</string>
     <string name="notif_done_text">%1$d × %2$d · %3$.1f MP · %4$s · %5$.0f s</string>
     <string name="notif_failed_title">Upscaling failed</string>
+    <!-- Karsilastirma -->
+    <string name="compare">Compare</string>
+    <string name="compare_title">Before · After</string>
+    <string name="compare_before">Original</string>
+    <string name="compare_after">Upscaled</string>
+    <string name="compare_hint">Drag the handle · pinch to zoom</string>
+    <string name="compare_fit">Fit</string>
+    <string name="compare_failed">Could not open the comparison.</string>
     <string name="summary_jpeg">JPEG · %1$d</string>
     <string name="value_none">—</string>
 </resources>

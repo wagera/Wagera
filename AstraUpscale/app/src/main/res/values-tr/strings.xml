@@ -188,6 +188,14 @@
     <string name="notif_done_title">Fotoğraf hazır</string>
     <string name="notif_done_text">%1$d × %2$d · %3$.1f MP · %4$s · %5$.0f sn</string>
     <string name="notif_failed_title">Büyütme başarısız</string>
+    <!-- Karsilastirma -->
+    <string name="compare">Karşılaştır</string>
+    <string name="compare_title">Öncesi · Sonrası</string>
+    <string name="compare_before">Orijinal</string>
+    <string name="compare_after">Büyütülmüş</string>
+    <string name="compare_hint">Tutamağı sürükleyin · yakınlaştırmak için sıkıştırın</string>
+    <string name="compare_fit">Sığdır</string>
+    <string name="compare_failed">Karşılaştırma açılamadı.</string>
     <string name="summary_jpeg">JPEG · %1$d</string>
     <string name="value_none">—</string>
 </resources>
