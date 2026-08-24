@@ -38,10 +38,27 @@ ASSET_DIR="$APP/assets"
 if [ -n "${MODELS:-}" ]; then
     ASSET_DIR="$OUT/assets"
     rm -rf "$ASSET_DIR"; mkdir -p "$ASSET_DIR/models"
+
+    # Model DISINDAKI butun varliklar aynen tasinir.
+    #
+    # Burasi bir sure boyunca yalnizca modelleri kopyaliyordu. Yayin
+    # derlemesi her zaman MODELS ile yapildigi icin lisans bildirimleri
+    # (license.txt, third_party_notices.md) APK'ya hic girmiyordu — oysa
+    # paketlenen BSD, MIT ve OFL bileşenlerinin hepsi ikili dagitimda
+    # telif bildiriminin yeniden uretilmesini zorunlu kılıyor.
+    for entry in "$APP/assets"/*; do
+        [ -e "$entry" ] || continue
+        case "$(basename "$entry")" in
+            models) continue ;;
+            *) cp -r "$entry" "$ASSET_DIR/" ;;
+        esac
+    done
+
     for m in $MODELS; do
         cp "$APP/assets/models/$m.param" "$APP/assets/models/$m.bin" "$ASSET_DIR/models/"
     done
     echo "==> ince surum modelleri: $MODELS"
+    echo "==> model disi varliklar: $(ls "$ASSET_DIR" | grep -v '^models$' | tr '\n' ' ')"
 fi
 
 echo "==> kaynaklar derleniyor (aapt2 compile)"
@@ -58,8 +75,8 @@ echo "==> kaynaklar baglaniyor (aapt2 link)"
     --java "$OUT/classes" \
     --min-sdk-version 26 \
     --target-sdk-version 34 \
-    --version-code 12 \
-    --version-name 10.0 \
+    --version-code 13 \
+    --version-name 11.0 \
     -0 .param \
     -o "$OUT/base.apk" \
     "$OUT/res/resources.zip"

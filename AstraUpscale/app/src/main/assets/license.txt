@@ -1,0 +1,90 @@
+AstraUpscale — Son Kullanıcı Lisans Sözleşmesi
+==============================================
+
+Telif hakkı © 2026 AstraUpscale. Tüm hakları saklıdır.
+
+Bu lisans, AstraUpscale uygulamasının DERLENMİŞ SÜRÜMÜNÜ (APK) kapsar.
+Uygulamanın paketlediği üçüncü taraf bileşenler bu lisansın kapsamı DIŞINDADIR
+ve kendi lisansları altındadır; tam liste ve lisans metinleri için
+THIRD_PARTY_NOTICES.md dosyasına bakınız.
+
+
+1. VERİLEN HAKLAR
+
+Bu uygulamayı kişisel ya da ticari amaçla, cihaz sayısı sınırı olmaksızın
+ücretsiz kullanabilirsiniz. Uygulamayla ürettiğiniz görüntüler tümüyle
+size aittir; üzerlerinde hiçbir hak talep edilmez.
+
+APK'yı değiştirmeden, bu lisans metniyle birlikte başkalarına
+dağıtabilirsiniz.
+
+
+2. KISITLAMALAR
+
+Aşağıdakiler için önceden yazılı izin gerekir:
+
+  a) Uygulamayı tersine mühendislikle çözmek, parçalarına ayırmak veya
+     türev bir çalışma üretmek — yürürlükteki yasanın açıkça izin verdiği
+     durumlar saklıdır;
+
+  b) APK'yı değiştirilmiş biçimde dağıtmak;
+
+  c) Uygulamayı ya da bir parçasını, başka bir ürünün içinde yeniden
+     paketleyerek dağıtmak;
+
+  d) "AstraUpscale" adını veya işaretini, kendi ürününüzü tanıtmak ya da
+     bu uygulamayla ilişkili göstermek için kullanmak.
+
+
+3. GİZLİLİK
+
+Uygulama fotoğraflarınızı YALNIZCA cihazınızda işler. Hiçbir görüntü,
+küçük resim veya dosya yolu cihazdan dışarı çıkmaz.
+
+Dışarı giden tek şey, kullanıcının kendi yazdığı geri bildirimlerdir; onların
+yanında yalnızca uygulama sürümü, dil, Android sürümü, cihaz modeli, işlemci
+ve bellek bilgisi gönderilir.
+
+
+4. GARANTİ REDDİ
+
+UYGULAMA "OLDUĞU GİBİ" SUNULUR. AÇIK YA DA ÖRTÜLÜ HİÇBİR GARANTİ VERİLMEZ;
+BUNA TİCARİ ELVERİŞLİLİK, BELİRLİ BİR AMACA UYGUNLUK VE İHLAL ETMEME
+GARANTİLERİ DAHİLDİR.
+
+Uygulama büyük görüntüler üretirken cihazın işlemcisini ve depolamasını
+yoğun biçimde kullanır. Veri kaybı, aşırı ısınma veya depolama dolması
+gibi sonuçlardan doğan sorumluluk kullanıcıya aittir; işleme başlamadan
+önce yer durumu uygulama içinde gösterilir.
+
+
+5. SORUMLULUK SINIRI
+
+YÜRÜRLÜKTEKİ YASANIN İZİN VERDİĞİ AZAMİ ÖLÇÜDE, TELİF HAKKI SAHİBİ, BU
+UYGULAMANIN KULLANIMINDAN DOĞAN HİÇBİR DOĞRUDAN, DOLAYLI, ARIZİ, ÖZEL VEYA
+SONUÇSAL ZARARDAN SORUMLU TUTULAMAZ.
+
+
+6. FESİH
+
+Bu lisansın koşullarını ihlal etmeniz durumunda, size verilen haklar
+kendiliğinden sona erer. Bu durumda uygulamanın bütün kopyalarını
+silmeniz gerekir.
+
+
+---
+
+NOT — KAYNAK KODU VE BU LİSANSIN KAPSAMI
+
+Bu lisans, DERLENMİŞ UYGULAMAYI kapsar. AstraUpscale'in kaynak kodu şu anda
+herkese açık bir depoda (github.com/wagera/Wagera) bulunmakta ve o deponun
+kökündeki Apache License 2.0 metni kapsamında yayımlanmış durumdadır.
+
+Apache 2.0 geri alınamaz bir lisanstır: halihazırda yayımlanmış sürümleri
+edinen kişiler, o sürümler için Apache 2.0'ın verdiği haklara sahip olmayı
+sürdürür. Kaynak kodunun bundan sonraki sürümlerini kapalı tutmak
+istiyorsanız, depoyu özel yapmanız ve kökteki LICENSE dosyasını buna göre
+değiştirmeniz gerekir; bu, geçmiş sürümleri geri almaz.
+
+Bu metin hukuki danışmanlık değildir. Yayına çıkmadan önce bir hukukçuya
+danışılması önerilir.
