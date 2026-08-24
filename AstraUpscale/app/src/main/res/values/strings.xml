@@ -201,6 +201,30 @@
     <string name="compare_fit">Fit</string>
     <string name="compare_failed">Could not open the comparison.</string>
     <string name="status_format">%1$s · %2$d threads</string>
+    <!-- Islem zinciri -->
+    <!-- Kesfet ve yasal -->
+    <string name="nav_discover">Discover</string>
+    <string name="discover_offline">Offline — showing the last content that was fetched.</string>
+    <string name="discover_stale">Could not refresh (%1$s). Showing the last content that was fetched.</string>
+    <string name="discover_empty">No content yet. Pull to refresh once you are online.</string>
+    <string name="legal_title">Legal</string>
+    <string name="legal_value">Licences</string>
+    <string name="legal_app">This app</string>
+    <string name="legal_third">Third party</string>
+    <string name="pipe_steps">%1$d steps</string>
+    <string name="pipe_title">Pipeline</string>
+    <string name="pipe_source">%1$d  SOURCE      %2$d × %3$d · %4$.1f MP</string>
+    <string name="pipe_denoise_on">%1$d  DENOISE     edge-preserving, before scaling</string>
+    <string name="pipe_denoise_off">%1$d  DENOISE     skipped</string>
+    <string name="pipe_model">%1$d  MODEL       %2$s · %3$d× · %4$d px tiles (%5$d)</string>
+    <string name="pipe_model_pass2">%1$d  PASS 2      on %2$d × %3$d · %4$d tiles</string>
+    <string name="pipe_resample">%1$d  RESAMPLE    %2$d × %3$d → %4$d × %5$d · Lanczos-3</string>
+    <string name="pipe_classic">%1$d  RESAMPLE    → %2$d × %3$d · Lanczos-3, linear light</string>
+    <string name="pipe_sharpen">%1$d  SHARPEN     unsharp mask %2$d%%</string>
+    <string name="pipe_encode_jpeg">%1$d  ENCODE      JPEG q%2$d · 4:4:4, streamed</string>
+    <string name="pipe_encode_png">%1$d  ENCODE      PNG · Paeth, streamed</string>
+    <string name="pipe_budget">   BUDGET      %1$d threads · ~%2$s output</string>
+    <string name="pipe_note">No time estimate is shown: it varies by several times with the processor, its temperature and whatever else is running. Only quantities that can actually be computed are listed.</string>
     <string name="spec_title">Specification</string>
     <string name="summary_jpeg">JPEG · %1$d</string>
     <string name="value_none">—</string>

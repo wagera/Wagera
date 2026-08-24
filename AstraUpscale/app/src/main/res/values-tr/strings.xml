@@ -197,6 +197,30 @@
     <string name="compare_fit">Sığdır</string>
     <string name="compare_failed">Karşılaştırma açılamadı.</string>
     <string name="status_format">%1$s · %2$d iş parçacığı</string>
+    <!-- Islem zinciri -->
+    <!-- Kesfet ve yasal -->
+    <string name="nav_discover">Keşfet</string>
+    <string name="discover_offline">Çevrimdışı — en son alınan içerik gösteriliyor.</string>
+    <string name="discover_stale">Tazelenemedi (%1$s). En son alınan içerik gösteriliyor.</string>
+    <string name="discover_empty">Henüz içerik yok. İnternete bağlandığınızda yenileyin.</string>
+    <string name="legal_title">Yasal</string>
+    <string name="legal_value">Lisanslar</string>
+    <string name="legal_app">Bu uygulama</string>
+    <string name="legal_third">Üçüncü taraf</string>
+    <string name="pipe_steps">%1$d adım</string>
+    <string name="pipe_title">İşlem zinciri</string>
+    <string name="pipe_source">%1$d  KAYNAK      %2$d × %3$d · %4$.1f MP</string>
+    <string name="pipe_denoise_on">%1$d  GÜRÜLTÜ     kenar koruyarak, büyütmeden önce</string>
+    <string name="pipe_denoise_off">%1$d  GÜRÜLTÜ     atlanıyor</string>
+    <string name="pipe_model">%1$d  MODEL       %2$s · %3$d× · %4$d px karo (%5$d)</string>
+    <string name="pipe_model_pass2">%1$d  2. GEÇİŞ    %2$d × %3$d üzerinde · %4$d karo</string>
+    <string name="pipe_resample">%1$d  ÖLÇEKLE     %2$d × %3$d → %4$d × %5$d · Lanczos-3</string>
+    <string name="pipe_classic">%1$d  ÖLÇEKLE     → %2$d × %3$d · Lanczos-3, doğrusal ışık</string>
+    <string name="pipe_sharpen">%1$d  KESKİNLİK   maske %%%2$d</string>
+    <string name="pipe_encode_jpeg">%1$d  KODLA       JPEG q%2$d · 4:4:4, akışlı</string>
+    <string name="pipe_encode_png">%1$d  KODLA       PNG · Paeth, akışlı</string>
+    <string name="pipe_budget">   BÜTÇE       %1$d iş parçacığı · ~%2$s çıktı</string>
+    <string name="pipe_note">Süre tahmini gösterilmiyor: işlemciye, sıcaklığına ve o an çalışan diğer uygulamalara göre kat kat değişir. Yalnızca gerçekten hesaplanabilen büyüklükler listeleniyor.</string>
     <string name="spec_title">Künye</string>
     <string name="summary_jpeg">JPEG · %1$d</string>
     <string name="value_none">—</string>

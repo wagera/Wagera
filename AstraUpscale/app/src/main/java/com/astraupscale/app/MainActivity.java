@@ -59,6 +59,13 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
             navUpscaleLabel, navHistoryLabel, navRequestsLabel;
     private Button pickButton, startButton, cancelButton, openButton, shareButton,
             formatJpeg, formatPng, stage1, stage2, denoiseToggle, updateButton, sendButton;
+    private LinearLayout pageDiscover, discoverList, navDiscover;
+    private TextView discoverState, navDiscoverLabel, licenseText;
+    private ImageView navDiscoverIcon;
+    private Accordion secLicense;
+    /** Kesfet bir kez cekildi mi; sekmeye her donuste aga gidilmesin. */
+    private boolean discoverLoaded;
+
     private LinearLayout modelList, progressCard, resultCard, emptyState, qualityRow,
             loadLevels, updateGate, pageUpscale, pageRequests, pageHistory, kindRow,
             historyList, onboarding, navUpscale, navHistory, navRequests;
@@ -68,10 +75,11 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
     /** Yeni yerlesim: sahne, eylem cubugu ve acilir ayar bolumleri. */
     private View stage, appBar, stageCaption, brandMark;
     private LinearLayout scale;
+    private TextView pipelineInfo;
     private TextView statusText, statusThermal;
     private TextView targetBadge, targetDims;
     private final List<Accordion> sections = Accordion.newGroup();
-    private Accordion secEngine, secSettings, secDevice;
+    private Accordion secPipeline, secEngine, secSettings, secDevice;
 
     /** Oncesi/sonrasi karsilastirma. */
     private CompareView compareView;
@@ -200,6 +208,7 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         }
         refreshTexts();
 
+        showLicense(true);
         playEntrance();
 
         applyUpdateState(UpdateChecker.pending(this));
@@ -427,6 +436,13 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         navUpscale = findViewById(R.id.navUpscale);
         navHistory = findViewById(R.id.navHistory);
         navRequests = findViewById(R.id.navRequests);
+        navDiscover = findViewById(R.id.navDiscover);
+        navDiscoverIcon = findViewById(R.id.navDiscoverIcon);
+        navDiscoverLabel = findViewById(R.id.navDiscoverLabel);
+        pageDiscover = findViewById(R.id.pageDiscover);
+        discoverList = findViewById(R.id.discoverList);
+        discoverState = findViewById(R.id.discoverState);
+        licenseText = findViewById(R.id.licenseText);
         historyList = findViewById(R.id.historyList);
         onboarding = findViewById(R.id.onboarding);
         onboardingStart = findViewById(R.id.onboardingStart);
@@ -459,6 +475,7 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         kindRow = findViewById(R.id.kindRow);
 
         scale = findViewById(R.id.scale);
+        pipelineInfo = findViewById(R.id.pipelineInfo);
         statusText = findViewById(R.id.statusText);
         statusThermal = findViewById(R.id.statusThermal);
         stage = findViewById(R.id.stage);
@@ -480,6 +497,14 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         galleryGrant = findViewById(R.id.galleryGrant);
 
         // Acilir bolumler: ayni anda yalnizca biri acik kalir.
+        secPipeline = Accordion.attach(findViewById(R.id.rowPipeline),
+                (ViewGroup) findViewById(R.id.panelPipeline),
+                (TextView) findViewById(R.id.valuePipeline),
+                (ImageView) findViewById(R.id.chevronPipeline), sections);
+        secLicense = Accordion.attach(findViewById(R.id.rowLicense),
+                (ViewGroup) findViewById(R.id.panelLicense),
+                (TextView) findViewById(R.id.valueLicense),
+                (ImageView) findViewById(R.id.chevronLicense), new ArrayList<Accordion>());
         secEngine = Accordion.attach(findViewById(R.id.rowEngine),
                 (ViewGroup) findViewById(R.id.panelEngine),
                 (TextView) findViewById(R.id.valueEngine),
@@ -544,6 +569,20 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
             dlp.topMargin = dp(3);
             desc.setLayoutParams(dlp);
             text.addView(desc);
+
+            // Kaynak proje ve lisansi: hem kullanici icin ayrinti, hem
+            // paketlenen bileşenlerin atifi. Lisanslarin hepsi ikili
+            // dagitimda telif bildiriminin yeniden uretilmesini istiyor.
+            TextView origin = new TextView(this);
+            origin.setText(m.origin);
+            origin.setTextSize(9.5f);
+            origin.setTypeface(faceDisplay);
+            origin.setTextColor(getColor(R.color.content_ghost));
+            LinearLayout.LayoutParams olp = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            olp.topMargin = dp(4);
+            origin.setLayoutParams(olp);
+            text.addView(origin);
             row.addView(text);
 
             TextView badge = new TextView(this);
@@ -853,8 +892,20 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         navHistory.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) { showPage(1); }
         });
-        navRequests.setOnClickListener(new View.OnClickListener() {
+        navDiscover.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) { showPage(2); }
+        });
+        navRequests.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) { showPage(3); }
+        });
+        findViewById(R.id.discoverRefresh).setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) { loadDiscover(true); }
+        });
+        findViewById(R.id.licenseApp).setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) { showLicense(true); }
+        });
+        findViewById(R.id.licenseThird).setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) { showLicense(false); }
         });
         themeButton.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
@@ -903,15 +954,19 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
     }
 
     /** 0 = buyut, 1 = gecmis, 2 = istekler */
+    /** 0 = buyut, 1 = gecmis, 2 = kesfet, 3 = istekler */
     private void showPage(int which) {
         page = which;
         pageUpscale.setVisibility(which == 0 ? View.VISIBLE : View.GONE);
         pageHistory.setVisibility(which == 1 ? View.VISIBLE : View.GONE);
-        pageRequests.setVisibility(which == 2 ? View.VISIBLE : View.GONE);
+        pageDiscover.setVisibility(which == 2 ? View.VISIBLE : View.GONE);
+        pageRequests.setVisibility(which == 3 ? View.VISIBLE : View.GONE);
 
-        LinearLayout[] items = {navUpscale, navHistory, navRequests};
-        TextView[] labels = {navUpscaleLabel, navHistoryLabel, navRequestsLabel};
-        ImageView[] icons = {navUpscaleIcon, navHistoryIcon, navRequestsIcon};
+        LinearLayout[] items = {navUpscale, navHistory, navDiscover, navRequests};
+        TextView[] labels = {navUpscaleLabel, navHistoryLabel, navDiscoverLabel,
+                navRequestsLabel};
+        ImageView[] icons = {navUpscaleIcon, navHistoryIcon, navDiscoverIcon,
+                navRequestsIcon};
         for (int i = 0; i < items.length; i++) {
             boolean on = i == which;
             items[i].setSelected(on);
@@ -922,7 +977,8 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         themeButton.setText(ThemeHelper.labelRes(ThemeHelper.current(this)));
         scrollToTop();
         if (which == 1) loadHistory();
-        if (which == 2) refreshQueueStatus();
+        if (which == 2) loadDiscover(false);
+        if (which == 3) refreshQueueStatus();
     }
 
     private void scrollToTop() {
@@ -1434,6 +1490,9 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
      */
     private void refreshSummaries(boolean hasSource) {
         secEngine.setValue(model.label);
+        // Ozet: kac adim calisacagi. Acmadan da islem zincirinin uzunlugu
+        // gorunur, boylece satir bos bir baslik olmaktan cikar.
+        secPipeline.setValue(getString(R.string.pipe_steps, pipelineStepCount()));
         secSettings.setValue(jpeg
                 ? getString(R.string.summary_jpeg, jpegQuality())
                 : "PNG");
@@ -1448,6 +1507,224 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
             targetDims.setText(R.string.pick_photo_first);
         }
         refreshStatusStrip();
+        refreshPipeline();
+    }
+
+    /**
+     * Islem zinciri: makinenin bu fotografa tam olarak ne yapacagi.
+     *
+     * <p>Onceki arayuz yalnizca modelin adini gosteriyordu; kullanici hangi
+     * adimlarin calisacagini, kac gecis yapilacagini, goruntunun kac karoya
+     * bolunecegini ya da ne kadar yer tutacagini goremiyordu.
+     *
+     * <p>Burada SURE TAHMINI YOK. Sure, cihazin islemcisine, sicakligina ve
+     * o an calisan diger uygulamalara gore kat kat degisir; uydurma bir
+     * "yaklasik 48 sn" yazmak, olculebilir seylerin arasina olculemeyen bir
+     * sayi koymak olurdu. Onun yerine gercekten hesaplanabilen buyuklukler
+     * gosteriliyor: piksel sayilari, gecisler, karo sayisi, dosya boyutu.
+     */
+    private void refreshPipeline() {
+        if (pipelineInfo == null) return;
+        if (sourceUri == null || srcWidth <= 0) {
+            pipelineInfo.setText(R.string.pick_photo_first);
+            return;
+        }
+
+        int[] target = preset.targetSize(srcWidth, srcHeight);
+        StringBuilder sb = new StringBuilder();
+        int step = 1;
+
+        sb.append(getString(R.string.pipe_source, step++, srcWidth, srcHeight,
+                srcWidth * (long) srcHeight / 1e6));
+
+        if (denoiseActive()) {
+            sb.append('\n').append(getString(R.string.pipe_denoise_on, step++));
+        } else {
+            sb.append('\n').append(getString(R.string.pipe_denoise_off, step++));
+        }
+
+        if (model.isNeural()) {
+            int factor = model.scale;
+            int midW = srcWidth * factor, midH = srcHeight * factor;
+            int tile = loadLevel.tileSize(device);
+            // Karo sayisi: her gecis kaynagi kendi olceginde boler
+            long tilesPass1 = (long) ceilDiv(srcWidth, tile) * ceilDiv(srcHeight, tile);
+            sb.append('\n').append(getString(R.string.pipe_model, step++,
+                    model.label, factor, tile, tilesPass1));
+
+            if (stages == 2) {
+                long tilesPass2 = (long) ceilDiv(midW, tile) * ceilDiv(midH, tile);
+                sb.append('\n').append(getString(R.string.pipe_model_pass2, step++,
+                        midW, midH, tilesPass2));
+                midW *= factor;
+                midH *= factor;
+            }
+            sb.append('\n').append(getString(R.string.pipe_resample, step++,
+                    midW, midH, target[0], target[1]));
+        } else {
+            sb.append('\n').append(getString(R.string.pipe_classic, step++,
+                    target[0], target[1]));
+        }
+
+        int sharpen = sharpenSeek.getProgress();
+        if (sharpen > 0) {
+            sb.append('\n').append(getString(R.string.pipe_sharpen, step++, sharpen));
+        }
+
+        sb.append('\n').append(jpeg
+                ? getString(R.string.pipe_encode_jpeg, step++, jpegQuality())
+                : getString(R.string.pipe_encode_png, step++));
+
+        sb.append('\n').append(getString(R.string.pipe_budget,
+                loadLevel.threads(device), formatSize(estimatedBytes(target[0], target[1]))));
+
+        pipelineInfo.setText(sb.toString());
+    }
+
+    /**
+     * Kesfet icerigini getirir.
+     *
+     * <p>Ag islemi arka planda yapilir. Sekmeye her donuste yeniden
+     * cekilmez; yalnizca ilk acilista ya da kullanici acikca yenilediginde.
+     *
+     * @param force kullanici yenile'ye bastiysa true
+     */
+    private void loadDiscover(boolean force) {
+        if (discoverLoaded && !force) return;
+        discoverLoaded = true;
+
+        final String locale = LocaleHelper.current(this).startsWith("en") ? "en" : "tr";
+        new Thread(new Runnable() {
+            @Override public void run() {
+                final Discover.Result r = Discover.load(MainActivity.this, locale);
+                runOnUiThread(new Runnable() {
+                    @Override public void run() { renderDiscover(r); }
+                });
+            }
+        }, "astra-discover").start();
+    }
+
+    /** Kartlari cizer ve tazelenemedigini soyler. */
+    private void renderDiscover(Discover.Result r) {
+        discoverList.removeAllViews();
+
+        if (r.fresh) {
+            discoverState.setVisibility(View.GONE);
+        } else if ("offline".equals(r.failure)) {
+            discoverState.setText(R.string.discover_offline);
+            discoverState.setVisibility(View.VISIBLE);
+        } else if (!r.failure.isEmpty()) {
+            // Sessiz basarisizlik bu projede bir kez pahaliya mal oldu;
+            // neden gorunur kaliyor.
+            discoverState.setText(getString(R.string.discover_stale, r.failure));
+            discoverState.setVisibility(View.VISIBLE);
+        } else {
+            discoverState.setVisibility(View.GONE);
+        }
+
+        if (r.items.isEmpty()) {
+            TextView empty = new TextView(this);
+            empty.setText(R.string.discover_empty);
+            empty.setTextSize(13f);
+            empty.setTypeface(faceSans);
+            empty.setTextColor(getColor(R.color.content_faint));
+            empty.setPadding(dp(20), dp(20), dp(20), dp(20));
+            discoverList.addView(empty);
+            return;
+        }
+
+        for (Discover.Item item : r.items) {
+            discoverList.addView(discoverCard(item));
+        }
+    }
+
+    /** Tek bir Kesfet karti: ust satirda tur, sonra baslik ve govde. */
+    private View discoverCard(Discover.Item item) {
+        LinearLayout card = new LinearLayout(this);
+        card.setOrientation(LinearLayout.VERTICAL);
+        card.setBackgroundResource(R.drawable.panel);
+        card.setPadding(dp(16), dp(14), dp(16), dp(16));
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp.setMarginStart(dp(20));
+        lp.setMarginEnd(dp(20));
+        lp.bottomMargin = dp(8);
+        card.setLayoutParams(lp);
+
+        if (item.meta != null && !item.meta.isEmpty()) {
+            TextView meta = new TextView(this);
+            meta.setText(item.meta.toUpperCase(Locale.getDefault()));
+            meta.setTextSize(10f);
+            meta.setTypeface(faceDisplay);
+            meta.setLetterSpacing(0.12f);
+            meta.setTextColor(getColor(R.color.signal));
+            card.addView(meta);
+        }
+
+        TextView title = new TextView(this);
+        title.setText(item.title);
+        title.setTextSize(15f);
+        title.setTypeface(faceSans);
+        title.setTextColor(getColor(R.color.content));
+        LinearLayout.LayoutParams tlp = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        tlp.topMargin = dp(6);
+        title.setLayoutParams(tlp);
+        card.addView(title);
+
+        TextView body = new TextView(this);
+        body.setText(item.body);
+        body.setTextSize(13f);
+        body.setTypeface(faceSans);
+        body.setLineSpacing(dp(4), 1f);
+        body.setTextColor(getColor(R.color.content_dim));
+        LinearLayout.LayoutParams blp = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        blp.topMargin = dp(7);
+        body.setLayoutParams(blp);
+        card.addView(body);
+
+        return card;
+    }
+
+    /**
+     * Lisans metnini gosterir.
+     *
+     * <p>Metinler APK'nin varliklarindan okunur. Paketlenen BSD, MIT, Apache
+     * ve OFL bileşenlerinin hepsi ikili dagitimda telif bildiriminin yeniden
+     * uretilmesini zorunlu kıldigi icin bu ekran bir susleme degil, dagitim
+     * kosulu.
+     *
+     * @param app true ise uygulamanin kendi lisansi, false ise ucuncu taraf
+     */
+    private void showLicense(boolean app) {
+        String asset = app ? "license.txt" : "third_party_notices.md";
+        try {
+            InputStream in = getAssets().open(asset);
+            java.io.ByteArrayOutputStream bos = new java.io.ByteArrayOutputStream();
+            byte[] buf = new byte[8192];
+            int n;
+            while ((n = in.read(buf)) > 0) bos.write(buf, 0, n);
+            in.close();
+            licenseText.setText(bos.toString("UTF-8"));
+        } catch (Throwable t) {
+            licenseText.setText(asset + ": " + t.getClass().getSimpleName());
+        }
+        findViewById(R.id.licenseApp).setSelected(app);
+        findViewById(R.id.licenseThird).setSelected(!app);
+    }
+
+    /** Zincirde kac adim calisacagi; satir ozetinde gosterilir. */
+    private int pipelineStepCount() {
+        int steps = 3;                               // kaynak, gurultu, kodlama
+        steps += model.isNeural() && stages == 2 ? 3 : 2;   // model (+2. gecis) + olcekleme
+        if (sharpenSeek.getProgress() > 0) steps++;
+        return steps;
+    }
+
+    /** Yukari yuvarlayan tam sayi bolme; karo sayisi icin. */
+    private static int ceilDiv(int a, int b) {
+        return (a + b - 1) / b;
     }
 
     /**

@@ -794,6 +794,46 @@
                             </LinearLayout>
                         </LinearLayout>
 
+                        <!-- ── Islem zinciri ──────────────────────────── -->
+                        <LinearLayout
+                            android:id="@+id/rowPipeline"
+                            style="@style/SpecRow">
+
+                            <TextView style="@style/SpecKey" android:text="@string/pipe_title" />
+
+                            <TextView android:id="@+id/valuePipeline" style="@style/SpecValue" />
+
+                            <ImageView
+                                android:id="@+id/chevronPipeline"
+                                style="@style/SpecChevron"
+                                android:contentDescription="@string/pipe_title" />
+                        </LinearLayout>
+
+                        <View style="@style/SpecRule" />
+
+                        <LinearLayout
+                            android:id="@+id/panelPipeline"
+                            style="@style/SpecPanel"
+                            android:visibility="gone">
+
+                            <!-- Sabit genislikli yuz sart: adimlar sutun
+                                 halinde hizalanir, gosterim yuzu bunu verir. -->
+                            <TextView
+                                android:id="@+id/pipelineInfo"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/display"
+                                android:lineSpacingExtra="5dp"
+                                android:textColor="@color/content_dim"
+                                android:textSize="@dimen/text_fine" />
+
+                            <TextView
+                                android:id="@+id/pipelineNote"
+                                style="@style/SpecNote"
+                                android:layout_marginTop="12dp"
+                                android:text="@string/pipe_note" />
+                        </LinearLayout>
+
                         <!-- ── Cihaz ──────────────────────────────────── -->
                         <LinearLayout
                             android:id="@+id/rowDevice"
@@ -936,6 +976,136 @@
                             android:text="@string/history_empty"
                             android:textColor="@color/content_faint"
                             android:textSize="@dimen/text_body" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- ══ Sayfa: Kesfet ═══════════════════════════════════
+                     Icerik Supabase'den gelir; uygulama surumune gomulu
+                     degildir, yani yeni bir APK yayinlamadan guncellenir.
+                     Ag yoksa en son bilinen icerik gosterilir. -->
+                <LinearLayout
+                    android:id="@+id/pageDiscover"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingBottom="26dp"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingStart="@dimen/gutter"
+                        android:paddingEnd="@dimen/gutter"
+                        android:paddingTop="@dimen/gap_block"
+                        android:paddingBottom="10dp">
+
+                        <TextView
+                            style="@style/FieldLabel"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:text="@string/nav_discover" />
+
+                        <TextView
+                            android:id="@+id/discoverRefresh"
+                            android:layout_width="wrap_content"
+                            android:layout_height="28dp"
+                            android:background="@drawable/btn_secondary"
+                            android:fontFamily="@font/sans"
+                            android:gravity="center"
+                            android:paddingStart="14dp"
+                            android:paddingEnd="14dp"
+                            android:text="@string/history_refresh"
+                            android:textColor="@color/content_soft"
+                            android:textSize="@dimen/text_fine" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/discoverState"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/gutter"
+                        android:layout_marginEnd="@dimen/gutter"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/preview_bg"
+                        android:fontFamily="@font/sans"
+                        android:lineSpacingExtra="3dp"
+                        android:paddingStart="14dp"
+                        android:paddingEnd="12dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:textColor="@color/content_faint"
+                        android:textSize="@dimen/text_fine"
+                        android:visibility="gone" />
+
+                    <LinearLayout
+                        android:id="@+id/discoverList"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+
+                    <!-- ── Yasal ────────────────────────────────────────
+                         Paketlenen BSD, MIT, Apache ve OFL bileşenlerinin
+                         hepsi ikili dagitimda telif bildiriminin yeniden
+                         uretilmesini zorunlu kılıyor; bu yuzden bildirimler
+                         APK'nin icinde tasiniyor ve buradan okunuyor. -->
+                    <View
+                        style="@style/SpecRule"
+                        android:layout_marginTop="@dimen/gap_section" />
+
+                    <LinearLayout
+                        android:id="@+id/rowLicense"
+                        style="@style/SpecRow">
+
+                        <TextView style="@style/SpecKey" android:text="@string/legal_title" />
+
+                        <TextView
+                            android:id="@+id/valueLicense"
+                            style="@style/SpecValue"
+                            android:text="@string/legal_value" />
+
+                        <ImageView
+                            android:id="@+id/chevronLicense"
+                            style="@style/SpecChevron"
+                            android:contentDescription="@string/legal_title" />
+                    </LinearLayout>
+
+                    <View style="@style/SpecRule" />
+
+                    <LinearLayout
+                        android:id="@+id/panelLicense"
+                        style="@style/SpecPanel"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/licenseText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/sans"
+                            android:lineSpacingExtra="4dp"
+                            android:textColor="@color/content_dim"
+                            android:textSize="@dimen/text_fine"
+                            android:textIsSelectable="true" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:orientation="horizontal">
+
+                            <Button
+                                android:id="@+id/licenseApp"
+                                style="@style/SpecChip"
+                                android:text="@string/legal_app" />
+
+                            <Space android:layout_width="6dp" android:layout_height="1dp" />
+
+                            <Button
+                                android:id="@+id/licenseThird"
+                                style="@style/SpecChip"
+                                android:text="@string/legal_third" />
+                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -1139,6 +1309,32 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
                     android:text="@string/nav_history"
+                    android:textColor="@color/content_faint"
+                    android:textSize="@dimen/text_label" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/navDiscover"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/nav_item"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/navDiscoverIcon"
+                    android:layout_width="21dp"
+                    android:layout_height="21dp"
+                    android:contentDescription="@string/nav_discover"
+                    android:src="@drawable/ic_nav_discover" />
+
+                <TextView
+                    android:id="@+id/navDiscoverLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="@string/nav_discover"
                     android:textColor="@color/content_faint"
                     android:textSize="@dimen/text_label" />
             </LinearLayout>
