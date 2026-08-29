@@ -228,4 +228,76 @@
     <string name="spec_title">Specification</string>
     <string name="summary_jpeg">JPEG · %1$d</string>
     <string name="value_none">—</string>
+
+    <!-- ══ Video ══════════════════════════════════════════════════════
+         The second pipeline. Everything here exists because a video is
+         not one photo repeated: it has a duration, a frame rate, a sound
+         track, and a hardware encoder with a ceiling of its own. -->
+    <string name="kind_photo">Photo</string>
+    <string name="kind_video">Video</string>
+    <string name="v_pick_video">Choose a video</string>
+    <string name="v_change_video">Change video</string>
+    <string name="v_no_video">No video selected yet</string>
+    <string name="v_stage_tap_hint">Tap to choose from your gallery</string>
+    <string name="v_read_failed">Could not read the video</string>
+    <string name="v_pick_video_first">Choose a video first.</string>
+    <string name="v_source_format">%1$d × %2$d   %3$s   %4$.0f fps</string>
+    <string name="v_target_format">%1$d × %2$d per frame   %3$.1f MP   %4$.1f×</string>
+    <string name="v_target_frames">%1$d frames to build</string>
+    <string name="v_encoder_line">Encoder  %1$s</string>
+    <string name="v_encoder_capped">This device\'s encoder stops at %1$d × %2$d, so %3$s cannot be written as a video file. The frames are written as numbered images instead.</string>
+    <string name="v_encoder_none">No video encoder was found on this device; only a frame sequence can be written.</string>
+    <string name="v_sequence_line">%1$d image files, no audio</string>
+    <string name="v_slow_warning">At this size a phone produces well under one frame per second. Expect hours, and keep it plugged in.</string>
+
+    <!-- Video settings -->
+    <string name="v_row_output">Output</string>
+    <string name="v_out_video">Video file</string>
+    <string name="v_out_sequence">Frame sequence</string>
+    <string name="v_out_video_note">One .mp4 in Movies / AstraUpscale. Audio is copied across, and it plays anywhere.</string>
+    <string name="v_out_sequence_note">Numbered images in Pictures / AstraUpscale. No encoder ceiling and no quality loss, but no audio — rebuild them with ffmpeg at the frame rate in the folder name.</string>
+    <string name="v_out_sequence_forced">The chosen resolution is above this device\'s encoder ceiling, so the output has to be a frame sequence.</string>
+    <string name="v_row_bitrate">Bit rate</string>
+    <string name="v_bitrate_value">%1$.0f Mbps</string>
+    <string name="v_row_audio">Audio</string>
+    <string name="v_audio_keep">Keep</string>
+    <string name="v_audio_drop">Drop</string>
+    <string name="v_audio_note_on">The original track is copied across without re-encoding.</string>
+    <string name="v_audio_note_off">The output will be silent.</string>
+    <string name="v_audio_none">This video has no audio track.</string>
+
+    <!-- Video pipeline -->
+    <string name="v_pipe_source">%1$d  SOURCE      %2$d × %3$d · %4$d frames · %5$.0f fps</string>
+    <string name="v_pipe_decode">%1$d  DECODE      %2$s → RGB, %3$s</string>
+    <string name="v_pipe_encode_video">%1$d  ENCODE      %2$s · %3$.0f Mbps → MP4</string>
+    <string name="v_pipe_encode_sequence">%1$d  WRITE       %2$s per frame · %3$d files</string>
+    <string name="v_pipe_audio">%1$d  AUDIO       copied, not re-encoded</string>
+    <string name="v_pipe_budget">   BUDGET      %1$d threads · ~%2$s output · %3$d frames</string>
+    <string name="v_pipe_note">Per-frame work is multiplied by the frame count. A single frame that takes two seconds becomes an hour of work over a thirty-second clip.</string>
+
+    <!-- Video job stages -->
+    <string name="v_stage_open">Reading the video</string>
+    <string name="v_stage_frames">Frame %1$d / %2$d   ·   %3$.2f fps</string>
+    <string name="v_stage_closing">Finishing the file</string>
+    <string name="v_stage_done">Done</string>
+    <string name="v_error_size_changed">The frame size changes partway through this video (%1$d × %2$d → %3$d × %4$d). Split it first, or convert it to a constant size.</string>
+    <string name="v_error_no_frames">No frames could be decoded from this video.</string>
+    <string name="v_error_no_video_track">This file has no video track.</string>
+    <string name="v_error_no_encoder">No usable video encoder was found on this device.</string>
+    <string name="v_error_memory">Ran out of memory. Try a lower resolution or a single pass.</string>
+    <string name="v_note_source_too_big">Frames are too large for the AI model; the classic method is used.</string>
+    <string name="v_note_model_failed">The model could not load; the classic method is used.</string>
+    <string name="v_note_single_pass">Two passes would need %1$.1f GB per frame — running a single pass.</string>
+
+    <!-- Video notifications and result -->
+    <string name="v_notif_running_title">Upscaling video to %1$s</string>
+    <string name="v_notif_done_title">Video is ready</string>
+    <string name="v_notif_done_text">%1$d × %2$d · %3$d frames · %4$s · %5$.1f min</string>
+    <string name="v_notif_done_sequence">%1$d frames · %2$d × %3$d · %4$s</string>
+    <string name="v_result_format">%1$d × %2$d   %3$d frames\n%4$s\n%5$s\n%6$.1f MB   %7$.1f min\n%8$s\nMovies / AstraUpscale</string>
+    <string name="v_result_sequence">%1$d × %2$d   %3$d frames\n%4$s\n%5$s\n%6$.1f MB   %7$.1f min\n%8$s\nPictures / AstraUpscale</string>
+    <string name="v_result_audio_kept">audio kept</string>
+    <string name="v_result_audio_none">no audio</string>
+    <string name="v_gallery_title">Recent videos</string>
+    <string name="v_gallery_empty">No videos found on this device</string>
 </resources>

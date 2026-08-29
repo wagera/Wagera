@@ -43,6 +43,34 @@ public class FormatStringsTest {
                                        "AstraUpscale_1.jpg"}},
         {"update_check_failed", new Object[]{"HTTP 404"}},
         {"summary_jpeg", new Object[]{95}},
+
+        // Video hatti. Argümanlar VideoTranscoder, VideoService ve
+        // MainActivity'deki cagri yerlerinden birebir alinmistir; kare
+        // sayilari long, olculen hiz float olarak gecer.
+        {"v_source_format", new Object[]{1920, 1080, "1:42", 29.97f}},
+        {"v_target_format", new Object[]{7680, 4320, 33.2, 4.0}},
+        {"v_target_frames", new Object[]{3060L}},
+        {"v_encoder_line", new Object[]{"H.265 / HEVC  ·  48 Mbps"}},
+        {"v_encoder_capped", new Object[]{3840, 2160, "16K"}},
+        {"v_sequence_line", new Object[]{3060L}},
+        {"v_bitrate_value", new Object[]{48.3}},
+        {"v_pipe_source", new Object[]{1, 1920, 1080, 3060L, 29.97f}},
+        {"v_pipe_decode", new Object[]{2, "AVC", "YUV 4:2:0"}},
+        {"v_pipe_encode_video", new Object[]{7, "H.265 / HEVC", 48.3}},
+        {"v_pipe_encode_sequence", new Object[]{7, "PNG", 3060L}},
+        {"v_pipe_audio", new Object[]{8}},
+        {"v_pipe_budget", new Object[]{6, "1.4 GB", 3060L}},
+        {"v_stage_frames", new Object[]{128L, 3060L, 0.62f}},
+        {"v_note_single_pass", new Object[]{1.6}},
+        {"v_error_size_changed", new Object[]{1920, 1080, 1280, 720}},
+        {"v_notif_running_title", new Object[]{"8K"}},
+        {"v_notif_done_text", new Object[]{7680, 4320, 3060L, "1.4 GB", 96.5}},
+        {"v_notif_done_sequence", new Object[]{3060L, 15360, 8640, "212 GB"}},
+        {"v_result_format", new Object[]{7680, 4320, 3060L, "Real-ESRGAN Hizli (GPU)",
+                                         "H.265 / HEVC  ·  48 Mbps", 1432.5, 96.5,
+                                         "ses tasindi"}},
+        {"v_result_sequence", new Object[]{15360, 8640, 3060L, "Real-ESRGAN Hizli (GPU)",
+                                           "PNG", 217344.0, 640.0, "ses yok"}},
     };
 
     public static void main(String[] args) throws Exception {

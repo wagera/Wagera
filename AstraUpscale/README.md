@@ -2,15 +2,18 @@
 
 **[English](README.en.md) · Türkçe**
 
-Fotoğrafları cihaz üzerinde **2K'dan 512K'ya** kadar büyüten Android uygulaması.
-Real-ESRGAN, SwinIR ve Real-CUGAN modelleri APK'nın içinde taşınır; işlem
-tamamen telefonda yapılır ve hiçbir görüntü dışarı çıkmaz.
+**Fotoğrafı ve videoyu** cihaz üzerinde büyüten Android uygulaması —
+fotoğrafta **2K'dan 512K'ya**, videoda **2K, 4K, 8K ve 16K**. Real-ESRGAN,
+SwinIR ve Real-CUGAN modelleri APK'nın içinde taşınır; işlem tamamen telefonda
+yapılır ve hiçbir şey dışarı çıkmaz.
 
 <img src="docs/tema-koyu.png" width="250" alt="Koyu tema" /> <img src="docs/tema-acik.png" width="250" alt="Açık tema" />
 
 | | |
 |---|---|
-| Çözünürlük | 2K'dan 512K'ya 14 ön ayar, üç kademede |
+| Kaynak | Fotoğraf ya da video; ekranın üstünden seçilir |
+| Fotoğraf çözünürlüğü | 2K'dan 512K'ya 14 ön ayar, üç kademede |
+| Video çözünürlüğü | 2K, 4K, 8K, 16K |
 | Modeller | Real-ESRGAN (Hızlı / x4plus / Anime 6B), SwinIR-S, SwinIR-M, Real-CUGAN 2×/3×/4×, klasik Lanczos |
 | Geçiş | Model tek ya da çift geçiş çalıştırılabilir |
 | Gürültü temizleme | 64K ve üzerinde otomatik: kaynak, büyütmeden önce temizlenir |
@@ -18,8 +21,8 @@ tamamen telefonda yapılır ve hiçbir görüntü dışarı çıkmaz.
 | Diller | Türkçe ve İngilizce; başlıktaki düğmeyle değiştirilir |
 | Tema | Açık ve koyu; sistem ayarını izler, elle de sabitlenebilir |
 | Sayfalar | Büyüt · Geçmiş · İstekler (alt gezinme çubuğu) |
-| Çıkış | JPEG (kalite ayarlanabilir) veya kayıpsız PNG |
-| Kayıt yeri | Galeri › Pictures › AstraUpscale |
+| Çıkış | Fotoğraf: JPEG (kalite ayarlanabilir) veya kayıpsız PNG. Video: sesi taşınan H.265/H.264 MP4 ya da numaralı kare dizisi |
+| Kayıt yeri | Galeri › Pictures › AstraUpscale (fotoğraf ve kareler), Movies › AstraUpscale (video) |
 
 ## Kurulum
 
@@ -54,6 +57,72 @@ durumda biçimi kendisi PNG'ye çevirir ve nedenini yazar.
 
 256K ve 512K gerçekten üretilebilir; asıl engel depolamadır. Başlamadan önce
 tahmini dosya boyutu ile boş alan karşılaştırılır, yetmiyorsa işlem başlamaz.
+
+## Video
+
+Aynı motor, kare başına bir kez. Video kare kare çözülür, her kare tam olarak
+fotoğraf hattından geçer — istenirse gürültü temizleme, sinir ağı, tam hedef
+boyuta Lanczos, keskinleştirme — ve sonuç doğrudan donanım kodlayıcısına
+verilir. Zaman damgaları kaynaktan taşınır, yani değişken kare hızlı kayıtlar
+süresini korur; ses izi yeniden kodlanmadan kopyalanır.
+
+| Ön ayar | Kare | Kare başına piksel | Tipik kodlayıcı |
+|---|---|---|---|
+| 2K | 2560×1440 | 3.7 MP | H.265 ya da H.264 |
+| 4K | 3840×2160 | 8.3 MP | H.265 ya da H.264 |
+| 8K | 7680×4320 | 33.2 MP | H.265, yalnızca amiral gemisi yongalarda |
+| 16K | 15360×8640 | 132.7 MP | yok — kare dizisi olarak yazılır |
+
+### Bellekte hiçbir şey tutulmaz
+
+8K bir kare RGB olarak 100 MB'dir ve saniyede otuz tane üretilir. Bu yüzden
+büyütülmüş kare **hiçbir zaman** bütün halinde oluşturulmaz: `YuvWriter`, motor
+her satırı ürettiği anda onu kodlayıcının kendi giriş düzlemlerine yazar ve
+yolda RGB'yi YUV 4:2:0'a çevirir. Fazladan tutulan tek şey bir önceki satırdır;
+renk 2×2 bloklar üzerinden ortalandığı için gerekir.
+
+### Kodlayıcı tavanı tahmin edilmez, sorulur
+
+Fotoğrafta 512K'ya çıkılabiliyor çünkü dosyayı uygulamanın kendisi yazıyor.
+Videoda öyle değil: kareyi bir donanım kodlayıcısı sıkıştırır ve onun bir tavanı
+vardır — çoğu telefonda 4K, en iyilerinde 8K, hiçbirinde 16K değil.
+`VideoCodecs` varsaymak yerine cihaza sorar: istenen boyutu küçülterek
+kodlayıcı "evet" diyene kadar dener.
+
+İstenen çözünürlük sığmadığında uygulama reddetmez. Onun yerine **numaralı
+görüntü dosyaları** yazar — `frame_000001.png` ve devamı, adında kare hızını
+taşıyan bir klasörde. Renk düzeltme ve son işlemin gerçekte kullandığı biçim
+zaten budur. Bilgisayarda tek komutla videoya dönüşür:
+
+```
+ffmpeg -framerate 30 -i frame_%06d.png -c:v libx265 -crf 18 out.mp4
+```
+
+Kare dizisinde ses yoktur, kodlayıcı tavanı da yoktur ve sıkıştırmaya hiçbir şey
+kaybedilmez.
+
+### Renk taşınır, varsayılmaz
+
+Kod çözücüye kaynağın hangi renk standardını kullandığı sorulur (BT.601, BT.709
+ya da BT.2020; sınırlı veya tam aralık); yazarken de aynısı kullanılır ve çıkışa
+işlenir, böylece oynatıcı tahmin etmek zorunda kalmaz. Kaynak bir şey
+söylemiyorsa standart çözünürlükten seçilir. `tools/desktop/YuvTest.java`
+çevrimi I420, NV12 ve satır adımı dolgulu yerleşimlerde, dört renk uzayının
+hepsinde gidiş-dönüş sınar: en kötü sapma 255 seviyede 3, ana renkler doğru
+kanallardan geri geliyor.
+
+### Neye mal olduğu
+
+Kare başına iş, kare sayısıyla çarpılır; arayüzün başlamadan önce önünüze
+koyduğu sayı budur. İki saniye süren bir kare, otuz saniyelik bir klipte bir
+saatlik iştir. Model bir kez yüklenir ve iş parçacığı havuzu kareler arasında
+paylaşılır; yani kare başına ek yük, büyütmenin kendisinden ibarettir. İlk
+kareler bittikten sonra ölçülen hız ve gerçek kalan süre — tahmin değil, ölçüm —
+hem ilerleme satırında hem bildirimde görünür.
+
+Yaklaşık 9 MP'nin üstündeki kaynak kareler klasik Lanczos'a düşer: o boyutta
+sinir ağı kare başına dakikalar sürer ve böyle bir işi başlatmak kimseye yardım
+etmez.
 
 ## Kullanıcı istekleri
 

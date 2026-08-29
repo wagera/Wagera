@@ -198,6 +198,42 @@
                         android:layout_height="1dp"
                         android:background="@color/rule" />
 
+                    <!-- ── Kaynak turu ──────────────────────────────────
+                         Fotograf mi video mu. Tek bir uygulamada iki
+                         hat var ve hangisinde oldugunu ekranin en
+                         ustunde, vizore girmeden once soylemek gerekir:
+                         asagidaki her sey (olcek, ayarlar, zincir) bu
+                         secime gore degisir. -->
+                    <LinearLayout
+                        android:id="@+id/mediaKind"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingStart="@dimen/gutter"
+                        android:paddingEnd="@dimen/gutter"
+                        android:paddingTop="12dp"
+                        android:paddingBottom="12dp">
+
+                        <Button
+                            android:id="@+id/kindPhoto"
+                            style="@style/SpecChip"
+                            android:letterSpacing="0.04"
+                            android:text="@string/kind_photo" />
+
+                        <Space android:layout_width="6dp" android:layout_height="1dp" />
+
+                        <Button
+                            android:id="@+id/kindVideo"
+                            style="@style/SpecChip"
+                            android:letterSpacing="0.04"
+                            android:text="@string/kind_video" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/rule" />
+
                     <!-- ── Vizor ────────────────────────────────────────
                          Dort durum ayni alani paylasir. Cerceve yerine
                          kose ayraclari: fotografin onune gecmez. -->
@@ -219,12 +255,14 @@
                             android:paddingBottom="48dp">
 
                             <ImageView
+                                android:id="@+id/emptyIcon"
                                 android:layout_width="26dp"
                                 android:layout_height="26dp"
                                 android:contentDescription="@string/no_photo"
                                 android:src="@drawable/ic_photo" />
 
                             <TextView
+                                android:id="@+id/emptyTitle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="14dp"
@@ -236,6 +274,7 @@
                                 android:textSize="@dimen/text_fine" />
 
                             <TextView
+                                android:id="@+id/emptyHint"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="6dp"
@@ -416,6 +455,7 @@
                             android:orientation="horizontal" />
 
                         <LinearLayout
+                            android:id="@+id/tierRow"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
@@ -692,6 +732,7 @@
                             android:visibility="gone">
 
                             <LinearLayout
+                                android:id="@+id/formatRow"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal">
@@ -791,6 +832,130 @@
                                     android:textAllCaps="false"
                                     android:textColor="@color/chip_text"
                                     android:textSize="@dimen/text_fine" />
+                            </LinearLayout>
+
+                            <!-- ── Video ayarlari ──────────────────────
+                                 Yalnizca video kipinde gorunur. Fotograf
+                                 ayarlariyla ayni panelde durur cunku ikisi
+                                 de ayni soruya cevap verir: cikis dosyasi
+                                 nasil yazilsin. -->
+                            <LinearLayout
+                                android:id="@+id/videoSettings"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:visibility="gone">
+
+                                <TextView
+                                    style="@style/FieldLabel"
+                                    android:layout_marginTop="16dp"
+                                    android:text="@string/v_row_output" />
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
+                                    android:orientation="horizontal">
+
+                                    <Button
+                                        android:id="@+id/outVideo"
+                                        style="@style/SpecChip"
+                                        android:text="@string/v_out_video" />
+
+                                    <Space android:layout_width="6dp" android:layout_height="1dp" />
+
+                                    <Button
+                                        android:id="@+id/outSequence"
+                                        style="@style/SpecChip"
+                                        android:text="@string/v_out_sequence" />
+                                </LinearLayout>
+
+                                <TextView
+                                    android:id="@+id/outputInfo"
+                                    style="@style/SpecNote"
+                                    android:layout_marginTop="8dp" />
+
+                                <LinearLayout
+                                    android:id="@+id/sequenceFormatRow"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="12dp"
+                                    android:orientation="horizontal"
+                                    android:visibility="gone">
+
+                                    <Button
+                                        android:id="@+id/seqPng"
+                                        style="@style/SpecChip"
+                                        android:letterSpacing="0.06"
+                                        android:text="PNG" />
+
+                                    <Space android:layout_width="6dp" android:layout_height="1dp" />
+
+                                    <Button
+                                        android:id="@+id/seqJpeg"
+                                        style="@style/SpecChip"
+                                        android:letterSpacing="0.06"
+                                        android:text="JPEG" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:id="@+id/bitrateRow"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="16dp"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        style="@style/FieldLabel"
+                                        android:layout_width="0dp"
+                                        android:layout_weight="1"
+                                        android:text="@string/v_row_bitrate" />
+
+                                    <TextView
+                                        android:id="@+id/bitrateValue"
+                                        style="@style/SpecReadout" />
+                                </LinearLayout>
+
+                                <SeekBar
+                                    android:id="@+id/bitrateSeek"
+                                    style="@style/SpecSeek"
+                                    android:max="100"
+                                    android:progress="50" />
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="16dp"
+                                    android:gravity="center_vertical"
+                                    android:orientation="horizontal">
+
+                                    <LinearLayout
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:orientation="vertical">
+
+                                        <TextView
+                                            style="@style/FieldLabel"
+                                            android:text="@string/v_row_audio" />
+
+                                        <TextView
+                                            android:id="@+id/audioInfo"
+                                            style="@style/SpecNote"
+                                            android:layout_marginTop="4dp" />
+                                    </LinearLayout>
+
+                                    <Button
+                                        android:id="@+id/audioToggle"
+                                        android:layout_width="86dp"
+                                        android:layout_height="36dp"
+                                        android:layout_marginStart="12dp"
+                                        android:background="@drawable/chip"
+                                        android:fontFamily="@font/sans"
+                                        android:textAllCaps="false"
+                                        android:textColor="@color/chip_text"
+                                        android:textSize="@dimen/text_fine" />
+                                </LinearLayout>
                             </LinearLayout>
                         </LinearLayout>
 

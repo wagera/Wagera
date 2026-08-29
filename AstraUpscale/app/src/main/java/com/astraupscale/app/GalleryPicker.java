@@ -44,6 +44,11 @@ final class GalleryPicker {
     private static final int COLUMNS = 3;
     /** Bir seferde okunan en fazla fotograf; izgara sonsuza kadar buyumesin. */
     private static final int LIMIT = 300;
+    /**
+     * Video icin daha dusuk sinir: bir video kucuk resmi bir fotograftan
+     * kat kat pahali cozulur (kap acilir, ilk kare bulunur, cozulur).
+     */
+    private static final int VIDEO_LIMIT = 120;
     /** Kucuk resmin hedef kenar uzunlugu (px); ekran yogunluguyla carpilir. */
     private static final int THUMB_DP = 120;
 
@@ -57,21 +62,44 @@ final class GalleryPicker {
 
     private final Activity activity;
     private final OnPicked callback;
+    /** Izgara video mu listeliyor? Ayni sinif iki turu de gosterir. */
+    private boolean videos;
 
     GalleryPicker(Activity activity, OnPicked callback) {
         this.activity = activity;
         this.callback = callback;
     }
 
+    void setVideos(boolean videos) {
+        this.videos = videos;
+    }
+
+    boolean isVideos() {
+        return videos;
+    }
+
     /** API duzeyine gore dogru fotograf izni. */
     static String permission() {
-        return Build.VERSION.SDK_INT >= 33
-                ? Manifest.permission.READ_MEDIA_IMAGES
-                : Manifest.permission.READ_EXTERNAL_STORAGE;
+        return permission(false);
+    }
+
+    /**
+     * API duzeyine ve ture gore dogru izin.
+     *
+     * <p>Android 13'ten itibaren fotograf ve video izinleri ayrildi;
+     * oncesinde ikisi de tek bir depolama izninin altindaydi.
+     */
+    static String permission(boolean videos) {
+        if (Build.VERSION.SDK_INT >= 33) {
+            return videos ? Manifest.permission.READ_MEDIA_VIDEO
+                    : Manifest.permission.READ_MEDIA_IMAGES;
+        }
+        return Manifest.permission.READ_EXTERNAL_STORAGE;
     }
 
     boolean hasPermission() {
-        return activity.checkSelfPermission(permission()) == PackageManager.PERMISSION_GRANTED;
+        return activity.checkSelfPermission(permission(videos))
+                == PackageManager.PERMISSION_GRANTED;
     }
 
     /**
@@ -81,7 +109,7 @@ final class GalleryPicker {
      */
     int load(LinearLayout grid) {
         grid.removeAllViews();
-        List<Uri> photos = query();
+        List<Uri> photos = videos ? queryVideos() : query();
         if (photos.isEmpty()) return 0;
 
         int density = (int) activity.getResources().getDisplayMetrics().density;
@@ -129,6 +157,30 @@ final class GalleryPicker {
         return out;
     }
 
+    /** Cihazdaki videolari yeniden eskiye dogru listeler. */
+    private List<Uri> queryVideos() {
+        List<Uri> out = new ArrayList<>();
+        String[] columns = {MediaStore.Video.Media._ID};
+        Cursor c = null;
+        try {
+            c = activity.getContentResolver().query(
+                    MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                    columns, null, null,
+                    MediaStore.Video.Media.DATE_ADDED + " DESC");
+            if (c == null) return out;
+            int idColumn = c.getColumnIndexOrThrow(MediaStore.Video.Media._ID);
+            while (c.moveToNext() && out.size() < VIDEO_LIMIT) {
+                out.add(ContentUris.withAppendedId(
+                        MediaStore.Video.Media.EXTERNAL_CONTENT_URI, c.getLong(idColumn)));
+            }
+        } catch (Exception e) {
+            // Saglayici erisilemezse izgara bos kalir; "Dosyalar" yolu acik.
+        } finally {
+            if (c != null) c.close();
+        }
+        return out;
+    }
+
     private View cellFor(final Uri uri, int size, int startMargin) {
         final ImageView view = new ImageView(activity);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(size, size);
@@ -143,9 +195,10 @@ final class GalleryPicker {
         });
 
         final int target = THUMB_DP * (int) activity.getResources().getDisplayMetrics().density;
+        final boolean isVideo = videos;
         io.execute(new Runnable() {
             @Override public void run() {
-                final Bitmap bmp = decode(uri, target);
+                final Bitmap bmp = isVideo ? decodeVideo(uri, target) : decode(uri, target);
                 if (bmp == null) return;
                 ui.post(new Runnable() {
                     @Override public void run() { view.setImageBitmap(bmp); }
@@ -188,6 +241,30 @@ final class GalleryPicker {
             } finally {
                 in2.close();
             }
+        } catch (Exception e) {
+            return null;
+        } catch (OutOfMemoryError e) {
+            return null;
+        }
+    }
+
+    /**
+     * Videonun kucuk resmi.
+     *
+     * <p>Android 10'dan itibaren saglayici hazir bir kucuk resim verebilir;
+     * oncesinde MediaStore'un kendi onbellegi kullanilir. Ikisi de
+     * basarisiz olursa hucre bos kalir — bir videoyu tam olarak cozup ilk
+     * karesini almak, izgarada yuz kez tekrarlanabilecek bir is degil.
+     */
+    private Bitmap decodeVideo(Uri uri, int target) {
+        try {
+            if (Build.VERSION.SDK_INT >= 29) {
+                return activity.getContentResolver().loadThumbnail(
+                        uri, new android.util.Size(target, target), null);
+            }
+            long id = android.content.ContentUris.parseId(uri);
+            return MediaStore.Video.Thumbnails.getThumbnail(activity.getContentResolver(),
+                    id, MediaStore.Video.Thumbnails.MINI_KIND, null);
         } catch (Exception e) {
             return null;
         } catch (OutOfMemoryError e) {
