@@ -202,11 +202,6 @@
     <string name="compare_failed">Could not open the comparison.</string>
     <string name="status_format">%1$s · %2$d threads</string>
     <!-- Islem zinciri -->
-    <!-- Kesfet ve yasal -->
-    <string name="nav_discover">Discover</string>
-    <string name="discover_offline">Offline — showing the last content that was fetched.</string>
-    <string name="discover_stale">Could not refresh (%1$s). Showing the last content that was fetched.</string>
-    <string name="discover_empty">No content yet. Pull to refresh once you are online.</string>
     <string name="legal_title">Legal</string>
     <string name="legal_value">Licences</string>
     <string name="legal_app">This app</string>

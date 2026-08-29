@@ -59,15 +59,11 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
             navUpscaleLabel, navHistoryLabel, navRequestsLabel;
     private Button pickButton, startButton, cancelButton, openButton, shareButton,
             formatJpeg, formatPng, stage1, stage2, denoiseToggle, updateButton, sendButton;
-    private LinearLayout pageDiscover, discoverList, navDiscover;
-    private TextView discoverState, navDiscoverLabel, licenseText;
-    private ImageView navDiscoverIcon;
+    private TextView licenseText;
     private Accordion secLicense;
-    /** Kesfet bir kez cekildi mi; sekmeye her donuste aga gidilmesin. */
-    private boolean discoverLoaded;
 
     private LinearLayout modelList, progressCard, resultCard, emptyState, qualityRow,
-            loadLevels, updateGate, pageUpscale, pageRequests, pageHistory, kindRow,
+            loadLevels, updateGate, pageUpscale, pageRequests, pageHistory, pageLegal, kindRow,
             historyList, onboarding, navUpscale, navHistory, navRequests;
     private ImageView navUpscaleIcon, navHistoryIcon, navRequestsIcon;
     private Button onboardingStart;
@@ -436,12 +432,7 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         navUpscale = findViewById(R.id.navUpscale);
         navHistory = findViewById(R.id.navHistory);
         navRequests = findViewById(R.id.navRequests);
-        navDiscover = findViewById(R.id.navDiscover);
-        navDiscoverIcon = findViewById(R.id.navDiscoverIcon);
-        navDiscoverLabel = findViewById(R.id.navDiscoverLabel);
-        pageDiscover = findViewById(R.id.pageDiscover);
-        discoverList = findViewById(R.id.discoverList);
-        discoverState = findViewById(R.id.discoverState);
+        pageLegal = findViewById(R.id.pageLegal);
         licenseText = findViewById(R.id.licenseText);
         historyList = findViewById(R.id.historyList);
         onboarding = findViewById(R.id.onboarding);
@@ -892,14 +883,8 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         navHistory.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) { showPage(1); }
         });
-        navDiscover.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) { showPage(2); }
-        });
         navRequests.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) { showPage(3); }
-        });
-        findViewById(R.id.discoverRefresh).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) { loadDiscover(true); }
+            @Override public void onClick(View v) { showPage(2); }
         });
         findViewById(R.id.licenseApp).setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) { showLicense(true); }
@@ -953,20 +938,26 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         });
     }
 
-    /** 0 = buyut, 1 = gecmis, 2 = istekler */
-    /** 0 = buyut, 1 = gecmis, 2 = kesfet, 3 = istekler */
+    /**
+     * 0 = buyut, 1 = gecmis, 2 = istekler.
+     *
+     * <p>Aralik disi bir deger buyut sayfasina duser. Kesfet sekmesi
+     * kaldirildiginda diskte kayitli sayfa numarasi artik var olmayan bir
+     * sayfayi gosteriyor olabilir; boyle bir kurulumda uygulama bos bir
+     * ekranla acilirdi.
+     */
     private void showPage(int which) {
+        if (which < 0 || which > 2) which = 0;
         page = which;
         pageUpscale.setVisibility(which == 0 ? View.VISIBLE : View.GONE);
         pageHistory.setVisibility(which == 1 ? View.VISIBLE : View.GONE);
-        pageDiscover.setVisibility(which == 2 ? View.VISIBLE : View.GONE);
-        pageRequests.setVisibility(which == 3 ? View.VISIBLE : View.GONE);
+        pageRequests.setVisibility(which == 2 ? View.VISIBLE : View.GONE);
+        // Yasal bildirimler istekler sayfasiyla birlikte gorunur.
+        pageLegal.setVisibility(which == 2 ? View.VISIBLE : View.GONE);
 
-        LinearLayout[] items = {navUpscale, navHistory, navDiscover, navRequests};
-        TextView[] labels = {navUpscaleLabel, navHistoryLabel, navDiscoverLabel,
-                navRequestsLabel};
-        ImageView[] icons = {navUpscaleIcon, navHistoryIcon, navDiscoverIcon,
-                navRequestsIcon};
+        LinearLayout[] items = {navUpscale, navHistory, navRequests};
+        TextView[] labels = {navUpscaleLabel, navHistoryLabel, navRequestsLabel};
+        ImageView[] icons = {navUpscaleIcon, navHistoryIcon, navRequestsIcon};
         for (int i = 0; i < items.length; i++) {
             boolean on = i == which;
             items[i].setSelected(on);
@@ -977,8 +968,7 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
         themeButton.setText(ThemeHelper.labelRes(ThemeHelper.current(this)));
         scrollToTop();
         if (which == 1) loadHistory();
-        if (which == 2) loadDiscover(false);
-        if (which == 3) refreshQueueStatus();
+        if (which == 2) refreshQueueStatus();
     }
 
     private void scrollToTop() {
@@ -1579,112 +1569,6 @@ public final class MainActivity extends Activity implements UpscaleJob.Listener 
                 loadLevel.threads(device), formatSize(estimatedBytes(target[0], target[1]))));
 
         pipelineInfo.setText(sb.toString());
-    }
-
-    /**
-     * Kesfet icerigini getirir.
-     *
-     * <p>Ag islemi arka planda yapilir. Sekmeye her donuste yeniden
-     * cekilmez; yalnizca ilk acilista ya da kullanici acikca yenilediginde.
-     *
-     * @param force kullanici yenile'ye bastiysa true
-     */
-    private void loadDiscover(boolean force) {
-        if (discoverLoaded && !force) return;
-        discoverLoaded = true;
-
-        final String locale = LocaleHelper.current(this).startsWith("en") ? "en" : "tr";
-        new Thread(new Runnable() {
-            @Override public void run() {
-                final Discover.Result r = Discover.load(MainActivity.this, locale);
-                runOnUiThread(new Runnable() {
-                    @Override public void run() { renderDiscover(r); }
-                });
-            }
-        }, "astra-discover").start();
-    }
-
-    /** Kartlari cizer ve tazelenemedigini soyler. */
-    private void renderDiscover(Discover.Result r) {
-        discoverList.removeAllViews();
-
-        if (r.fresh) {
-            discoverState.setVisibility(View.GONE);
-        } else if ("offline".equals(r.failure)) {
-            discoverState.setText(R.string.discover_offline);
-            discoverState.setVisibility(View.VISIBLE);
-        } else if (!r.failure.isEmpty()) {
-            // Sessiz basarisizlik bu projede bir kez pahaliya mal oldu;
-            // neden gorunur kaliyor.
-            discoverState.setText(getString(R.string.discover_stale, r.failure));
-            discoverState.setVisibility(View.VISIBLE);
-        } else {
-            discoverState.setVisibility(View.GONE);
-        }
-
-        if (r.items.isEmpty()) {
-            TextView empty = new TextView(this);
-            empty.setText(R.string.discover_empty);
-            empty.setTextSize(13f);
-            empty.setTypeface(faceSans);
-            empty.setTextColor(getColor(R.color.content_faint));
-            empty.setPadding(dp(20), dp(20), dp(20), dp(20));
-            discoverList.addView(empty);
-            return;
-        }
-
-        for (Discover.Item item : r.items) {
-            discoverList.addView(discoverCard(item));
-        }
-    }
-
-    /** Tek bir Kesfet karti: ust satirda tur, sonra baslik ve govde. */
-    private View discoverCard(Discover.Item item) {
-        LinearLayout card = new LinearLayout(this);
-        card.setOrientation(LinearLayout.VERTICAL);
-        card.setBackgroundResource(R.drawable.panel);
-        card.setPadding(dp(16), dp(14), dp(16), dp(16));
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        lp.setMarginStart(dp(20));
-        lp.setMarginEnd(dp(20));
-        lp.bottomMargin = dp(8);
-        card.setLayoutParams(lp);
-
-        if (item.meta != null && !item.meta.isEmpty()) {
-            TextView meta = new TextView(this);
-            meta.setText(item.meta.toUpperCase(Locale.getDefault()));
-            meta.setTextSize(10f);
-            meta.setTypeface(faceDisplay);
-            meta.setLetterSpacing(0.12f);
-            meta.setTextColor(getColor(R.color.signal));
-            card.addView(meta);
-        }
-
-        TextView title = new TextView(this);
-        title.setText(item.title);
-        title.setTextSize(15f);
-        title.setTypeface(faceSans);
-        title.setTextColor(getColor(R.color.content));
-        LinearLayout.LayoutParams tlp = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        tlp.topMargin = dp(6);
-        title.setLayoutParams(tlp);
-        card.addView(title);
-
-        TextView body = new TextView(this);
-        body.setText(item.body);
-        body.setTextSize(13f);
-        body.setTypeface(faceSans);
-        body.setLineSpacing(dp(4), 1f);
-        body.setTextColor(getColor(R.color.content_dim));
-        LinearLayout.LayoutParams blp = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        blp.topMargin = dp(7);
-        body.setLayoutParams(blp);
-        card.addView(body);
-
-        return card;
     }
 
     /**

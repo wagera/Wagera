@@ -1,6 +1,6 @@
 {
-  "versionCode": 13,
-  "versionName": "11.0",
+  "versionCode": 14,
+  "versionName": "12.0",
   "apkUrl": "https://github.com/wagera/Wagera/raw/main/AstraUpscale/release/AstraUpscale.apk",
-  "notes": "Licences bundled in the app as binary distribution requires, a pipeline readout showing exactly what will be done to your photo, and a Discover page."
+  "notes": "Video upscaling at 2K, 4K, 8K and 16K with the same engine as photos: audio is carried across, the encoder ceiling is asked rather than assumed, and resolutions above it are written as a frame sequence. The Discover page has been removed."
 }
