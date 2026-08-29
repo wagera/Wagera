@@ -67,6 +67,18 @@ echo "==> kaynaklar derleniyor (aapt2 compile)"
 # minSdk 26 (Android 8.0): res/font kaynak aileleri ve uyarlanabilir simge
 # bu surumde geldi. 24'te birakilirsa aapt2 sorun cikarmaz ama Android 7
 # cihazda @font/* cozulmez ve tipografi sessizce varsayilana duser.
+# Surum numarasi manifest'ten okunur.
+#
+# Onceden burada elle yazilmis sabitler vardi ve manifest guncellendiginde
+# APK eski numarayla cikiyordu. Guncelleme kapisi version.json ile APK'nin
+# versionCode'unu karsilastirdigi icin bu sessiz bir hata degil, uygulamayi
+# acilmaz hale getiren bir hata: yeni surum "eski" gorunur ve kapi kapali
+# kalir. Tek dogru kaynak manifest olsun.
+VERSION_CODE="$(sed -n 's/.*android:versionCode="\([0-9]*\)".*/\1/p' "$APP/AndroidManifest.xml" | head -1)"
+VERSION_NAME="$(sed -n 's/.*android:versionName="\([^"]*\)".*/\1/p' "$APP/AndroidManifest.xml" | head -1)"
+[ -n "$VERSION_CODE" ] && [ -n "$VERSION_NAME" ] || { echo "manifest'te surum okunamadi"; exit 1; }
+echo "==> surum: $VERSION_NAME ($VERSION_CODE)"
+
 echo "==> kaynaklar baglaniyor (aapt2 link)"
 "$BT/aapt2" link \
     -I "$ANDROID_JAR" \
@@ -75,8 +87,8 @@ echo "==> kaynaklar baglaniyor (aapt2 link)"
     --java "$OUT/classes" \
     --min-sdk-version 26 \
     --target-sdk-version 34 \
-    --version-code 13 \
-    --version-name 11.0 \
+    --version-code "$VERSION_CODE" \
+    --version-name "$VERSION_NAME" \
     -0 .param \
     -o "$OUT/base.apk" \
     "$OUT/res/resources.zip"
