@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 
 import com.astraupscale.engine.Preset;
+import com.astraupscale.engine.VideoPreset;
 
 /**
  * Kullanicinin secimlerini acilistan acilisa tasir.
@@ -34,6 +35,16 @@ final class Session {
     private static final String KEY_DENOISE = "session_denoise";
     private static final String KEY_LOAD = "session_load";
     private static final String KEY_PAGE = "session_page";
+
+    // Video hatti ayri anahtarlar kullanir: kullanici fotograf kipine
+    // dondugunde oradaki secimlerini oldugu gibi bulmali.
+    private static final String KEY_MEDIA_VIDEO = "session_media_video";
+    private static final String KEY_VIDEO_SOURCE = "session_video_source";
+    private static final String KEY_VIDEO_PRESET = "session_video_preset";
+    private static final String KEY_VIDEO_SEQUENCE = "session_video_sequence";
+    private static final String KEY_VIDEO_SEQ_JPEG = "session_video_seq_jpeg";
+    private static final String KEY_VIDEO_AUDIO = "session_video_audio";
+    private static final String KEY_VIDEO_BITRATE = "session_video_bitrate";
 
     private Session() { }
 
@@ -129,5 +140,62 @@ final class Session {
     /** Kaynak okunamadiginda cagrilir: yalniz adres unutulur, ayarlar kalir. */
     static void forgetSource(Context ctx) {
         prefs(ctx).edit().remove(KEY_SOURCE).apply();
+    }
+
+    // ------------------------------------------------------------------ video
+
+    /** Video kipine ait secimleri yazar. */
+    static void saveVideo(Context ctx, Uri source, VideoPreset preset, boolean sequence,
+                          boolean sequenceJpeg, boolean audio, int bitrate) {
+        prefs(ctx).edit()
+                .putString(KEY_VIDEO_SOURCE, source == null ? "" : source.toString())
+                .putString(KEY_VIDEO_PRESET, preset == null ? "" : preset.name())
+                .putBoolean(KEY_VIDEO_SEQUENCE, sequence)
+                .putBoolean(KEY_VIDEO_SEQ_JPEG, sequenceJpeg)
+                .putBoolean(KEY_VIDEO_AUDIO, audio)
+                .putInt(KEY_VIDEO_BITRATE, bitrate)
+                .apply();
+    }
+
+    /** Hangi hattin acik oldugu; uygulama kapandigi yerden acilsin. */
+    static void saveMediaKind(Context ctx, boolean video) {
+        prefs(ctx).edit().putBoolean(KEY_MEDIA_VIDEO, video).apply();
+    }
+
+    static boolean videoMode(Context ctx, boolean fallback) {
+        return prefs(ctx).getBoolean(KEY_MEDIA_VIDEO, fallback);
+    }
+
+    static Uri videoSource(Context ctx) {
+        String s = prefs(ctx).getString(KEY_VIDEO_SOURCE, "");
+        return s.isEmpty() ? null : Uri.parse(s);
+    }
+
+    static VideoPreset videoPreset(Context ctx, VideoPreset fallback) {
+        String name = prefs(ctx).getString(KEY_VIDEO_PRESET, "");
+        for (VideoPreset p : VideoPreset.values()) {
+            if (p.name().equals(name)) return p;
+        }
+        return fallback;
+    }
+
+    static boolean videoSequence(Context ctx, boolean fallback) {
+        return prefs(ctx).getBoolean(KEY_VIDEO_SEQUENCE, fallback);
+    }
+
+    static boolean videoSequenceJpeg(Context ctx, boolean fallback) {
+        return prefs(ctx).getBoolean(KEY_VIDEO_SEQ_JPEG, fallback);
+    }
+
+    static boolean videoAudio(Context ctx, boolean fallback) {
+        return prefs(ctx).getBoolean(KEY_VIDEO_AUDIO, fallback);
+    }
+
+    static int videoBitrate(Context ctx, int fallback) {
+        return prefs(ctx).getInt(KEY_VIDEO_BITRATE, fallback);
+    }
+
+    static void forgetVideoSource(Context ctx) {
+        prefs(ctx).edit().remove(KEY_VIDEO_SOURCE).apply();
     }
 }

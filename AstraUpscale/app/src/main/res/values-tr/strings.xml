@@ -224,4 +224,69 @@
     <string name="spec_title">Künye</string>
     <string name="summary_jpeg">JPEG · %1$d</string>
     <string name="value_none">—</string>
+
+    <!-- ══ Video ══════════════════════════════════════════════════════ -->
+    <string name="kind_photo">Fotoğraf</string>
+    <string name="kind_video">Video</string>
+    <string name="v_pick_video">Video seç</string>
+    <string name="v_change_video">Videoyu değiştir</string>
+    <string name="v_no_video">Henüz video seçilmedi</string>
+    <string name="v_stage_tap_hint">Galeriden seçmek için dokunun</string>
+    <string name="v_read_failed">Video okunamadı</string>
+    <string name="v_pick_video_first">Önce bir video seçin.</string>
+    <string name="v_source_format">%1$d × %2$d   %3$s   %4$.0f fps</string>
+    <string name="v_target_format">Kare başına %1$d × %2$d   %3$.1f MP   %4$.1f×</string>
+    <string name="v_target_frames">%1$d kare üretilecek</string>
+    <string name="v_encoder_line">Kodlayıcı  %1$s</string>
+    <string name="v_encoder_capped">Bu cihazın kodlayıcısı %1$d × %2$d\'de duruyor; %3$s bir video dosyası olarak yazılamaz. Kareler numaralı görüntüler olarak yazılır.</string>
+    <string name="v_encoder_none">Bu cihazda video kodlayıcı bulunamadı; yalnızca kare dizisi yazılabilir.</string>
+    <string name="v_sequence_line">%1$d görüntü dosyası, ses yok</string>
+    <string name="v_slow_warning">Bu boyutta bir telefon saniyede bir kareden çok daha azını üretir. Saatler sürer; cihazı prizde tutun.</string>
+
+    <string name="v_row_output">Çıkış</string>
+    <string name="v_out_video">Video dosyası</string>
+    <string name="v_out_sequence">Kare dizisi</string>
+    <string name="v_out_video_note">Movies / AstraUpscale içine tek bir .mp4. Ses olduğu gibi taşınır ve her yerde oynar.</string>
+    <string name="v_out_sequence_note">Pictures / AstraUpscale içine numaralı görüntüler. Kodlayıcı tavanı ve kalite kaybı yok, ama ses de yok — klasör adındaki kare hızıyla ffmpeg ile birleştirin.</string>
+    <string name="v_out_sequence_forced">Seçilen çözünürlük bu cihazın kodlayıcı tavanının üstünde; çıkış kare dizisi olmak zorunda.</string>
+    <string name="v_row_bitrate">Bit hızı</string>
+    <string name="v_bitrate_value">%1$.0f Mbps</string>
+    <string name="v_row_audio">Ses</string>
+    <string name="v_audio_keep">Taşı</string>
+    <string name="v_audio_drop">Bırak</string>
+    <string name="v_audio_note_on">Özgün ses izi yeniden kodlanmadan kopyalanır.</string>
+    <string name="v_audio_note_off">Çıkışta ses olmayacak.</string>
+    <string name="v_audio_none">Bu videoda ses izi yok.</string>
+
+    <string name="v_pipe_source">%1$d  KAYNAK      %2$d × %3$d · %4$d kare · %5$.0f fps</string>
+    <string name="v_pipe_decode">%1$d  ÇÖZME       %2$s → RGB, %3$s</string>
+    <string name="v_pipe_encode_video">%1$d  KODLAMA     %2$s · %3$.0f Mbps → MP4</string>
+    <string name="v_pipe_encode_sequence">%1$d  YAZMA       kare başına %2$s · %3$d dosya</string>
+    <string name="v_pipe_audio">%1$d  SES         kopyalanır, yeniden kodlanmaz</string>
+    <string name="v_pipe_budget">   BÜTÇE       %1$d iş parçacığı · ~%2$s çıkış · %3$d kare</string>
+    <string name="v_pipe_note">Kare başına iş, kare sayısıyla çarpılır. İki saniye süren tek bir kare, otuz saniyelik bir klipte bir saatlik işe dönüşür.</string>
+
+    <string name="v_stage_open">Video okunuyor</string>
+    <string name="v_stage_frames">Kare %1$d / %2$d   ·   %3$.2f kare/sn</string>
+    <string name="v_stage_closing">Dosya kapatılıyor</string>
+    <string name="v_stage_done">Tamamlandı</string>
+    <string name="v_error_size_changed">Bu videoda kare boyutu ortada değişiyor (%1$d × %2$d → %3$d × %4$d). Önce bölün ya da sabit boyuta dönüştürün.</string>
+    <string name="v_error_no_frames">Bu videodan hiçbir kare çözülemedi.</string>
+    <string name="v_error_no_video_track">Bu dosyada görüntü izi yok.</string>
+    <string name="v_error_no_encoder">Bu cihazda kullanılabilir bir video kodlayıcı bulunamadı.</string>
+    <string name="v_error_memory">Bellek yetmedi. Daha düşük bir çözünürlük ya da tek geçiş deneyin.</string>
+    <string name="v_note_source_too_big">Kareler yapay zekâ modeli için fazla büyük; klasik yöntem kullanılıyor.</string>
+    <string name="v_note_model_failed">Model yüklenemedi; klasik yöntem kullanılıyor.</string>
+    <string name="v_note_single_pass">İki geçiş kare başına %1$.1f GB isterdi — tek geçişle sürüyor.</string>
+
+    <string name="v_notif_running_title">Video %1$s\'ya büyütülüyor</string>
+    <string name="v_notif_done_title">Video hazır</string>
+    <string name="v_notif_done_text">%1$d × %2$d · %3$d kare · %4$s · %5$.1f dk</string>
+    <string name="v_notif_done_sequence">%1$d kare · %2$d × %3$d · %4$s</string>
+    <string name="v_result_format">%1$d × %2$d   %3$d kare\n%4$s\n%5$s\n%6$.1f MB   %7$.1f dk\n%8$s\nMovies / AstraUpscale</string>
+    <string name="v_result_sequence">%1$d × %2$d   %3$d kare\n%4$s\n%5$s\n%6$.1f MB   %7$.1f dk\n%8$s\nPictures / AstraUpscale</string>
+    <string name="v_result_audio_kept">ses taşındı</string>
+    <string name="v_result_audio_none">ses yok</string>
+    <string name="v_gallery_title">Son videolar</string>
+    <string name="v_gallery_empty">Bu cihazda video bulunamadı</string>
 </resources>

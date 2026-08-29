@@ -28,6 +28,13 @@ public final class Upscaler {
         /** Kullanilacak is parcacigi sayisi; 0 ise cekirdek sayisi kadar. */
         public int threads = 0;
         /**
+         * Hazir bir is parcacigi havuzu. Video hattinda her kare icin yeni
+         * havuz kurmak saniyede onlarca kez is parcacigi yaratmak demektir;
+         * verilirse havuz paylasilir ve bu kurulum bedeli odenmez. Havuz
+         * cagiranin malidir: {@link #run} onu kapatmaz.
+         */
+        public ThreadPool pool;
+        /**
          * Keskinlestirme halkasi icin ayrilabilecek azami bellek. Cok genis
          * ciktilarda (128K ve uzeri) yaricap bu butceye gore kisilir.
          */
@@ -61,7 +68,10 @@ public final class Upscaler {
         final int srcH = src.height();
         final int w3 = dstW * 3;
 
-        ThreadPool pool = opt.threads > 0 ? new ThreadPool(opt.threads) : ThreadPool.auto();
+        final boolean ownPool = opt.pool == null;
+        ThreadPool pool = ownPool
+                ? (opt.threads > 0 ? new ThreadPool(opt.threads) : ThreadPool.auto())
+                : opt.pool;
         try {
             Resampler resampler = new Resampler(src, dstW, dstH, pool);
             writer.start(dstW, dstH);
@@ -162,7 +172,7 @@ public final class Upscaler {
             progress.onProgress(1f, "Tamamlandi");
             return result;
         } finally {
-            pool.shutdown();
+            if (ownPool) pool.shutdown();
         }
     }
 
