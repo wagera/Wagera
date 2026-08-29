@@ -2,18 +2,15 @@
 
 **English · [Türkçe](README.md)**
 
-An Android app that upscales **photos and video** on the device — photos from
-**2K up to 512K**, video at **2K, 4K, 8K and 16K**. Real-ESRGAN, SwinIR and
-Real-CUGAN models ship inside the APK; everything runs on the phone and nothing
-ever leaves it.
+An Android app that upscales photos on the device, from **2K up to 512K**.
+Real-ESRGAN, SwinIR and Real-CUGAN models ship inside the APK; everything runs
+on the phone and no image ever leaves it.
 
 <img src="docs/tema-koyu.png" width="250" alt="Dark theme" /> <img src="docs/tema-acik.png" width="250" alt="Light theme" />
 
 | | |
 |---|---|
-| Source | Photo or video, chosen at the top of the screen |
-| Photo resolution | 14 presets from 2K to 512K, in three tiers |
-| Video resolution | 2K, 4K, 8K, 16K |
+| Resolution | 14 presets from 2K to 512K, in three tiers |
 | Models | Real-ESRGAN (Fast / x4plus / Anime 6B), SwinIR-S, SwinIR-M, Real-CUGAN 2×/3×/4×, classic Lanczos |
 | Passes | The model can run once or twice |
 | Noise cleanup | Automatic at 64K and above: the source is cleaned before upscaling |
@@ -21,8 +18,8 @@ ever leaves it.
 | Languages | Turkish and English, switched from the header |
 | Theme | Light and dark; follows the system setting, can be pinned manually |
 | Pages | Upscale · History · Requests (bottom navigation) |
-| Output | Photo: JPEG (adjustable quality) or lossless PNG. Video: H.265/H.264 MP4 with the audio carried across, or a numbered frame sequence |
-| Saved to | Gallery › Pictures › AstraUpscale (photos and frames), Movies › AstraUpscale (video) |
+| Output | JPEG (adjustable quality) or lossless PNG |
+| Saved to | Gallery › Pictures › AstraUpscale |
 
 ## Install
 
@@ -63,73 +60,6 @@ The only memory risk was very wide rows: the sharpening ring grows with output
 width. Horizontal box sums are stored as 16-bit integers (a box holds at most
 49×255 = 12495) and the ring is capped against a memory budget, so PNG writing
 at 512K width runs within a 256 MB heap.
-
-## Video
-
-The same engine, run once per frame. A video is decoded frame by frame, each
-frame goes through exactly the photo pipeline — optional noise cleanup, the
-neural model, Lanczos to the exact target size, sharpening — and the result is
-handed straight to a hardware encoder. Timestamps are carried from the source,
-so variable frame rate footage keeps its length, and the audio track is copied
-across without being re-encoded.
-
-| Preset | Frame | Pixels per frame | Typical encoder |
-|---|---|---|---|
-| 2K | 2560×1440 | 3.7 MP | H.265 or H.264 |
-| 4K | 3840×2160 | 8.3 MP | H.265 or H.264 |
-| 8K | 7680×4320 | 33.2 MP | H.265, flagship chips only |
-| 16K | 15360×8640 | 132.7 MP | none — written as a frame sequence |
-
-### Nothing is held in memory
-
-An 8K frame is 100 MB as RGB, and there are thirty of them a second. So a whole
-upscaled frame is **never** materialised: `YuvWriter` takes each row as the
-engine produces it and writes it straight into the encoder's own input planes,
-converting RGB to YUV 4:2:0 on the way. The only extra memory is one previous
-row, kept because chroma is averaged over 2×2 blocks.
-
-### The encoder ceiling is asked, not guessed
-
-Photos can reach 512K because the app writes the file itself. Video cannot:
-the frame goes through a hardware encoder, and that encoder has a ceiling —
-usually 4K, 8K on the best chips, and never 16K. `VideoCodecs` asks the device
-rather than assuming, by shrinking the requested size until the codec says yes.
-
-When the requested resolution does not fit, the app does not refuse. It writes
-**numbered image files** instead — `frame_000001.png` and onwards, in a folder
-whose name carries the frame rate — which is the format colour grading and
-finishing actually use. Those can be rebuilt into a video on a computer:
-
-```
-ffmpeg -framerate 30 -i frame_%06d.png -c:v libx265 -crf 18 out.mp4
-```
-
-Frame sequences have no audio and no encoder ceiling, and lose nothing to
-compression.
-
-### Colour is carried, not assumed
-
-The decoder is asked which colour standard the source uses (BT.601, BT.709 or
-BT.2020, limited or full range); the same one is used when writing, and it is
-tagged on the output so players do not have to guess. Where the source says
-nothing, the standard is picked from its resolution. `tools/desktop/YuvTest.java`
-round-trips the conversion through I420, NV12 and stride-padded layouts in all
-four colour spaces: worst-case error is 3 levels out of 255, and the primaries
-come back in the right channels.
-
-### What it costs
-
-Per-frame work is multiplied by the frame count, and this is the number the
-interface puts in front of you before you start. A frame that takes two seconds
-is an hour of work over a thirty-second clip. The model is loaded once and the
-thread pool is shared across frames, so the per-frame overhead is the upscaling
-itself and nothing else. Measured throughput and a real remaining time — not an
-estimate, a measurement — appear in the progress readout and the notification
-once the first frames are done.
-
-Source frames above roughly 9 MP fall back to classic Lanczos: at that size the
-neural model takes minutes per frame, and starting such a job is not helping
-anyone.
 
 ## Noise cleanup
 
@@ -186,10 +116,8 @@ automatically.
 With no internet and no pending version, the app runs normally and shows when
 the last check happened.
 
-Photo and video jobs run in separate foreground services, each holding a partial
-wake lock, so they continue with the screen off or another app in front — and
-they can run at the same time, because a photo takes minutes and a video takes
-hours. Network access is only
+The upscaling job runs in a foreground service and holds a partial wake lock, so
+it continues with the screen off or another app in front. Network access is only
 used for the update check and for feedback delivery; image processing never
 touches the network.
 

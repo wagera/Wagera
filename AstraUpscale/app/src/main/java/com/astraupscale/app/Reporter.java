@@ -84,33 +84,4 @@ public final class Reporter {
         } catch (Throwable ignored) {
         }
     }
-
-    /** Tamamlanan bir video buyutme isinin ozeti. */
-    public static void videoFinished(Context ctx, VideoJob job) {
-        try {
-            JSONObject d = new JSONObject();
-            d.put("preset", job.preset.label);
-            d.put("source", job.sourceWidth + "x" + job.sourceHeight);
-            d.put("target", job.outWidth + "x" + job.outHeight);
-            d.put("model", job.usedModel == null ? "?" : job.usedModel.label);
-            d.put("passes", job.usedStages);
-            d.put("denoise", job.usedDenoise);
-            d.put("gpu", job.usedGpu);
-            d.put("output", job.frameSequence ? "sequence" : "mp4");
-            d.put("encoder", job.encoderLabel);
-            d.put("frames", job.framesDone);
-            d.put("fps", Math.round(job.framesPerSecond * 100) / 100.0);
-            d.put("seconds", job.elapsedMillis / 1000.0);
-            d.put("megabytes", job.outputBytes / 1048576.0);
-            d.put("audio", job.audioCopied);
-            event(ctx, job.error != null ? "video_failed"
-                    : (job.cancelled ? "video_cancelled" : "video_done"), d);
-            if (job.error != null) {
-                JSONObject e = new JSONObject();
-                e.put("message", job.error);
-                event(ctx, "error", e);
-            }
-        } catch (Throwable ignored) {
-        }
-    }
 }

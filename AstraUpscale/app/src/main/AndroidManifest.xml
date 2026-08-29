@@ -23,9 +23,6 @@
          calisir, secim sistem belge secicisine duser. -->
     <uses-permission
         android:name="android.permission.READ_MEDIA_IMAGES" />
-    <!-- Galeriden video secme; fotografla ayni kural: hicbir kare disari cikmaz. -->
-    <uses-permission
-        android:name="android.permission.READ_MEDIA_VIDEO" />
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
@@ -62,11 +59,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="image/*" />
             </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="video/*" />
-            </intent-filter>
         </activity>
 
         <!-- Kuyruktaki bildirimleri ag geldiginde gonderir -->
@@ -77,15 +69,6 @@
 
         <service
             android:name=".UpscaleService"
-            android:exported="false"
-            android:foregroundServiceType="dataSync" />
-
-        <!--
-            Video isi ayri servistir: bir fotograf dakikalar, bir video
-            saatler surer ve ikisi ayni anda calisabilmelidir.
-        -->
-        <service
-            android:name=".VideoService"
             android:exported="false"
             android:foregroundServiceType="dataSync" />
     </application>
